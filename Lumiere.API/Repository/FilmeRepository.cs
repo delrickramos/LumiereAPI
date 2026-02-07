@@ -1,7 +1,8 @@
 ﻿using Lumiere.API.Database;
+using Lumiere.API.Interfaces;
 using Lumiere.Models;
 
-namespace Lumiere.API.Repositories
+namespace Lumiere.API.Repository
 {
     public class FilmeRepository : IFilmeRepository
     {

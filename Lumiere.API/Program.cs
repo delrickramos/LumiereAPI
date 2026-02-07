@@ -1,5 +1,6 @@
 using Lumiere.API.Database;
-using Lumiere.API.Repositories;
+using Lumiere.API.Interfaces;
+using Lumiere.API.Repository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

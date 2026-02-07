@@ -1,6 +1,6 @@
 ﻿using Lumiere.API.Dtos.Filme;
+using Lumiere.API.Interfaces;
 using Lumiere.API.Mappers;
-using Lumiere.API.Repositories;
 using Lumiere.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -57,8 +57,11 @@ namespace Lumiere.API.Controllers
             return Ok(filme.ToFilmeDto());
         }
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete([FromRoute] int id)
         {
+            if (_repository.GetFilmeById(id) == null)
+                return NotFound();
+
             _repository.DeleteFilme(id);
             return NoContent();
         }
