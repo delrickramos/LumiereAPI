@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Lumiere.API/Lumiere.API.csproj" />
+  <Project Path="Lumiere.Models/Lumiere.Models.csproj" />
+</Solution>
