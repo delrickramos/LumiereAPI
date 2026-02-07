@@ -15,7 +15,7 @@ builder.Services.AddDbContext<LumiereContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("Lumiere"))
 );
 
-builder.Services.AddScoped<IFilmeRepository, FilmeMemoryRepository>();
+builder.Services.AddScoped<IFilmeRepository, FilmeRepository>();
 
 var app = builder.Build();
 

@@ -1,4 +1,6 @@
-﻿using Lumiere.API.Repositories;
+﻿using Lumiere.API.Dtos.Filme;
+using Lumiere.API.Mappers;
+using Lumiere.API.Repositories;
 using Lumiere.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,37 +17,50 @@ namespace Lumiere.API.Controllers
         {
             _repository = repository;
         }
+
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_repository.GetFilmes());
+            var filmes = _repository.GetFilmes();
+            return Ok(filmes.Select( f => f.ToFilmeDto()));
         }
+
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
             var filme = _repository.GetFilmeById(id);
             if (filme == null)
                 return NotFound();
-            return Ok(filme);
+            return Ok(filme.ToFilmeDto());
         }
+
         [HttpPost]
-        public IActionResult Add([FromBody] Filme filme)
+        public IActionResult Add([FromBody] CreateFilmeDto filmeDto)
         {
+            var filme = filmeDto.ToFilmeModel();
+
             _repository.AddFilme(filme);
-            return CreatedAtAction(nameof(Get), new { id = filme.Id }, filme);
+
+            return CreatedAtAction(nameof(Get), new { id = filme.Id }, filme.ToFilmeDto());
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update([FromBody] Filme filme, int id)
+        public IActionResult Update(int id, [FromBody] UpdateFilmeDto filmeDto)
         {
+            var filme = _repository.GetFilmeById(id);
+            if (filme == null)
+                return NotFound();
+
+            filmeDto.UpdateFilmeModel(filme);
             _repository.UpdateFilme(filme);
-            return Ok(filme);
+
+            return Ok(filme.ToFilmeDto());
         }
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
             _repository.DeleteFilme(id);
-            return Ok();
+            return NoContent();
         }
     }
 }
