@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Lumiere.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using static System.Net.Mime.MediaTypeNames;
@@ -23,5 +24,16 @@ namespace Lumiere.API.Database
         }
         */
         #endregion
+
+        public DbSet<Assento> Assentos { get; set; }
+        public DbSet<Filme> Filmes { get; set; }
+        public DbSet<FormatoSessao> FormatosSessao { get; set; }
+        public DbSet<Genero> Generos { get; set; }
+        public DbSet<Ingresso> Ingressos { get; set; }
+        public DbSet<Sala> Salas { get; set; }
+        public DbSet<Sessao> Sessoes { get; set; }
+        public DbSet<TipoIngresso> TiposIngresso { get; set; }
+
+
     }
 }
