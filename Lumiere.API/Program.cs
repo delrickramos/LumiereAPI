@@ -1,4 +1,6 @@
+using Lumiere.API.Database;
 using Lumiere.API.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +10,11 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<LumiereContext>(
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("Lumiere"))
+);
+
 builder.Services.AddScoped<IFilmeRepository, FilmeMemoryRepository>();
 
 var app = builder.Build();
