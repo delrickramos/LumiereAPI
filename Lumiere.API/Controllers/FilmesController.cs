@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Lumiere.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/filmes")]
     [ApiController]
     public class FilmesController : ControllerBase
     {
