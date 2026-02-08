@@ -10,9 +10,9 @@ namespace Lumiere.Models
         public int Id { get; set; }
         public DateTimeOffset DataHoraInicio { get; set; }
         public DateTimeOffset DataHoraFim { get; set; }
-        public string Versao { get; set; } = string.Empty;
+        public string Idioma { get; set; } = string.Empty;
         [Column(TypeName = "decimal(18,2)")]
-        public decimal Preco { get; set; }
+        public decimal PrecoBase { get; set; }
         public int SalaId { get; set; }
         public int FormatoSessaoId { get; set; }
         public int FilmeId { get; set; }
@@ -20,5 +20,6 @@ namespace Lumiere.Models
         public Filme? Filme { get; set; }
         public Sala? Sala { get; set; }
         public FormatoSessao? FormatoSessao { get; set; }
+        public List<Ingresso>? Ingressos { get; set; }
     }
 }

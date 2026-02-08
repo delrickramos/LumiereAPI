@@ -23,6 +23,7 @@ builder.Services.AddDbContext<LumiereContext>(
 builder.Services.AddScoped<IFilmeRepository, FilmeRepository>();
 builder.Services.AddScoped<ISessaoRepository, SessaoRepository>();
 builder.Services.AddScoped<ISalaRepository, SalaRepository>();
+builder.Services.AddScoped<IGeneroRepository, GeneroRepository>();
 
 var app = builder.Build();
 

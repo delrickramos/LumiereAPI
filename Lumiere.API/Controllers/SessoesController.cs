@@ -11,10 +11,12 @@ namespace Lumiere.API.Controllers
     {
         private readonly ISessaoRepository _sessaoRepo;
         private readonly IFilmeRepository _filmeRepo;
-        public SessoesController(ISessaoRepository sessaoRepo, IFilmeRepository filmeRepo)
+        private readonly ISalaRepository _salaRepo;
+        public SessoesController(ISessaoRepository sessaoRepo, IFilmeRepository filmeRepo, ISalaRepository salaRepo )
         {
             _sessaoRepo = sessaoRepo;
             _filmeRepo = filmeRepo;
+            _salaRepo = salaRepo;
         }
         [HttpGet]
         public IActionResult Get()
@@ -41,9 +43,53 @@ namespace Lumiere.API.Controllers
             {
                 return BadRequest("Filme não encontrado");
             }
+            if (!_salaRepo.SalaExists(sessaoDto.SalaId))
+            {
+                return BadRequest("Sala não encontrada");
+            }
+
             var sessao = sessaoDto.ToSessaoModel(FilmeId);
             _sessaoRepo.AddSessao(sessao);
             return CreatedAtAction(nameof(GetById), new { id = sessao.Id }, sessao.ToSessaoDto());
         }
-}
+
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromBody] UpdateSessaoDto sessaoDto)
+        {
+            var sessao = _sessaoRepo.GetSessaoById(id);
+            if (sessao == null)
+                return NotFound();
+
+            if (!_salaRepo.SalaExists(sessaoDto.SalaId))
+            {
+                return BadRequest("Sala não encontrada");
+            }
+
+            if (sessao.Ingressos?.Any() == true)
+            {
+                return BadRequest("Não é possível atualizar sessão com ingressos vendidos");
+            }
+
+            sessaoDto.UpdateSessaoModel(sessao);
+            _sessaoRepo.UpdateSessao(sessao);
+
+            return Ok(sessao.ToSessaoDto());
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete([FromRoute] int id)
+        {
+            var sessao = _sessaoRepo.GetSessaoById(id);
+            if (sessao == null)
+                return NotFound();
+
+            if (sessao.Ingressos?.Any() == true)
+            {
+                return BadRequest("Não é possível excluir sessão com ingressos vendidos");
+            }
+
+            _sessaoRepo.DeleteSessao(id);
+            return NoContent();
+        }
+    }
 }

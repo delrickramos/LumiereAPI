@@ -12,25 +12,36 @@ namespace Lumiere.API.Mappers
                 Id = sessao.Id,
                 DataHoraInicio = sessao.DataHoraInicio,
                 DataHoraFim = sessao.DataHoraFim,
-                Versao = sessao.Versao,
-                Preco = sessao.Preco,
+                Idioma = sessao.Idioma,
+                PrecoBase = sessao.PrecoBase,
                 SalaId = sessao.SalaId,
                 FormatoSessaoId = sessao.FormatoSessaoId,
                 FilmeId = sessao.FilmeId
             };
         }
+
         public static Sessao ToSessaoModel(this CreateSessaoDto sessaoDto, int FilmeId)
         {
             return new Sessao
             {
                 DataHoraInicio = sessaoDto.DataHoraInicio,
                 DataHoraFim = sessaoDto.DataHoraFim,
-                Versao = sessaoDto.Versao,
-                Preco = sessaoDto.Preco,
-                //SessaoId = sessao.SessaoId,
-                //FormatoSessaoId = sessao.FormatoSessaoId,
+                Idioma = sessaoDto.Idioma,
+                PrecoBase = sessaoDto.PrecoBase,
+                SalaId = sessaoDto.SalaId,
+                FormatoSessaoId = sessaoDto.FormatoSessaoId,
                 FilmeId = FilmeId
             };
+        }
+
+        public static void UpdateSessaoModel(this UpdateSessaoDto sessaoDto, Sessao sessao)
+        {
+            sessao.DataHoraInicio = sessaoDto.DataHoraInicio;
+            sessao.DataHoraFim = sessaoDto.DataHoraFim;
+            sessao.Idioma = sessaoDto.Idioma;
+            sessao.PrecoBase = sessaoDto.PrecoBase;
+            sessao.SalaId = sessaoDto.SalaId;
+            sessao.FormatoSessaoId = sessaoDto.FormatoSessaoId;
         }
     }
 }

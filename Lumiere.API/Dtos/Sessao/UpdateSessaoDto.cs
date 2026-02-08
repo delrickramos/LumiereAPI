@@ -1,6 +1,6 @@
-﻿namespace Lumiere.API.Dtos.Sessao
+namespace Lumiere.API.Dtos.Sessao
 {
-    public class CreateSessaoDto
+    public class UpdateSessaoDto
     {
         public DateTimeOffset DataHoraInicio { get; set; }
         public DateTimeOffset DataHoraFim { get; set; }
@@ -9,4 +9,4 @@
         public int SalaId { get; set; }
         public int FormatoSessaoId { get; set; }
     }
-}
+}   

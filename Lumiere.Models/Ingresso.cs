@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection.Metadata;
 using System.Text;
@@ -12,7 +13,9 @@ namespace Lumiere.Models
         [Column(TypeName = "decimal(18,2)")]
         public decimal PrecoFinal { get; set; }
         public DateTimeOffset ExpiraEm { get; set; }
-        public string Status { get; set; } = string.Empty;
+
+        [Required]
+        public StatusIngressoEnum Status { get; set; }
         public int SessaoId { get; set; }
         public int AssentoId { get; set; }
         public int TipoIngressoId { get; set; }
