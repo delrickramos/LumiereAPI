@@ -16,7 +16,8 @@ namespace Lumiere.API.Mappers
                 Sinopse = filme.Sinopse,
                 Direcao = filme.Direcao,
                 Distribuidora = filme.Distribuidora,
-                Genero_Id = filme.Genero_Id
+                Genero_Id = filme.Genero_Id,
+                Sessoes = filme.Sessoes?.Select(s => s.ToSessaoDto()).ToList()
             };
         }
         public static Filme ToFilmeModel(this CreateFilmeDto filmeDto)

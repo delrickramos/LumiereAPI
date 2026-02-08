@@ -14,7 +14,7 @@ namespace Lumiere.Models
         public string Direcao { get; set; } = string.Empty;
         public string Distribuidora { get; set; } = string.Empty;
         public int Genero_Id { get; set; }
-        public ICollection<Sessao>? Sessoes { get; set; }
+        public List<Sessao>? Sessoes { get; set; }
         public Genero? Genero { get; set; }
 
     }

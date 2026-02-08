@@ -1,6 +1,7 @@
 ﻿using Lumiere.API.Database;
 using Lumiere.API.Interfaces;
 using Lumiere.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Lumiere.API.Repository
 {
@@ -13,12 +14,12 @@ namespace Lumiere.API.Repository
         }
         public List<Filme> GetFilmes()
         {
-            return _db.Filmes.OrderBy( a => a.Id).ToList();
+            return _db.Filmes.OrderBy(a => a.Id).Include(s => s.Sessoes).ToList();
         }
 
         public Filme GetFilmeById(int id)
         {
-            return _db.Filmes.Find(id)!;
+            return _db.Filmes.Include(s => s.Sessoes).FirstOrDefault(i => i.Id == id)!;
         }
 
         public void AddFilme(Filme filme)

@@ -8,6 +8,6 @@ namespace Lumiere.Models
     {
         public int Id { get; set; }
         public string Nome { get; set; } = string.Empty;
-        public ICollection<Sessao>? Sessoes { get; set; }
+        public List<Sessao>? Sessoes { get; set; }
     }
 }

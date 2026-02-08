@@ -1,4 +1,6 @@
-﻿namespace Lumiere.API.Dtos.Filme
+﻿using Lumiere.API.Dtos.Sessao;
+
+namespace Lumiere.API.Dtos.Filme
 {
     public class FilmeDto
     {
@@ -10,5 +12,7 @@
         public string Direcao { get; set; } = string.Empty;
         public string Distribuidora { get; set; } = string.Empty;
         public int Genero_Id { get; set; }
+        public List<SessaoDto>? Sessoes { get; set; }
+
     }
 }

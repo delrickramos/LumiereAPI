@@ -26,7 +26,7 @@ namespace Lumiere.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public IActionResult GetById(int id)
         {
             var filme = _repository.GetFilmeById(id);
             if (filme == null)

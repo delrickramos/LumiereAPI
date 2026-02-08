@@ -8,6 +8,6 @@ namespace Lumiere.Models
     {
         public int Id { get; set; }
         public string Nome { get; set; } = string.Empty;
-        public ICollection<Filme>? Filmes { get; set; }
+        public List<Filme>? Filmes { get; set; }
     }
 }

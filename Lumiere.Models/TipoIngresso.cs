@@ -11,6 +11,6 @@ namespace Lumiere.Models
         public string Nome { get; set; } = string.Empty;
         [Column(TypeName = "decimal(18,2)")]
         public decimal Desconto { get; set; }
-        public ICollection<Ingresso>? Ingressos { get; set; }
+        public List<Ingresso>? Ingressos { get; set; }
     }
 }
