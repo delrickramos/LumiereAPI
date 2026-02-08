@@ -11,9 +11,9 @@ namespace Lumiere.API.Controllers
     public class FormatosSessaoController : ControllerBase
     {
         private readonly IFormatoSessaoRepository _formatoRepo;
-        public FormatosSessaoController(IFormatoSessaoRepository formatoSessaoRepository)
+        public FormatosSessaoController(IFormatoSessaoRepository formatoRepo)
         {
-            _formatoRepo = formatoSessaoRepository;
+            _formatoRepo = formatoRepo;
         }
         [HttpGet]
         public IActionResult Get()
