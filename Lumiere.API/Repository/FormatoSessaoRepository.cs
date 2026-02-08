@@ -20,7 +20,7 @@ namespace Lumiere.API.Repository
 
         public FormatoSessao GetFormatoSessaoById(int id)
         {
-            return _db.FormatosSessao.Include(f => f.Sessoes).FirstOrDefault(f => f.Id == id)!;
+            return _db.FormatosSessao.FirstOrDefault(f => f.Id == id)!;
         }
         public void AddFormatoSessao(FormatoSessao formatoSessao)
         {
