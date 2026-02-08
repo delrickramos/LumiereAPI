@@ -14,9 +14,22 @@ namespace Lumiere.API.Mappers
                 DataHoraFim = sessao.DataHoraFim,
                 Versao = sessao.Versao,
                 Preco = sessao.Preco,
-                Sala_Id = sessao.Sala_Id,
-                FormatoSessao_Id = sessao.FormatoSessao_Id,
-                Filme_Id = sessao.Filme_Id
+                SalaId = sessao.SalaId,
+                FormatoSessaoId = sessao.FormatoSessaoId,
+                FilmeId = sessao.FilmeId
+            };
+        }
+        public static Sessao ToSessaoModel(this CreateSessaoDto sessaoDto, int FilmeId)
+        {
+            return new Sessao
+            {
+                DataHoraInicio = sessaoDto.DataHoraInicio,
+                DataHoraFim = sessaoDto.DataHoraFim,
+                Versao = sessaoDto.Versao,
+                Preco = sessaoDto.Preco,
+                //SessaoId = sessao.SessaoId,
+                //FormatoSessaoId = sessao.FormatoSessaoId,
+                FilmeId = FilmeId
             };
         }
     }

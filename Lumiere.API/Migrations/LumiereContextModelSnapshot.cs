@@ -37,10 +37,7 @@ namespace Lumiere.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SalaId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Sala_Id")
+                    b.Property<int>("SalaId")
                         .HasColumnType("int");
 
                     b.Property<string>("TipoAssento")
@@ -77,10 +74,7 @@ namespace Lumiere.API.Migrations
                     b.Property<int>("DuracaoMinutos")
                         .HasColumnType("int");
 
-                    b.Property<int?>("GeneroId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Genero_Id")
+                    b.Property<int>("GeneroId")
                         .HasColumnType("int");
 
                     b.Property<string>("Sinopse")
@@ -140,10 +134,7 @@ namespace Lumiere.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AssentoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Assento_Id")
+                    b.Property<int>("AssentoId")
                         .HasColumnType("int");
 
                     b.Property<DateTimeOffset>("ExpiraEm")
@@ -152,20 +143,14 @@ namespace Lumiere.API.Migrations
                     b.Property<decimal>("PrecoFinal")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("SessaoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Sessao_Id")
+                    b.Property<int>("SessaoId")
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TipoIngressoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TipoIngresso_Id")
+                    b.Property<int>("TipoIngressoId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -217,25 +202,16 @@ namespace Lumiere.API.Migrations
                     b.Property<DateTimeOffset>("DataHoraInicio")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<int?>("FilmeId")
+                    b.Property<int>("FilmeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Filme_Id")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("FormatoSessaoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FormatoSessao_Id")
+                    b.Property<int>("FormatoSessaoId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Preco")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("SalaId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Sala_Id")
+                    b.Property<int>("SalaId")
                         .HasColumnType("int");
 
                     b.Property<string>("Versao")
@@ -277,7 +253,9 @@ namespace Lumiere.API.Migrations
                 {
                     b.HasOne("Lumiere.Models.Sala", "Sala")
                         .WithMany("Assentos")
-                        .HasForeignKey("SalaId");
+                        .HasForeignKey("SalaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Sala");
                 });
@@ -286,7 +264,9 @@ namespace Lumiere.API.Migrations
                 {
                     b.HasOne("Lumiere.Models.Genero", "Genero")
                         .WithMany("Filmes")
-                        .HasForeignKey("GeneroId");
+                        .HasForeignKey("GeneroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Genero");
                 });
@@ -295,15 +275,21 @@ namespace Lumiere.API.Migrations
                 {
                     b.HasOne("Lumiere.Models.Assento", "Assento")
                         .WithMany("Ingressos")
-                        .HasForeignKey("AssentoId");
+                        .HasForeignKey("AssentoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Lumiere.Models.Sessao", "Sessao")
                         .WithMany()
-                        .HasForeignKey("SessaoId");
+                        .HasForeignKey("SessaoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Lumiere.Models.TipoIngresso", "TipoIngresso")
                         .WithMany("Ingressos")
-                        .HasForeignKey("TipoIngressoId");
+                        .HasForeignKey("TipoIngressoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Assento");
 
@@ -316,15 +302,21 @@ namespace Lumiere.API.Migrations
                 {
                     b.HasOne("Lumiere.Models.Filme", "Filme")
                         .WithMany("Sessoes")
-                        .HasForeignKey("FilmeId");
+                        .HasForeignKey("FilmeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Lumiere.Models.FormatoSessao", "FormatoSessao")
                         .WithMany("Sessoes")
-                        .HasForeignKey("FormatoSessaoId");
+                        .HasForeignKey("FormatoSessaoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Lumiere.Models.Sala", "Sala")
                         .WithMany("Sessoes")
-                        .HasForeignKey("SalaId");
+                        .HasForeignKey("SalaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Filme");
 

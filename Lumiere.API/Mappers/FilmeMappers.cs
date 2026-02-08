@@ -16,7 +16,7 @@ namespace Lumiere.API.Mappers
                 Sinopse = filme.Sinopse,
                 Direcao = filme.Direcao,
                 Distribuidora = filme.Distribuidora,
-                Genero_Id = filme.Genero_Id,
+                GeneroId = filme.GeneroId,
                 Sessoes = filme.Sessoes?.Select(s => s.ToSessaoDto()).ToList()
             };
         }
@@ -30,7 +30,7 @@ namespace Lumiere.API.Mappers
                 Sinopse = filmeDto.Sinopse,
                 Direcao = filmeDto.Direcao,
                 Distribuidora = filmeDto.Distribuidora,
-                Genero_Id = filmeDto.Genero_Id
+                GeneroId = filmeDto.GeneroId
             };
         }
         public static void UpdateFilmeModel(this UpdateFilmeDto filmeDto, Filme filme)
@@ -41,7 +41,7 @@ namespace Lumiere.API.Mappers
             filme.Sinopse = filmeDto.Sinopse;
             filme.Direcao = filmeDto.Direcao;
             filme.Distribuidora = filmeDto.Distribuidora;
-            filme.Genero_Id = filmeDto.Genero_Id;
+            filme.GeneroId = filmeDto.GeneroId;
         }
     }
 }

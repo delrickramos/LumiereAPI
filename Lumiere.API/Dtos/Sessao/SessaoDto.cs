@@ -10,8 +10,8 @@ namespace Lumiere.API.Dtos.Sessao
         public DateTimeOffset DataHoraFim { get; set; }
         public string Versao { get; set; } = string.Empty;
         public decimal Preco { get; set; }
-        public int Sala_Id { get; set; }
-        public int FormatoSessao_Id { get; set; }
-        public int Filme_Id { get; set; }
+        public int SalaId { get; set; }
+        public int FormatoSessaoId { get; set; }
+        public int FilmeId { get; set; }
     }
 }

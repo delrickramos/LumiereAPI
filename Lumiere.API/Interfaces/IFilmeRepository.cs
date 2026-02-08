@@ -9,5 +9,6 @@ namespace Lumiere.API.Interfaces
          void AddFilme(Filme filme);
          void UpdateFilme(Filme filme);
          void DeleteFilme(int id);
+         bool FilmeExists(int id);
     }
 }

@@ -39,5 +39,10 @@ namespace Lumiere.API.Repository
             _db.Filmes.Remove(GetFilmeById(id));
             _db.SaveChanges();
         }
+
+        public bool FilmeExists(int id)
+        {
+            return _db.Filmes.Any(f => f.Id == id);
+        }
     }
 }

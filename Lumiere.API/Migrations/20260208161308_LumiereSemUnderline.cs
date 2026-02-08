@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Lumiere.API.Migrations
 {
     /// <inheritdoc />
-    public partial class LumiereInicial : Migration
+    public partial class LumiereSemUnderline : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -78,8 +78,7 @@ namespace Lumiere.API.Migrations
                     Sinopse = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Direcao = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Distribuidora = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Genero_Id = table.Column<int>(type: "int", nullable: false),
-                    GeneroId = table.Column<int>(type: "int", nullable: true)
+                    GeneroId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -88,7 +87,8 @@ namespace Lumiere.API.Migrations
                         name: "FK_Filmes_Generos_GeneroId",
                         column: x => x.GeneroId,
                         principalTable: "Generos",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -100,8 +100,7 @@ namespace Lumiere.API.Migrations
                     Coluna = table.Column<int>(type: "int", nullable: false),
                     Fileira = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TipoAssento = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Sala_Id = table.Column<int>(type: "int", nullable: false),
-                    SalaId = table.Column<int>(type: "int", nullable: true)
+                    SalaId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -110,7 +109,8 @@ namespace Lumiere.API.Migrations
                         name: "FK_Assentos_Salas_SalaId",
                         column: x => x.SalaId,
                         principalTable: "Salas",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -123,12 +123,9 @@ namespace Lumiere.API.Migrations
                     DataHoraFim = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     Versao = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Preco = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Sala_Id = table.Column<int>(type: "int", nullable: false),
-                    FormatoSessao_Id = table.Column<int>(type: "int", nullable: false),
-                    Filme_Id = table.Column<int>(type: "int", nullable: false),
-                    FilmeId = table.Column<int>(type: "int", nullable: true),
-                    SalaId = table.Column<int>(type: "int", nullable: true),
-                    FormatoSessaoId = table.Column<int>(type: "int", nullable: true)
+                    SalaId = table.Column<int>(type: "int", nullable: false),
+                    FormatoSessaoId = table.Column<int>(type: "int", nullable: false),
+                    FilmeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -137,17 +134,20 @@ namespace Lumiere.API.Migrations
                         name: "FK_Sessoes_Filmes_FilmeId",
                         column: x => x.FilmeId,
                         principalTable: "Filmes",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Sessoes_FormatosSessao_FormatoSessaoId",
                         column: x => x.FormatoSessaoId,
                         principalTable: "FormatosSessao",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Sessoes_Salas_SalaId",
                         column: x => x.SalaId,
                         principalTable: "Salas",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -159,12 +159,9 @@ namespace Lumiere.API.Migrations
                     PrecoFinal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     ExpiraEm = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Sessao_Id = table.Column<int>(type: "int", nullable: false),
-                    Assento_Id = table.Column<int>(type: "int", nullable: false),
-                    TipoIngresso_Id = table.Column<int>(type: "int", nullable: false),
-                    SessaoId = table.Column<int>(type: "int", nullable: true),
-                    TipoIngressoId = table.Column<int>(type: "int", nullable: true),
-                    AssentoId = table.Column<int>(type: "int", nullable: true)
+                    SessaoId = table.Column<int>(type: "int", nullable: false),
+                    AssentoId = table.Column<int>(type: "int", nullable: false),
+                    TipoIngressoId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -173,17 +170,20 @@ namespace Lumiere.API.Migrations
                         name: "FK_Ingressos_Assentos_AssentoId",
                         column: x => x.AssentoId,
                         principalTable: "Assentos",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Ingressos_Sessoes_SessaoId",
                         column: x => x.SessaoId,
                         principalTable: "Sessoes",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_Ingressos_TiposIngresso_TipoIngressoId",
                         column: x => x.TipoIngressoId,
                         principalTable: "TiposIngresso",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

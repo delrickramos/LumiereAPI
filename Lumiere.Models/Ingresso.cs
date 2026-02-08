@@ -13,9 +13,9 @@ namespace Lumiere.Models
         public decimal PrecoFinal { get; set; }
         public DateTimeOffset ExpiraEm { get; set; }
         public string Status { get; set; } = string.Empty;
-        public int Sessao_Id { get; set; }
-        public int Assento_Id { get; set; }
-        public int TipoIngresso_Id { get; set; }
+        public int SessaoId { get; set; }
+        public int AssentoId { get; set; }
+        public int TipoIngressoId { get; set; }
         public Sessao? Sessao { get; set; }
         public TipoIngresso? TipoIngresso { get; set; }
         public Assento? Assento { get; set; }

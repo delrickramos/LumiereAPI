@@ -10,7 +10,7 @@ namespace Lumiere.Models
         public int Coluna { get; set; }
         public string Fileira { get; set; } = string.Empty;
         public string TipoAssento { get; set; } = string.Empty;
-        public int Sala_Id { get; set; }
+        public int SalaId { get; set; }
         public Sala? Sala { get; set; }
         public List<Ingresso>? Ingressos { get; set; }
     }

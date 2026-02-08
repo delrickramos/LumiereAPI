@@ -6,5 +6,6 @@ namespace Lumiere.API.Interfaces
     {
         List<Sessao> GetSessoes();
         Sessao GetSessaoById(int id);
+        void AddSessao(Sessao sessao);
     }
 }

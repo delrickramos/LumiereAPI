@@ -12,6 +12,12 @@ namespace Lumiere.API.Repository
             _db = db;
         }
 
+        public void AddSessao(Sessao sessao)
+        {
+            _db.Sessoes.Add(sessao);
+            _db.SaveChanges();
+        }
+
         public Sessao GetSessaoById(int id)
         {
             return _db.Sessoes.Find(id)!;

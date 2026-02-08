@@ -13,9 +13,9 @@ namespace Lumiere.Models
         public string Versao { get; set; } = string.Empty;
         [Column(TypeName = "decimal(18,2)")]
         public decimal Preco { get; set; }
-        public int Sala_Id { get; set; }
-        public int FormatoSessao_Id { get; set; }
-        public int Filme_Id { get; set; }
+        public int SalaId { get; set; }
+        public int FormatoSessaoId { get; set; }
+        public int FilmeId { get; set; }
 
         public Filme? Filme { get; set; }
         public Sala? Sala { get; set; }

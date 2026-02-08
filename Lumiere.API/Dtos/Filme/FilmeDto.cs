@@ -11,7 +11,7 @@ namespace Lumiere.API.Dtos.Filme
         public string Sinopse { get; set; } = string.Empty;
         public string Direcao { get; set; } = string.Empty;
         public string Distribuidora { get; set; } = string.Empty;
-        public int Genero_Id { get; set; }
+        public int GeneroId { get; set; }
         public List<SessaoDto>? Sessoes { get; set; }
 
     }
