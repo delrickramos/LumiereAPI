@@ -30,6 +30,8 @@ builder.Services.AddScoped<IFormatoSessaoRepository, FormatoSessaoRepository>();
 builder.Services.AddScoped<ITipoIngressoRepository, TipoIngressoRepository>();
 builder.Services.AddScoped<IGeneroService, GeneroService>();
 builder.Services.AddScoped<IFormatoSessaoService, FormatoSessaoService>();
+builder.Services.AddScoped<ITipoIngressoService, TipoIngressoService>();
+
 
 var app = builder.Build();
 
