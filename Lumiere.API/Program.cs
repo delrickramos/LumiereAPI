@@ -26,6 +26,8 @@ builder.Services.AddScoped<ISalaRepository, SalaRepository>();
 builder.Services.AddScoped<IGeneroRepository, GeneroRepository>();
 builder.Services.AddScoped<IFormatoSessaoRepository, FormatoSessaoRepository>();
 builder.Services.AddScoped<ITipoIngressoRepository, TipoIngressoRepository>();
+builder.Services.AddScoped<IAssentoRepository, AssentoRepository>();
+builder.Services.AddScoped<IIngressoRepository, IngressoRepository>();
 
 var app = builder.Build();
 
