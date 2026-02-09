@@ -10,104 +10,43 @@ namespace Lumiere.API.Controllers
     [ApiController]
     public class IngressosController : ControllerBase
     {
-        private readonly IIngressoRepository _ingressoRepo;
-        private readonly ISessaoRepository _sessaoRepo;
-        private readonly IAssentoRepository _assentoRepo;
-        private readonly ITipoIngressoRepository _tipoIngressoRepo;
+        private readonly IIngressoService _service;
 
-        public IngressosController(
-            IIngressoRepository ingressoRepo, 
-            ISessaoRepository sessaoRepo, 
-            IAssentoRepository assentoRepo, 
-            ITipoIngressoRepository tipoIngressoRepo)
+        public IngressosController(IIngressoService service)
         {
-            _ingressoRepo = ingressoRepo;
-            _sessaoRepo = sessaoRepo;
-            _assentoRepo = assentoRepo;
-            _tipoIngressoRepo = tipoIngressoRepo;
+            _service = service;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            var ingressos = _ingressoRepo.GetIngressos();
-            return Ok(ingressos.Select(i => i.ToIngressoDto()));
+            var result = _service.GetAll();
+            if (!result.Ok) return BadRequest(result.Error);
+            return Ok(result.Data);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var ingresso = _ingressoRepo.GetIngressoById(id);
-            if (ingresso == null)
-                return NotFound();
-            return Ok(ingresso.ToIngressoDto());
+            var result = _service.GetById(id);
+            if (!result.Ok) return NotFound(result.Error);
+            return Ok(result.Data);
         }
 
         [HttpGet("sessao/{sessaoId}")]
         public IActionResult GetBySessao(int sessaoId)
         {
-            var ingressos = _ingressoRepo.GetIngressosBySessao(sessaoId);
-            return Ok(ingressos.Select(i => i.ToIngressoDto()));
+            var result = _service.GetBySessao(sessaoId);
+            if (!result.Ok) return BadRequest(result.Error);
+            return Ok(result.Data);
         }
 
         [HttpPost]
         public IActionResult VenderIngresso([FromBody] CreateIngressoDto ingressoDto)
         {
-            if (!_sessaoRepo.SessaoExists(ingressoDto.SessaoId))
-            {
-                return BadRequest("Sessão não encontrada");
-            }
-
-            if (!_assentoRepo.AssentoExists(ingressoDto.AssentoId))
-            {
-                return BadRequest("Assento não encontrado");
-            }
-
-            if (!_tipoIngressoRepo.TipoIngressoExists(ingressoDto.TipoIngressoId))
-            {
-                return BadRequest("Tipo de ingresso não encontrado");
-            }
-
-            if (_ingressoRepo.AssentoOcupadoNaSessao(ingressoDto.SessaoId, ingressoDto.AssentoId))
-            {
-                return BadRequest("Assento já está ocupado nesta sessão");
-            }
-
-            var sessao = _sessaoRepo.GetSessaoById(ingressoDto.SessaoId);
-            var tipoIngresso = _tipoIngressoRepo.GetTipoIngressoById(ingressoDto.TipoIngressoId);
-
-            var precoFinal = sessao.PrecoBase * (1 - tipoIngresso.DescontoPercentual);
-
-            var ingresso = new Ingresso
-            {
-                SessaoId = ingressoDto.SessaoId,
-                AssentoId = ingressoDto.AssentoId,
-                TipoIngressoId = ingressoDto.TipoIngressoId,
-                PrecoFinal = precoFinal,
-                ExpiraEm = sessao.DataHoraInicio.AddMinutes(-30),
-                Status = StatusIngressoEnum.Confirmado
-            };
-
-            _ingressoRepo.AddIngresso(ingresso);
-            return CreatedAtAction(nameof(GetById), new { id = ingresso.Id }, ingresso.ToIngressoDto());
-        }
-
-        [HttpPut("{id}/cancelar")]
-        public IActionResult CancelarIngresso(int id)
-        {
-            var ingresso = _ingressoRepo.GetIngressoById(id);
-            if (ingresso == null)
-                return NotFound();
-
-            if (ingresso.Status == StatusIngressoEnum.Cancelado)
-            {
-                return BadRequest("Ingresso já está cancelado");
-            }
-
-            ingresso.Status = StatusIngressoEnum.Cancelado;
-            _ingressoRepo.UpdateIngresso(ingresso);
-
-            return Ok(new { message = "Ingresso cancelado com sucesso", ingresso = ingresso.ToIngressoDto() });
+            var result = _service.Vender(ingressoDto);
+            if (!result.Ok) return BadRequest(new { result.Error });
+            return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id }, result.Data);
         }
     }
 }

@@ -15,12 +15,12 @@ namespace Lumiere.API.Repository
 
         public List<Ingresso> GetIngressos()
         {
-            return _db.Ingressos.OrderBy(i => i.Id).Include(i => i.Sessao).Include(i => i.Assento).Include(i => i.TipoIngresso).ToList();
+            return _db.Ingressos.OrderBy(i => i.Id).ToList();
         }
 
         public Ingresso GetIngressoById(int id)
         {
-            return _db.Ingressos.Include(i => i.Sessao).Include(i => i.Assento).Include(i => i.TipoIngresso).FirstOrDefault(i => i.Id == id)!;
+            return _db.Ingressos.FirstOrDefault(i => i.Id == id)!;
         }
 
         public List<Ingresso> GetIngressosBySessao(int sessaoId)
