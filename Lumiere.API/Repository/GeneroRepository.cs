@@ -15,12 +15,12 @@ namespace Lumiere.API.Repository
 
         public List<Genero> GetGeneros()
         {
-            return _db.Generos.OrderBy(g => g.Id).Include(g => g.Filmes).ToList();
+            return _db.Generos.OrderBy(g => g.Id).ToList();
         }
 
         public Genero GetGeneroById(int id)
         {
-            return _db.Generos.Include(g => g.Filmes).FirstOrDefault(g => g.Id == id)!;
+            return _db.Generos.FirstOrDefault(g => g.Id == id)!;
         }
 
         public void AddGenero(Genero genero)

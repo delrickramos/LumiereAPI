@@ -89,7 +89,7 @@ public class GeneroService : IGeneroService
         return ServiceResult<GeneroDto>.Success(genero.ToGeneroDto());
     }
 
-    private static string? ValidateNome(string nome)
+    private string? ValidateNome(string nome)
     {
         if (string.IsNullOrWhiteSpace(nome))
             return "Nome é obrigatório.";
