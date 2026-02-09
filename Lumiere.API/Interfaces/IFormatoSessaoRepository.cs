@@ -10,5 +10,7 @@ namespace Lumiere.API.Interfaces
         void UpdateFormatoSessao(FormatoSessao formatoSessao);
         void DeleteFormatoSessao(int id);
         bool FormatoSessaoExists(int id);
+        bool FormatoSessaoNomeExists(string nome, int? ignoreId = null);
+        bool FormatoSessaoHasSessoes(int id);
     }
 }
