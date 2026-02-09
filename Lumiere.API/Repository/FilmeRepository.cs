@@ -14,12 +14,19 @@ namespace Lumiere.API.Repository
         }
         public List<Filme> GetFilmes()
         {
-            return _db.Filmes.OrderBy(a => a.Id).Include(s => s.Sessoes).ToList();
+            return _db.Filmes.OrderBy(a => a.Id).ToList();
         }
 
         public Filme GetFilmeById(int id)
         {
-            return _db.Filmes.Include(s => s.Sessoes).FirstOrDefault(i => i.Id == id)!;
+            return _db.Filmes.FirstOrDefault(i => i.Id == id)!;
+        }
+
+        public Filme? GetFilmeByIdWithSessoes(int id)
+        {
+            return _db.Filmes
+                .Include(f => f.Sessoes)
+                .FirstOrDefault(f => f.Id == id);
         }
 
         public void AddFilme(Filme filme)
@@ -44,5 +51,21 @@ namespace Lumiere.API.Repository
         {
             return _db.Filmes.Any(f => f.Id == id);
         }
+
+        public bool FilmeHasSessoes(int id)
+        {
+            return _db.Sessoes.Any(s => s.FilmeId == id);
+        }
+
+        public bool FilmeTituloExists(string titulo, int? ignoreId = null)
+        {
+            var titNorm = titulo.Trim().ToUpper();
+
+            return _db.Filmes.Any(f =>
+                f.Titulo.Trim().ToUpper() == titNorm &&
+                (!ignoreId.HasValue || f.Id != ignoreId.Value)
+            );
+        }
+
     }
 }
