@@ -1,9 +1,5 @@
-﻿using Lumiere.API.Dtos.Filme;
-using Lumiere.API.Dtos.FormatoSessao;
-using Lumiere.API.Interfaces;
-using Lumiere.API.Mappers;
+﻿using Lumiere.API.Dtos.FormatoSessao;
 using Microsoft.AspNetCore.Mvc;
-using Lumiere.API.Services;
 using Lumiere.API.Services.Interfaces;
 
 namespace Lumiere.API.Controllers
@@ -12,11 +8,9 @@ namespace Lumiere.API.Controllers
     [ApiController]
     public class FormatosSessaoController : ControllerBase
     {
-        private readonly IFormatoSessaoRepository _formatoRepo;
         private readonly IFormatoSessaoService _service;
-        public FormatosSessaoController(IFormatoSessaoRepository formatoSessaoRepository, IFormatoSessaoService formatoSessaoService)
+        public FormatosSessaoController(IFormatoSessaoService formatoSessaoService)
         {
-            _formatoRepo = formatoSessaoRepository;
             _service = formatoSessaoService;
         }
 
