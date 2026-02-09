@@ -1,7 +1,6 @@
 using Lumiere.API.Dtos.FormatoSessao;
 using Lumiere.API.Interfaces;
 using Lumiere.API.Mappers;
-using Lumiere.API.Services.Interfaces;
 
 namespace Lumiere.API.Services;
 

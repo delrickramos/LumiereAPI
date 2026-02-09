@@ -12,5 +12,6 @@ namespace Lumiere.API.Interfaces
         void DeleteSessao(int id);
         bool SessaoExists(int id);
         bool SessaoHasIngressos(int id);
+        bool SessaoHasConflict (int salaId, DateTimeOffset dataHoraInicio, DateTimeOffset dataHoraFim, int? sessaoId = null);
     }
 }

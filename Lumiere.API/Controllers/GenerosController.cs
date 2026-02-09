@@ -1,6 +1,6 @@
 using Lumiere.API.Dtos.Genero;
 using Microsoft.AspNetCore.Mvc;
-using Lumiere.API.Services.Interfaces;
+using Lumiere.API.Interfaces;
 
 namespace Lumiere.API.Controllers
 {

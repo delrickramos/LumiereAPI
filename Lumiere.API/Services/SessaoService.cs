@@ -1,7 +1,6 @@
 using Lumiere.API.Dtos.Sessao;
 using Lumiere.API.Interfaces;
 using Lumiere.API.Mappers;
-using Lumiere.API.Services.Interfaces;
 
 namespace Lumiere.API.Services
 {
@@ -50,6 +49,9 @@ namespace Lumiere.API.Services
             if (!_salaRepo.SalaExists(dto.SalaId))
                 return ServiceResult<SessaoDto>.Fail("Sala não encontrada.");
 
+            if (_sessaoRepo.SessaoHasConflict(dto.SalaId, dto.DataHoraInicio, dto.DataHoraFim))
+                return ServiceResult<SessaoDto>.Fail("Já existe uma sessão nesta sala neste horário.");
+
             var filme = _filmeRepo.GetFilmeById(dto.FilmeId);
             var inicio = dto.DataHoraInicio;
             var fim = inicio.AddMinutes(filme.DuracaoMinutos);
@@ -74,6 +76,9 @@ namespace Lumiere.API.Services
 
             if (!_salaRepo.SalaExists(dto.SalaId))
                 return ServiceResult<SessaoDto>.Fail("Sala não encontrada.");
+
+            if (_sessaoRepo.SessaoHasConflict(dto.SalaId, dto.DataHoraInicio, dto.DataHoraFim, id))
+                return ServiceResult<SessaoDto>.Fail("Já existe uma sessão nesta sala neste horário.");
 
             if (_sessaoRepo.SessaoHasIngressos(id))
                 return ServiceResult<SessaoDto>.Fail("Não é possível atualizar sessão com ingressos vendidos.");
