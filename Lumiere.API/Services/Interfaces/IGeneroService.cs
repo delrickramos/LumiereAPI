@@ -1,7 +1,7 @@
 using Lumiere.API.Dtos.Genero;
 using Lumiere.API.Services;
 
-namespace Lumiere.API.Interfaces
+namespace Lumiere.API.Services.Interfaces
 {
     public interface IGeneroService
     {

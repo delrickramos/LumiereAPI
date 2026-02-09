@@ -1,5 +1,6 @@
 using Lumiere.API.Dtos.Genero;
 using Lumiere.API.Interfaces;
+using Lumiere.API.Services.Interfaces;
 using Lumiere.API.Services;
 using Lumiere.API.Mappers;
 
