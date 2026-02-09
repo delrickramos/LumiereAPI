@@ -15,12 +15,17 @@ namespace Lumiere.API.Repository
 
         public List<Sala> GetSalas()
         {
-            return _db.Salas.OrderBy(s => s.Id).Include(s => s.Sessoes).ToList();
+            return _db.Salas.OrderBy(s => s.Id).ToList();
         }
 
         public Sala GetSalaById(int id)
         {
-            return _db.Salas.Include(s => s.Sessoes).FirstOrDefault(s => s.Id == id)!;
+            return _db.Salas.FirstOrDefault(s => s.Id == id)!;
+        }
+
+        public Sala? GetSalaByIdWithSessoes(int id)
+        {
+            return _db.Salas.Include(s => s.Sessoes).FirstOrDefault(s => s.Id == id);
         }
 
         public void AddSala(Sala sala)
@@ -44,6 +49,21 @@ namespace Lumiere.API.Repository
         public bool SalaExists(int id)
         {
             return _db.Salas.Any(s => s.Id == id);
+        }
+
+        public bool SalaNomeExists(string nome, int? ignoreId = null)
+        {
+            var nomeNorm = nome.Trim().ToUpper();
+
+            return _db.Salas.Any(s =>
+                s.Nome.Trim().ToUpper() == nomeNorm &&
+                (!ignoreId.HasValue || s.Id != ignoreId.Value)
+            );
+        }
+
+        public bool SalaHasSessoes(int id)
+        {
+            return _db.Sessoes.Any(s => s.SalaId == id);
         }
     }
 }

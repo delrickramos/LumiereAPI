@@ -1,7 +1,6 @@
 ﻿using Lumiere.API.Dtos.Sala;
-using Lumiere.API.Interfaces;
-using Lumiere.API.Mappers;
 using Microsoft.AspNetCore.Mvc;
+using Lumiere.API.Services.Interfaces;
 
 namespace Lumiere.API.Controllers
 {
@@ -9,56 +8,49 @@ namespace Lumiere.API.Controllers
     [ApiController]
     public class SalasController : ControllerBase
     {
-        private readonly ISalaRepository _salaRepo;
-        public SalasController(ISalaRepository salaRepo)
+        private readonly ISalaService _service;
+        public SalasController(ISalaService service)
         {
-            _salaRepo = salaRepo;
+            _service = service;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            var salas = _salaRepo.GetSalas();
-            return Ok(salas.Select(s => s.ToSalaDto()));
+            var result = _service.GetAll();
+            if (!result.Ok) return BadRequest(result.Error);
+            return Ok(result.Data);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var sala = _salaRepo.GetSalaById(id);
-            if (sala == null)
-                return NotFound();
-            return Ok(sala.ToSalaDto());
+            var result = _service.GetById(id);
+            if (!result.Ok) return NotFound(result.Error);
+            return Ok(result.Data);
         }
 
         [HttpPost]
         public IActionResult Add([FromBody] CreateSalaDto salaDto)
         {
-            var sala = salaDto.ToSalaModel();
-            _salaRepo.AddSala(sala);
-            return CreatedAtAction(nameof(GetById), new { id = sala.Id }, sala.ToSalaDto());
+            var result = _service.Create(salaDto);
+            if (!result.Ok) return BadRequest(new { result.Error });
+            return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id }, result.Data);
         }
 
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] UpdateSalaDto salaDto)
         {
-            var sala = _salaRepo.GetSalaById(id);
-            if (sala == null)
-                return NotFound();
-
-            salaDto.UpdateSalaModel(sala);
-            _salaRepo.UpdateSala(sala);
-
-            return Ok(sala.ToSalaDto());
+            var result = _service.Update(id, salaDto);
+            if (!result.Ok) return BadRequest(result.Error);
+            return Ok(result.Data);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete([FromRoute] int id)
         {
-            if (_salaRepo.GetSalaById(id) == null)
-                return NotFound();
-
-            _salaRepo.DeleteSala(id);
+            var result = _service.Delete(id);
+            if (!result.Ok) return BadRequest(result.Error);
             return NoContent();
         }
     }
