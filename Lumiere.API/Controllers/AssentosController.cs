@@ -9,85 +9,58 @@ namespace Lumiere.API.Controllers
     [ApiController]
     public class AssentosController : ControllerBase
     {
-        private readonly IAssentoRepository _assentoRepo;
-        private readonly ISalaRepository _salaRepo;
+        private readonly IAssentoService _service;
 
-        public AssentosController(IAssentoRepository assentoRepo, ISalaRepository salaRepo)
+        public AssentosController(IAssentoService service)
         {
-            _assentoRepo = assentoRepo;
-            _salaRepo = salaRepo;
+            _service = service;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            var assentos = _assentoRepo.GetAssentos();
-            return Ok(assentos.Select(a => a.ToAssentoDto()));
+            var result = _service.GetAll();
+            if (!result.Ok) return BadRequest(result.Error);
+            return Ok(result.Data);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var assento = _assentoRepo.GetAssentoById(id);
-            if (assento == null)
-                return NotFound();
-            return Ok(assento.ToAssentoDto());
+            var result = _service.GetById(id);
+            if (!result.Ok) return NotFound(result.Error);
+            return Ok(result.Data);
         }
 
         [HttpGet("sala/{salaId}")]
         public IActionResult GetBySala(int salaId)
         {
-            if (!_salaRepo.SalaExists(salaId))
-                return NotFound("Sala não encontrada");
-
-            var assentos = _assentoRepo.GetAssentosBySala(salaId);
-            return Ok(assentos.Select(a => a.ToAssentoDto()));
+            var result = _service.GetBySala(salaId);
+            if (!result.Ok) return BadRequest(result.Error);
+            return Ok(result.Data);
         }
 
         [HttpPost]
         public IActionResult Add([FromBody] CreateAssentoDto assentoDto)
         {
-            if (!_salaRepo.SalaExists(assentoDto.SalaId))
-            {
-                return BadRequest("Sala não encontrada");
-            }
-
-            var assento = assentoDto.ToAssentoModel();
-            _assentoRepo.AddAssento(assento);
-            return CreatedAtAction(nameof(GetById), new { id = assento.Id }, assento.ToAssentoDto());
+            var result = _service.Create(assentoDto);
+            if (!result.Ok) return BadRequest(new { result.Error });
+            return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id }, result.Data);
         }
 
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] UpdateAssentoDto assentoDto)
         {
-            var assento = _assentoRepo.GetAssentoById(id);
-            if (assento == null)
-                return NotFound();
-
-            if (!_salaRepo.SalaExists(assentoDto.SalaId))
-            {
-                return BadRequest("Sala não encontrada");
-            }
-
-            assentoDto.UpdateAssentoModel(assento);
-            _assentoRepo.UpdateAssento(assento);
-
-            return Ok(assento.ToAssentoDto());
+            var result = _service.Update(id, assentoDto);
+            if (!result.Ok) return BadRequest(result.Error);
+            return Ok(result.Data);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete([FromRoute] int id)
         {
-            var assento = _assentoRepo.GetAssentoById(id);
-            if (assento == null)
-                return NotFound();
-
-            if (assento.Ingressos?.Any() == true)
-            {
-                return BadRequest("Não é possível excluir assento com ingressos vendidos");
-            }
-
-            _assentoRepo.DeleteAssento(id);
+            var result = _service.Delete(id);
+            if (!result.Ok) return BadRequest(result.Error);
             return NoContent();
         }
     }

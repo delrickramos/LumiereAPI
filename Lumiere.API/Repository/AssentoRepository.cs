@@ -51,5 +51,22 @@ namespace Lumiere.API.Repository
         {
             return _db.Assentos.Any(a => a.Id == id);
         }
+
+                public bool AssentoPosicaoExists(int salaId, string fileira, int coluna, int? ignoreId = null)
+        {
+            var fileiraNorm = (fileira ?? "").Trim().ToUpper();
+
+            return _db.Assentos.Any(a =>
+                a.SalaId == salaId &&
+                a.Coluna == coluna &&
+                a.Fileira.Trim().ToUpper() == fileiraNorm &&
+                (!ignoreId.HasValue || a.Id != ignoreId.Value)
+            );
+        }
+
+        public bool AssentoHasIngressos(int assentoId)
+        {
+            return _db.Ingressos.Any(i => i.AssentoId == assentoId);
+        }
     }
 }

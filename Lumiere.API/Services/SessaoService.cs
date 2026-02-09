@@ -52,7 +52,11 @@ namespace Lumiere.API.Services
             if (_sessaoRepo.SessaoHasConflict(dto.SalaId, dto.DataHoraInicio, dto.DataHoraFim))
                 return ServiceResult<SessaoDto>.Fail("Já existe uma sessão nesta sala neste horário.");
 
+            var filme = _filmeRepo.GetFilmeById(dto.FilmeId);
+            var inicio = dto.DataHoraInicio;
+            var fim = inicio.AddMinutes(filme.DuracaoMinutos);
             var sessao = dto.ToSessaoModel();
+            sessao.DataHoraFim = fim;
 
             _sessaoRepo.AddSessao(sessao);
             return ServiceResult<SessaoDto>.Success(sessao.ToSessaoDto());
@@ -80,6 +84,8 @@ namespace Lumiere.API.Services
                 return ServiceResult<SessaoDto>.Fail("Não é possível atualizar sessão com ingressos vendidos.");
 
             dto.UpdateSessaoModel(sessao);
+            var filme = _filmeRepo.GetFilmeById(sessao.FilmeId);
+            sessao.DataHoraFim = dto.DataHoraInicio.AddMinutes(filme.DuracaoMinutos);
             _sessaoRepo.UpdateSessao(sessao);
 
             return ServiceResult<SessaoDto>.Success(sessao.ToSessaoDto());

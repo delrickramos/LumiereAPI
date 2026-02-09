@@ -36,6 +36,9 @@ builder.Services.AddScoped<IFilmeService, FilmeService>();
 builder.Services.AddScoped<ISalaService, SalaService>();
 builder.Services.AddScoped<ISessaoService, SessaoService>();
 builder.Services.AddScoped<IRelatorioRepository, RelatorioRepository>();
+builder.Services.AddScoped<IAssentoService, AssentoService>();
+builder.Services.AddScoped<IIngressoService, IngressoService>();
+
 
 var app = builder.Build();
 

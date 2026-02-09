@@ -1,0 +1,145 @@
+using Lumiere.API.Dtos.Assento;
+using Lumiere.API.Interfaces;
+using Lumiere.API.Mappers;
+using Lumiere.API.Services;
+
+namespace Lumiere.API.Services
+{
+    public class AssentoService : IAssentoService
+    {
+        private readonly IAssentoRepository _assentoRepo;
+        private readonly ISalaRepository _salaRepo;
+
+        private const int FileiraMin = 1;
+        private const int FileiraMax = 5;
+        private const int ColunaMin = 1;
+        private const int ColunaMax = 200;
+
+        public AssentoService(IAssentoRepository assentoRepo, ISalaRepository salaRepo)
+        {
+            _assentoRepo = assentoRepo;
+            _salaRepo = salaRepo;
+        }
+
+        public ServiceResult<IEnumerable<AssentoDto>> GetAll()
+        {
+            var assentos = _assentoRepo.GetAssentos().Select(a => a.ToAssentoDto());
+            return ServiceResult<IEnumerable<AssentoDto>>.Success(assentos);
+        }
+
+        public ServiceResult<AssentoDto> GetById(int id)
+        {
+            if (id <= 0)
+                return ServiceResult<AssentoDto>.Fail("Id inválido.");
+
+            var assento = _assentoRepo.GetAssentoById(id);
+            if (assento == null)
+                return ServiceResult<AssentoDto>.Fail("Assento não encontrado.");
+
+            return ServiceResult<AssentoDto>.Success(assento.ToAssentoDto());
+        }
+
+        public ServiceResult<IEnumerable<AssentoDto>> GetBySala(int salaId)
+        {
+            if (salaId <= 0)
+                return ServiceResult<IEnumerable<AssentoDto>>.Fail("SalaId inválido.");
+
+            if (!_salaRepo.SalaExists(salaId))
+                return ServiceResult<IEnumerable<AssentoDto>>.Fail("Sala não encontrada.");
+
+            var assentos = _assentoRepo.GetAssentosBySala(salaId).Select(a => a.ToAssentoDto());
+            return ServiceResult<IEnumerable<AssentoDto>>.Success(assentos);
+        }
+
+        public ServiceResult<AssentoDto> Create(CreateAssentoDto dto)
+        {
+            if (dto.SalaId <= 0)
+                return ServiceResult<AssentoDto>.Fail("SalaId inválido.");
+
+            if (!_salaRepo.SalaExists(dto.SalaId))
+                return ServiceResult<AssentoDto>.Fail("Sala não encontrada.");
+
+            var fileira = (dto.Fileira ?? "").Trim();
+            var fileiraVal = ValidateFileira(fileira);
+            if (fileiraVal != null) return ServiceResult<AssentoDto>.Fail(fileiraVal);
+
+            var colunaVal = ValidateColuna(dto.Coluna);
+            if (colunaVal != null) return ServiceResult<AssentoDto>.Fail(colunaVal);
+
+            if (_assentoRepo.AssentoPosicaoExists(dto.SalaId, fileira, dto.Coluna))
+                return ServiceResult<AssentoDto>.Fail("Já existe um assento com essa posição nessa sala.");
+
+            var assento = dto.ToAssentoModel();
+            assento.Fileira = fileira;
+
+            _assentoRepo.AddAssento(assento);
+            return ServiceResult<AssentoDto>.Success(assento.ToAssentoDto());
+        }
+
+        public ServiceResult<AssentoDto> Update(int id, UpdateAssentoDto dto)
+        {
+            if (id <= 0)
+                return ServiceResult<AssentoDto>.Fail("Id inválido.");
+
+            var assento = _assentoRepo.GetAssentoById(id);
+            if (assento == null)
+                return ServiceResult<AssentoDto>.Fail("Assento não encontrado.");
+
+            if (dto.SalaId <= 0)
+                return ServiceResult<AssentoDto>.Fail("SalaId inválido.");
+
+            if (!_salaRepo.SalaExists(dto.SalaId))
+                return ServiceResult<AssentoDto>.Fail("Sala não encontrada.");
+
+            var fileira = (dto.Fileira ?? "").Trim();
+            var fileiraVal = ValidateFileira(fileira);
+            if (fileiraVal != null) return ServiceResult<AssentoDto>.Fail(fileiraVal);
+
+            var colunaVal = ValidateColuna(dto.Coluna);
+            if (colunaVal != null) return ServiceResult<AssentoDto>.Fail(colunaVal);
+
+            if (_assentoRepo.AssentoPosicaoExists(dto.SalaId, fileira, dto.Coluna, ignoreId: id))
+                return ServiceResult<AssentoDto>.Fail("Já existe um assento com essa posição nessa sala.");
+
+            dto.UpdateAssentoModel(assento);
+            assento.Fileira = fileira;
+            _assentoRepo.UpdateAssento(assento);
+            return ServiceResult<AssentoDto>.Success(assento.ToAssentoDto());
+        }
+
+        public ServiceResult<object> Delete(int id)
+        {
+            if (id <= 0)
+                return ServiceResult<object>.Fail("Id inválido.");
+
+            var assento = _assentoRepo.GetAssentoById(id);
+            if (assento == null)
+                return ServiceResult<object>.Fail("Assento não encontrado.");
+
+            if (_assentoRepo.AssentoHasIngressos(id))
+                return ServiceResult<object>.Fail("Não é possível excluir assento com ingressos vendidos.");
+
+            _assentoRepo.DeleteAssento(id);
+            return ServiceResult<object>.Success(new { });
+        }
+
+        private static string? ValidateFileira(string fileira)
+        {
+            if (string.IsNullOrWhiteSpace(fileira))
+                return "Fileira é obrigatória.";
+
+            if (fileira.Length < FileiraMin || fileira.Length > FileiraMax)
+                return $"Fileira deve ter entre {FileiraMin} e {FileiraMax} caracteres.";
+
+            return null;
+        }
+
+        private static string? ValidateColuna(int coluna)
+        {
+            if (coluna < ColunaMin || coluna > ColunaMax)
+                return $"Coluna deve estar entre {ColunaMin} e {ColunaMax}.";
+
+            return null;
+        }
+    }
+}
