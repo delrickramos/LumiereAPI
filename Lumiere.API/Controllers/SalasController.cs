@@ -1,6 +1,6 @@
 ﻿using Lumiere.API.Dtos.Sala;
 using Microsoft.AspNetCore.Mvc;
-using Lumiere.API.Services.Interfaces;
+using Lumiere.API.Interfaces;
 
 namespace Lumiere.API.Controllers
 {

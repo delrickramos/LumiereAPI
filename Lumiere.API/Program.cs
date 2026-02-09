@@ -1,7 +1,6 @@
 using Lumiere.API.Database;
 using Lumiere.API.Interfaces;
 using Lumiere.API.Repository;
-using Lumiere.API.Services.Interfaces;
 using Lumiere.API.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,6 +35,7 @@ builder.Services.AddScoped<ITipoIngressoService, TipoIngressoService>();
 builder.Services.AddScoped<IFilmeService, FilmeService>();
 builder.Services.AddScoped<ISalaService, SalaService>();
 builder.Services.AddScoped<ISessaoService, SessaoService>();
+builder.Services.AddScoped<IRelatorioRepository, RelatorioRepository>();
 
 var app = builder.Build();
 
