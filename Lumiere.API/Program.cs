@@ -33,6 +33,8 @@ builder.Services.AddScoped<IFormatoSessaoService, FormatoSessaoService>();
 builder.Services.AddScoped<ITipoIngressoService, TipoIngressoService>();
 builder.Services.AddScoped<IFilmeService, FilmeService>();
 builder.Services.AddScoped<ISalaService, SalaService>();
+builder.Services.AddScoped<ISessaoService, SessaoService>();
+
 
 var app = builder.Build();
 

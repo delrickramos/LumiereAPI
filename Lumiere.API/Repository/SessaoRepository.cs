@@ -1,6 +1,8 @@
 ﻿using Lumiere.API.Database;
 using Lumiere.API.Interfaces;
 using Lumiere.Models;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace Lumiere.API.Repository
 {
@@ -19,12 +21,19 @@ namespace Lumiere.API.Repository
         }
         public Sessao GetSessaoById(int id)
         {
-            return _db.Sessoes.Find(id)!;
+            return _db.Sessoes.FirstOrDefault(s => s.Id == id)!;
+        }
+
+        public Sessao? GetSessaoByIdWithIngressos(int id)
+        {
+            return _db.Sessoes
+                .Include(s => s.Ingressos)
+                .FirstOrDefault(s => s.Id == id);
         }
 
         public List<Sessao> GetSessoes()
         {
-            return _db.Sessoes.ToList();
+            return _db.Sessoes.OrderBy(s => s.Id).ToList();
         }
 
         public bool SessaoExists(int id)
@@ -39,9 +48,13 @@ namespace Lumiere.API.Repository
         }
         public void DeleteSessao(int id)
         {
-            var sessao = GetSessaoById(id);
-            _db.Sessoes.Remove(sessao);
+            _db.Sessoes.Remove(GetSessaoById(id));
             _db.SaveChanges();
+        }
+
+        public bool SessaoHasIngressos(int id)
+        {
+            return _db.Ingressos.Any(i => i.SessaoId == id);
         }
     }
 }
