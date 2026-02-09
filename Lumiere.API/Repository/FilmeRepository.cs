@@ -29,6 +29,21 @@ namespace Lumiere.API.Repository
                 .FirstOrDefault(f => f.Id == id);
         }
 
+        public List<Filme> GetFilmesEmCartaz(DateTime inicio, DateTime fim)
+        {
+            return _db.Filmes
+                .Where(f =>
+                    f.Sessoes != null &&
+                    f.Sessoes.Any(s =>
+                        s.DataHoraInicio >= inicio &&
+                        s.DataHoraInicio <= fim
+                    )
+                )
+                .Include(f => f.Sessoes)
+                .OrderBy(f => f.Titulo)
+                .ToList();
+        }
+
         public void AddFilme(Filme filme)
         {
             _db.Filmes.Add(filme);

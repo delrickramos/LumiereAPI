@@ -7,6 +7,7 @@ namespace Lumiere.API.Interfaces
         List<Filme> GetFilmes();
         Filme GetFilmeById(int id);
         public Filme? GetFilmeByIdWithSessoes(int id);
+        List<Filme> GetFilmesEmCartaz(DateTime inicio, DateTime fim);
         void AddFilme(Filme filme);
         void UpdateFilme(Filme filme);
         void DeleteFilme(int id);

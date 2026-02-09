@@ -44,6 +44,18 @@ public class FilmeService : IFilmeService
         return ServiceResult<FilmeDto>.Success(filme.ToFilmeDto());
     }
 
+    public ServiceResult<IEnumerable<FilmeDto>> GetEmCartaz()
+    {
+        var inicio = DateTime.Now;
+        var fim = inicio.AddDays(7);
+
+        var filmes = _repo
+            .GetFilmesEmCartaz(inicio, fim)
+            .Select(f => f.ToFilmeDto());
+
+        return ServiceResult<IEnumerable<FilmeDto>>.Success(filmes);
+    }
+
     public ServiceResult<FilmeDto> Create(CreateFilmeDto dto)
     {
         var titulo = (dto.Titulo ?? "").Trim();

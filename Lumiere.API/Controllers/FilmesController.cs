@@ -34,6 +34,15 @@ namespace Lumiere.API.Controllers
             return Ok(result.Data);
         }
 
+        [HttpGet("em-cartaz")]
+        public IActionResult GetEmCartaz()
+        {
+            var result = _service.GetEmCartaz();
+            if (!result.Ok) return BadRequest(result.Error);
+
+            return Ok(result.Data);
+        }
+
         [HttpPost]
         public IActionResult Add([FromBody] CreateFilmeDto filmeDto)
         {
