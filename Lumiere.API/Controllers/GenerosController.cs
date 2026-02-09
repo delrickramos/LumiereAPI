@@ -1,7 +1,7 @@
 using Lumiere.API.Dtos.Genero;
 using Lumiere.API.Interfaces;
-using Lumiere.API.Mappers;
 using Microsoft.AspNetCore.Mvc;
+using Lumiere.API.Services;
 
 namespace Lumiere.API.Controllers
 {
@@ -9,56 +9,49 @@ namespace Lumiere.API.Controllers
     [ApiController]
     public class GenerosController : ControllerBase
     {
-        private readonly IGeneroRepository _generoRepo;
-        public GenerosController(IGeneroRepository generoRepo)
+        private readonly IGeneroService _service;
+        public GenerosController(IGeneroService generoService)
         {
-            _generoRepo = generoRepo;
+            _service = generoService;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            var generos = _generoRepo.GetGeneros();
-            return Ok(generos.Select(g => g.ToGeneroDto()));
+            var result = _service.GetAll();
+            if (!result.Ok) return BadRequest(result.Error);
+            return Ok(result.Data);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var genero = _generoRepo.GetGeneroById(id);
-            if (genero == null)
-                return NotFound();
-            return Ok(genero.ToGeneroDto());
+            var result = _service.GetById(id);
+            if (!result.Ok) return NotFound(result.Error);
+            return Ok(result.Data);
         }
 
         [HttpPost]
         public IActionResult Add([FromBody] CreateGeneroDto generoDto)
         {
-            var genero = generoDto.ToGeneroModel();
-            _generoRepo.AddGenero(genero);
-            return CreatedAtAction(nameof(GetById), new { id = genero.Id }, genero.ToGeneroDto());
+            var result = _service.Create(generoDto);
+            if (!result.Ok) return BadRequest(new {result.Error});
+            return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id }, result.Data);
         }
 
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] UpdateGeneroDto generoDto)
         {
-            var genero = _generoRepo.GetGeneroById(id);
-            if (genero == null)
-                return NotFound();
-
-            generoDto.UpdateGeneroModel(genero);
-            _generoRepo.UpdateGenero(genero);
-
-            return Ok(genero.ToGeneroDto());
+            var result = _service.Update(id, generoDto);
+            if (!result.Ok) return BadRequest(result.Error);
+            return Ok(result.Data);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete([FromRoute] int id)
         {
-            if (_generoRepo.GetGeneroById(id) == null)
-                return NotFound();
-
-            _generoRepo.DeleteGenero(id);
+            var result = _service.Delete(id);
+            if (!result.Ok) return BadRequest(result.Error);
             return NoContent();
         }
     }

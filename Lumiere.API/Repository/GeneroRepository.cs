@@ -45,5 +45,20 @@ namespace Lumiere.API.Repository
         {
             return _db.Generos.Any(g => g.Id == id);
         }
+
+        public bool GeneroNomeExists(string nome, int? ignoreId = null)
+        {
+            var nomeNorm = nome.Trim().ToUpper();
+
+            return _db.Generos.Any(g =>
+                g.Nome.Trim().ToUpper() == nomeNorm &&
+                (!ignoreId.HasValue || g.Id != ignoreId.Value)
+            );
+        }
+
+        public bool GeneroHasFilmes(int id)
+        {
+            return _db.Filmes.Any(f => f.GeneroId == id);
+        }
     }
 }
