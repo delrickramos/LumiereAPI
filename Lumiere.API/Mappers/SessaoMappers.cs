@@ -25,7 +25,6 @@ namespace Lumiere.API.Mappers
             return new Sessao
             {
                 DataHoraInicio = sessaoDto.DataHoraInicio,
-                DataHoraFim = sessaoDto.DataHoraFim,
                 Idioma = sessaoDto.Idioma,
                 PrecoBase = sessaoDto.PrecoBase,
                 SalaId = sessaoDto.SalaId,
@@ -37,7 +36,6 @@ namespace Lumiere.API.Mappers
         public static void UpdateSessaoModel(this UpdateSessaoDto sessaoDto, Sessao sessao)
         {
             sessao.DataHoraInicio = sessaoDto.DataHoraInicio;
-            sessao.DataHoraFim = sessaoDto.DataHoraFim;
             sessao.Idioma = sessaoDto.Idioma;
             sessao.PrecoBase = sessaoDto.PrecoBase;
             sessao.SalaId = sessaoDto.SalaId;
