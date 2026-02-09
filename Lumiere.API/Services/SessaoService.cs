@@ -50,7 +50,11 @@ namespace Lumiere.API.Services
             if (!_salaRepo.SalaExists(dto.SalaId))
                 return ServiceResult<SessaoDto>.Fail("Sala não encontrada.");
 
+            var filme = _filmeRepo.GetFilmeById(dto.FilmeId);
+            var inicio = dto.DataHoraInicio;
+            var fim = inicio.AddMinutes(filme.DuracaoMinutos);
             var sessao = dto.ToSessaoModel();
+            sessao.DataHoraFim = fim;
 
             _sessaoRepo.AddSessao(sessao);
             return ServiceResult<SessaoDto>.Success(sessao.ToSessaoDto());
@@ -75,6 +79,8 @@ namespace Lumiere.API.Services
                 return ServiceResult<SessaoDto>.Fail("Não é possível atualizar sessão com ingressos vendidos.");
 
             dto.UpdateSessaoModel(sessao);
+            var filme = _filmeRepo.GetFilmeById(sessao.FilmeId);
+            sessao.DataHoraFim = dto.DataHoraInicio.AddMinutes(filme.DuracaoMinutos);
             _sessaoRepo.UpdateSessao(sessao);
 
             return ServiceResult<SessaoDto>.Success(sessao.ToSessaoDto());

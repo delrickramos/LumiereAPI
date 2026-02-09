@@ -11,5 +11,7 @@ namespace Lumiere.API.Interfaces
         void UpdateAssento(Assento assento);
         void DeleteAssento(int id);
         bool AssentoExists(int id);
+        bool AssentoPosicaoExists(int salaId, string fileira, int coluna, int? ignoreId = null);
+        bool AssentoHasIngressos(int assentoId);
     }
 }
