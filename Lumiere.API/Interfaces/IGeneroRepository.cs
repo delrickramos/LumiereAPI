@@ -10,5 +10,7 @@ namespace Lumiere.API.Interfaces
         void UpdateGenero(Genero genero);
         void DeleteGenero(int id);
         bool GeneroExists(int id);
+        bool GeneroNomeExists(string nome, int? ignoreId = null);
+        bool GeneroHasFilmes(int id);
     }
 }

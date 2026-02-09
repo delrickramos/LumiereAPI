@@ -11,58 +11,58 @@ namespace Lumiere.API.Controllers
     [ApiController]
     public class FilmesController : ControllerBase
     {
-        private readonly IFilmeRepository _repository;
+        private readonly IFilmeService _service;
 
-        public FilmesController(IFilmeRepository repository)
+        public FilmesController(IFilmeService service)
         {
-            _repository = repository;
+            _service = service;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            var filmes = _repository.GetFilmes();
-            return Ok(filmes.Select( f => f.ToFilmeDto()));
+            var result = _service.GetAll();
+            if (!result.Ok) return BadRequest(result.Error);
+            return Ok(result.Data);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var filme = _repository.GetFilmeById(id);
-            if (filme == null)
-                return NotFound();
-            return Ok(filme.ToFilmeDto());
+            var result = _service.GetById(id);
+            if (!result.Ok) return NotFound(result.Error);
+            return Ok(result.Data);
+        }
+
+        [HttpGet("em-cartaz")]
+        public IActionResult GetEmCartaz()
+        {
+            var result = _service.GetEmCartaz();
+            if (!result.Ok) return BadRequest(result.Error);
+
+            return Ok(result.Data);
         }
 
         [HttpPost]
         public IActionResult Add([FromBody] CreateFilmeDto filmeDto)
         {
-            var filme = filmeDto.ToFilmeModel();
-
-            _repository.AddFilme(filme);
-
-            return CreatedAtAction(nameof(Get), new { id = filme.Id }, filme.ToFilmeDto());
+            var result = _service.Create(filmeDto);
+            if (!result.Ok) return BadRequest(new { result.Error });
+            return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id }, result.Data);
         }
 
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] UpdateFilmeDto filmeDto)
         {
-            var filme = _repository.GetFilmeById(id);
-            if (filme == null)
-                return NotFound();
-
-            filmeDto.UpdateFilmeModel(filme);
-            _repository.UpdateFilme(filme);
-
-            return Ok(filme.ToFilmeDto());
+            var result = _service.Update(id, filmeDto);
+            if (!result.Ok) return BadRequest(result.Error);
+            return Ok(result.Data);
         }
         [HttpDelete("{id}")]
         public IActionResult Delete([FromRoute] int id)
         {
-            if (_repository.GetFilmeById(id) == null)
-                return NotFound();
-
-            _repository.DeleteFilme(id);
+            var result = _service.Delete(id);
+            if (!result.Ok) return BadRequest(result.Error);
             return NoContent();
         }
     }

@@ -20,7 +20,7 @@ namespace Lumiere.API.Mappers
             };
         }
 
-        public static Sessao ToSessaoModel(this CreateSessaoDto sessaoDto, int FilmeId)
+        public static Sessao ToSessaoModel(this CreateSessaoDto sessaoDto)
         {
             return new Sessao
             {
@@ -30,7 +30,7 @@ namespace Lumiere.API.Mappers
                 PrecoBase = sessaoDto.PrecoBase,
                 SalaId = sessaoDto.SalaId,
                 FormatoSessaoId = sessaoDto.FormatoSessaoId,
-                FilmeId = FilmeId
+                FilmeId = sessaoDto.FilmeId
             };
         }
 

@@ -8,5 +8,6 @@
         public decimal PrecoBase { get; set; }
         public int SalaId { get; set; }
         public int FormatoSessaoId { get; set; }
+        public int FilmeId { get; set; }
     }
 }

@@ -15,7 +15,7 @@ namespace Lumiere.API.Repository
 
         public List<FormatoSessao> GetFormatosSessoes()
         {
-            return _db.FormatosSessao.OrderBy(f => f.Id).Include(f => f.Sessoes).ToList();
+            return _db.FormatosSessao.OrderBy(f => f.Id).ToList();
         }
 
         public FormatoSessao GetFormatoSessaoById(int id)
@@ -42,6 +42,21 @@ namespace Lumiere.API.Repository
         public bool FormatoSessaoExists(int id)
         {
             return _db.FormatosSessao.Any(f => f.Id == id);
+        }
+
+        public bool FormatoSessaoNomeExists(string nome, int? ignoreId = null)
+        {
+            var nomeNorm = nome.Trim().ToUpper();
+
+            return _db.FormatosSessao.Any(f =>
+                f.Nome.Trim().ToUpper() == nomeNorm &&
+                (!ignoreId.HasValue || f.Id != ignoreId.Value)
+            );
+        }
+
+        public bool FormatoSessaoHasSessoes(int id)
+        {
+            return _db.Sessoes.Any(s => s.FormatoSessaoId == id);
         }
     }
 }

@@ -1,7 +1,8 @@
 ﻿using Lumiere.API.Dtos.Sessao;
-using Lumiere.API.Interfaces;
+using Lumiere.API.Services.Interfaces;
 using Lumiere.API.Mappers;
 using Microsoft.AspNetCore.Mvc;
+using Lumiere.Models;
 
 namespace Lumiere.API.Controllers
 {
@@ -9,86 +10,47 @@ namespace Lumiere.API.Controllers
     [ApiController]
     public class SessoesController : ControllerBase
     {
-        private readonly ISessaoRepository _sessaoRepo;
-        private readonly IFilmeRepository _filmeRepo;
-        private readonly ISalaRepository _salaRepo;
-        public SessoesController(ISessaoRepository sessaoRepo, IFilmeRepository filmeRepo, ISalaRepository salaRepo )
+        private readonly ISessaoService _service;
+        public SessoesController(ISessaoService service)
         {
-            _sessaoRepo = sessaoRepo;
-            _filmeRepo = filmeRepo;
-            _salaRepo = salaRepo;
+            _service = service;
         }
         [HttpGet]
         public IActionResult Get()
         {
-            var sessoes = _sessaoRepo.GetSessoes();
-
-            var sessoesDto = sessoes.Select(s => s.ToSessaoDto());
-
-            return Ok(sessoesDto);
+            var result = _service.GetAll();
+            if (!result.Ok) return BadRequest(result.Error);
+            return Ok(result.Data);
         }
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var sessao = _sessaoRepo.GetSessaoById(id);
-            if (sessao == null)
-                return NotFound();
-            return Ok(sessao.ToSessaoDto());
+            var result = _service.GetById(id);
+            if (!result.Ok) return NotFound(result.Error);
+            return Ok(result.Data);
         }
 
-        [HttpPost("{FilmeId}")]
-        public IActionResult Add([FromRoute] int FilmeId, CreateSessaoDto sessaoDto )
+        [HttpPost]
+        public IActionResult Add([FromBody] CreateSessaoDto sessaoDto)
         {
-            if (!_filmeRepo.FilmeExists(FilmeId))
-            {
-                return BadRequest("Filme não encontrado");
-            }
-            if (!_salaRepo.SalaExists(sessaoDto.SalaId))
-            {
-                return BadRequest("Sala não encontrada");
-            }
-
-            var sessao = sessaoDto.ToSessaoModel(FilmeId);
-            _sessaoRepo.AddSessao(sessao);
-            return CreatedAtAction(nameof(GetById), new { id = sessao.Id }, sessao.ToSessaoDto());
+            var result = _service.Create(sessaoDto);
+            if (!result.Ok) return BadRequest(new { result.Error });
+            return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id }, result.Data);
         }
 
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] UpdateSessaoDto sessaoDto)
         {
-            var sessao = _sessaoRepo.GetSessaoById(id);
-            if (sessao == null)
-                return NotFound();
-
-            if (!_salaRepo.SalaExists(sessaoDto.SalaId))
-            {
-                return BadRequest("Sala não encontrada");
-            }
-
-            if (sessao.Ingressos?.Any() == true)
-            {
-                return BadRequest("Não é possível atualizar sessão com ingressos vendidos");
-            }
-
-            sessaoDto.UpdateSessaoModel(sessao);
-            _sessaoRepo.UpdateSessao(sessao);
-
-            return Ok(sessao.ToSessaoDto());
+            var result = _service.Update(id, sessaoDto);
+            if (!result.Ok) return BadRequest(result.Error);
+            return Ok(result.Data);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete([FromRoute] int id)
         {
-            var sessao = _sessaoRepo.GetSessaoById(id);
-            if (sessao == null)
-                return NotFound();
-
-            if (sessao.Ingressos?.Any() == true)
-            {
-                return BadRequest("Não é possível excluir sessão com ingressos vendidos");
-            }
-
-            _sessaoRepo.DeleteSessao(id);
+            var result = _service.Delete(id);
+            if (!result.Ok) return BadRequest(result.Error);
             return NoContent();
         }
     }

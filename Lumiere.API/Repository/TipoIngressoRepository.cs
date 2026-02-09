@@ -45,4 +45,14 @@ public class TipoIngressoRepository : ITipoIngressoRepository
         _db.TiposIngresso.Update(tipoIngresso);
         _db.SaveChanges();
     }
+
+    public bool TipoIngressoNomeExists(string nome, int? ignoreId = null)
+    {
+        var nomeNorm = nome.Trim().ToUpper();
+
+        return _db.TiposIngresso.Any(t =>
+            t.Nome.Trim().ToUpper() == nomeNorm &&
+            (!ignoreId.HasValue || t.Id != ignoreId.Value)
+        );
+    }
 }

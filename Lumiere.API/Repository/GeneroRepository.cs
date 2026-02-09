@@ -15,12 +15,12 @@ namespace Lumiere.API.Repository
 
         public List<Genero> GetGeneros()
         {
-            return _db.Generos.OrderBy(g => g.Id).Include(g => g.Filmes).ToList();
+            return _db.Generos.OrderBy(g => g.Id).ToList();
         }
 
         public Genero GetGeneroById(int id)
         {
-            return _db.Generos.Include(g => g.Filmes).FirstOrDefault(g => g.Id == id)!;
+            return _db.Generos.FirstOrDefault(g => g.Id == id)!;
         }
 
         public void AddGenero(Genero genero)
@@ -44,6 +44,21 @@ namespace Lumiere.API.Repository
         public bool GeneroExists(int id)
         {
             return _db.Generos.Any(g => g.Id == id);
+        }
+
+        public bool GeneroNomeExists(string nome, int? ignoreId = null)
+        {
+            var nomeNorm = nome.Trim().ToUpper();
+
+            return _db.Generos.Any(g =>
+                g.Nome.Trim().ToUpper() == nomeNorm &&
+                (!ignoreId.HasValue || g.Id != ignoreId.Value)
+            );
+        }
+
+        public bool GeneroHasFilmes(int id)
+        {
+            return _db.Filmes.Any(f => f.GeneroId == id);
         }
     }
 }

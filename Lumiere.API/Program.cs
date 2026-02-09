@@ -1,6 +1,8 @@
 using Lumiere.API.Database;
 using Lumiere.API.Interfaces;
 using Lumiere.API.Repository;
+using Lumiere.API.Services.Interfaces;
+using Lumiere.API.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +30,12 @@ builder.Services.AddScoped<IFormatoSessaoRepository, FormatoSessaoRepository>();
 builder.Services.AddScoped<ITipoIngressoRepository, TipoIngressoRepository>();
 builder.Services.AddScoped<IAssentoRepository, AssentoRepository>();
 builder.Services.AddScoped<IIngressoRepository, IngressoRepository>();
+builder.Services.AddScoped<IGeneroService, GeneroService>();
+builder.Services.AddScoped<IFormatoSessaoService, FormatoSessaoService>();
+builder.Services.AddScoped<ITipoIngressoService, TipoIngressoService>();
+builder.Services.AddScoped<IFilmeService, FilmeService>();
+builder.Services.AddScoped<ISalaService, SalaService>();
+builder.Services.AddScoped<ISessaoService, SessaoService>();
 
 var app = builder.Build();
 

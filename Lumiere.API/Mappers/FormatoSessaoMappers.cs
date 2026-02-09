@@ -21,9 +21,9 @@ namespace Lumiere.API.Mappers
                 Nome = formatoSessaoDto.Nome
             };
         }
-        public static void UpdateFormatoSessaoModel(this FormatoSessaoDto formatoSessaoDto, FormatoSessao formatoSessao)
+        public static void UpdateFormatoSessaoModel(this UpdateFormatoSessaoDto updateFormatoSessaoDto, FormatoSessao formatoSessao)
         {
-            formatoSessao.Nome = formatoSessaoDto.Nome;
+            formatoSessao.Nome = updateFormatoSessaoDto.Nome;
         }
     }
 }
