@@ -34,6 +34,5 @@ namespace Lumiere.API.Database
         public DbSet<Sessao> Sessoes { get; set; }
         public DbSet<TipoIngresso> TiposIngresso { get; set; }
 
-
     }
 }
