@@ -14,7 +14,7 @@ namespace Lumiere.API.Repository
         }
         public List<Filme> GetFilmes()
         {
-            return _db.Filmes.OrderBy(a => a.Id).ToList();
+            return _db.Filmes.OrderBy(f => f.Titulo).ToList();
         }
 
         public Filme GetFilmeById(int id)

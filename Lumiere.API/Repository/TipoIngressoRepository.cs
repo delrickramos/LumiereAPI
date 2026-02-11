@@ -32,7 +32,7 @@ public class TipoIngressoRepository : ITipoIngressoRepository
 
     public List<TipoIngresso> GetTiposIngresso()
     {
-        return _db.TiposIngresso.ToList();
+        return _db.TiposIngresso.OrderBy(t => t.Nome).ToList();
     }
 
     public bool TipoIngressoExists(int id)
@@ -55,4 +55,9 @@ public class TipoIngressoRepository : ITipoIngressoRepository
             (!ignoreId.HasValue || t.Id != ignoreId.Value)
         );
     }
+    public bool TipoIngressoHasIngressos(int id)
+    {
+        return _db.Ingressos.Any(i => i.TipoIngressoId == id);
+    }
+
 }

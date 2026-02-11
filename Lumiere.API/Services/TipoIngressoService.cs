@@ -27,11 +27,11 @@ namespace Lumiere.API.Services
         public ServiceResult<TipoIngressoDto> GetById(int id)
         {
             if (id <= 0)
-                return ServiceResult<TipoIngressoDto>.Fail("Id inválido.");
+                return ServiceResult<TipoIngressoDto>.Fail("Id inválido.", 400);
 
             var tipo = _repo.GetTipoIngressoById(id);
             if (tipo == null)
-                return ServiceResult<TipoIngressoDto>.Fail("Tipo de ingresso não encontrado.");
+                return ServiceResult<TipoIngressoDto>.Fail("Tipo de ingresso não encontrado.", 404);
 
             return ServiceResult<TipoIngressoDto>.Success(tipo.ToTipoIngressoDto());
         }
@@ -42,42 +42,42 @@ namespace Lumiere.API.Services
 
             var nomeValidation = ValidateNome(nome);
             if (nomeValidation != null)
-                return ServiceResult<TipoIngressoDto>.Fail(nomeValidation);
+                return ServiceResult<TipoIngressoDto>.Fail(nomeValidation, 400);
 
             var descontoValidation = ValidateDesconto(dto.DescontoPercentual);
             if (descontoValidation != null)
-                return ServiceResult<TipoIngressoDto>.Fail(descontoValidation);
+                return ServiceResult<TipoIngressoDto>.Fail(descontoValidation, 400);
 
             if (_repo.TipoIngressoNomeExists(nome))
-                return ServiceResult<TipoIngressoDto>.Fail("Já existe um tipo de ingresso com esse nome.");
+                return ServiceResult<TipoIngressoDto>.Fail("Já existe um tipo de ingresso com esse nome.", 409);
 
             var tipo = dto.ToTipoIngressoModel();
             tipo.Nome = nome;
             _repo.AddTipoIngresso(tipo);
-            return ServiceResult<TipoIngressoDto>.Success(tipo.ToTipoIngressoDto());
+            return ServiceResult<TipoIngressoDto>.Success(tipo.ToTipoIngressoDto(), 201);
         }
 
         public ServiceResult<TipoIngressoDto> Update(int id, UpdateTipoIngressoDto dto)
         {
             if (id <= 0)
-                return ServiceResult<TipoIngressoDto>.Fail("Id inválido.");
+                return ServiceResult<TipoIngressoDto>.Fail("Id inválido.", 400);
 
             var tipo = _repo.GetTipoIngressoById(id);
             if (tipo == null)
-                return ServiceResult<TipoIngressoDto>.Fail("Tipo de ingresso não encontrado.");
+                return ServiceResult<TipoIngressoDto>.Fail("Tipo de ingresso não encontrado.", 404);
 
             var nome = (dto.Nome ?? "").Trim();
 
             var nomeValidation = ValidateNome(nome);
             if (nomeValidation != null)
-                return ServiceResult<TipoIngressoDto>.Fail(nomeValidation);
+                return ServiceResult<TipoIngressoDto>.Fail(nomeValidation, 400);
 
             var descontoValidation = ValidateDesconto(dto.DescontoPercentual);
             if (descontoValidation != null)
-                return ServiceResult<TipoIngressoDto>.Fail(descontoValidation);
+                return ServiceResult<TipoIngressoDto>.Fail(descontoValidation, 400);
 
             if (_repo.TipoIngressoNomeExists(nome, ignoreId: id))
-                return ServiceResult<TipoIngressoDto>.Fail("Já existe um tipo de ingresso com esse nome.");
+                return ServiceResult<TipoIngressoDto>.Fail("Já existe um tipo de ingresso com esse nome.", 409);
 
             tipo.Nome = nome;
             tipo.DescontoPercentual = dto.DescontoPercentual;
@@ -89,14 +89,17 @@ namespace Lumiere.API.Services
         public ServiceResult<object> Delete(int id)
         {
             if (id <= 0)
-                return ServiceResult<object>.Fail("Id inválido.");
+                return ServiceResult<object>.Fail("Id inválido.", 400);
 
             var tipo = _repo.GetTipoIngressoById(id);
             if (tipo == null)
-                return ServiceResult<object>.Fail("Tipo de ingresso não encontrado.");
+                return ServiceResult<object>.Fail("Tipo de ingresso não encontrado.", 404);
+
+            if (_repo.TipoIngressoHasIngressos(id))
+                return ServiceResult<object>.Fail("Não é possível excluir um tipo de ingresso que possui ingressos vinculados.", 409);
 
             _repo.DeleteTipoIngresso(id);
-            return ServiceResult<object>.Success(new { });
+            return ServiceResult<object>.Success(new { }, 204);
         }
 
         private string? ValidateNome(string nome)

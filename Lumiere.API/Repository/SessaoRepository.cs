@@ -25,7 +25,7 @@ namespace Lumiere.API.Repository
 
         public List<Sessao> GetSessoes()
         {
-            return _db.Sessoes.OrderBy(s => s.Id).ToList();
+            return _db.Sessoes.OrderBy(s => s.DataHoraInicio).ToList();
         }
 
         public bool SessaoExists(int id)

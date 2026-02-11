@@ -15,7 +15,7 @@ namespace Lumiere.API.Repository
 
         public List<Ingresso> GetIngressos()
         {
-            return _db.Ingressos.OrderBy(i => i.Id).ToList();
+            return _db.Ingressos.OrderBy(i => i.SessaoId).ThenBy(i => i.Id).ToList();
         }
 
         public Ingresso GetIngressoById(int id)

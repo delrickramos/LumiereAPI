@@ -15,7 +15,7 @@ namespace Lumiere.API.Repository
 
         public List<FormatoSessao> GetFormatosSessoes()
         {
-            return _db.FormatosSessao.OrderBy(f => f.Id).ToList();
+            return _db.FormatosSessao.OrderBy(f => f.Nome).ToList();
         }
 
         public FormatoSessao GetFormatoSessaoById(int id)
