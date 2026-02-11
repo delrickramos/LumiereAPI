@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace Lumiere.Models
@@ -11,9 +9,13 @@ namespace Lumiere.Models
         public int Id { get; set; }
         public DateTimeOffset DataHoraInicio { get; set; }
         public DateTimeOffset DataHoraFim { get; set; }
+
+        [MaxLength(20)]
         public string Idioma { get; set; } = string.Empty;
+
         [Column(TypeName = "decimal(18,2)")]
         public decimal PrecoBase { get; set; }
+
         public int SalaId { get; set; }
         public int FormatoSessaoId { get; set; }
         public int FilmeId { get; set; }

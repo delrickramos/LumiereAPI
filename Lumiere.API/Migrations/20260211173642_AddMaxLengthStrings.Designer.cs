@@ -4,6 +4,7 @@ using Lumiere.API.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Lumiere.API.Migrations
 {
     [DbContext(typeof(LumiereContext))]
-    partial class LumiereContextModelSnapshot : ModelSnapshot
+    [Migration("20260211173642_AddMaxLengthStrings")]
+    partial class AddMaxLengthStrings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -196,6 +199,9 @@ namespace Lumiere.API.Migrations
                     b.Property<int>("AssentoId")
                         .HasColumnType("int");
 
+                    b.Property<DateTimeOffset>("ExpiraEm")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<decimal>("PrecoFinal")
                         .HasColumnType("decimal(18,2)");
 
@@ -240,6 +246,11 @@ namespace Lumiere.API.Migrations
 
                     b.Property<int>("NumeroLinhas")
                         .HasColumnType("int");
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id");
 
