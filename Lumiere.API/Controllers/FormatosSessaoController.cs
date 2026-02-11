@@ -4,8 +4,7 @@ using Lumiere.API.Interfaces;
 namespace Lumiere.API.Controllers
 {
     [Route("api/formatos-sessao")]
-    [ApiController]
-    public class FormatosSessaoController : ControllerBase
+    public class FormatosSessaoController : ServiceResultController
     {
         private readonly IFormatoSessaoService _service;
         public FormatosSessaoController(IFormatoSessaoService formatoSessaoService)
@@ -17,40 +16,35 @@ namespace Lumiere.API.Controllers
         public IActionResult Get()
         {
             var result = _service.GetAll();
-            if (!result.Ok) return BadRequest(result.Error);
-            return Ok(result.Data);
+            return HandleResult(result);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
             var result = _service.GetById(id);
-            if (!result.Ok) return NotFound(result.Error);
-            return Ok(result.Data);
+            return HandleResult(result);
         }
-        
+
         [HttpPost]
         public IActionResult Add([FromBody] CreateFormatoSessaoDto formatoDto)
         {
             var result = _service.Create(formatoDto);
-            if (!result.Ok) return BadRequest(new { result.Error });
-            return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id }, result.Data);
+            return HandleResult(result);
         }
 
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] UpdateFormatoSessaoDto dto)
         {
             var result = _service.Update(id, dto);
-            if (!result.Ok) return BadRequest(result.Error);
-            return Ok(result.Data);
+            return HandleResult(result);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
             var result = _service.Delete(id);
-            if (!result.Ok) return BadRequest(result.Error);
-            return NoContent();
+            return HandleResult(result);
         }
     }
 }

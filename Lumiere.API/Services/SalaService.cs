@@ -28,11 +28,11 @@ namespace Lumiere.API.Services
         public ServiceResult<SalaDto> GetById(int id)
         {
             if (id <= 0)
-                return ServiceResult<SalaDto>.Fail("Id inválido.");
+                return ServiceResult<SalaDto>.Fail("Id inválido.", 400);
 
             var sala = _repo.GetSalaById(id);
             if (sala == null)
-                return ServiceResult<SalaDto>.Fail("Sala não encontrada.");
+                return ServiceResult<SalaDto>.Fail("Sala não encontrada.", 404);
 
             return ServiceResult<SalaDto>.Success(sala.ToSalaDto());
         }
@@ -43,48 +43,48 @@ namespace Lumiere.API.Services
             var tipo = (dto.Tipo ?? "").Trim();
 
             var nomeVal = ValidateTexto("Nome", nome, NomeMin, NomeMax);
-            if (nomeVal != null) return ServiceResult<SalaDto>.Fail(nomeVal);
+            if (nomeVal != null) return ServiceResult<SalaDto>.Fail(nomeVal, 400);
 
             var tipoVal = ValidateTipo(tipo);
-            if (tipoVal != null) return ServiceResult<SalaDto>.Fail(tipoVal);
+            if (tipoVal != null) return ServiceResult<SalaDto>.Fail(tipoVal, 400);
 
             var capVal = ValidateCapacidade(dto.Capacidade);
-            if (capVal != null) return ServiceResult<SalaDto>.Fail(capVal);
+            if (capVal != null) return ServiceResult<SalaDto>.Fail(capVal, 400);
 
             if (_repo.SalaNomeExists(nome))
-                return ServiceResult<SalaDto>.Fail("Já existe uma sala com esse nome.");
+                return ServiceResult<SalaDto>.Fail("Já existe uma sala com esse nome.", 409);
 
             var sala = dto.ToSalaModel();
             sala.Nome = nome;
             sala.Tipo = tipo;
 
             _repo.AddSala(sala);
-            return ServiceResult<SalaDto>.Success(sala.ToSalaDto());
+            return ServiceResult<SalaDto>.Success(sala.ToSalaDto(), 201);
         }
 
         public ServiceResult<SalaDto> Update(int id, UpdateSalaDto dto)
         {
             if (id <= 0)
-                return ServiceResult<SalaDto>.Fail("Id inválido.");
+                return ServiceResult<SalaDto>.Fail("Id inválido.", 400);
 
             var sala = _repo.GetSalaById(id);
             if (sala == null)
-                return ServiceResult<SalaDto>.Fail("Sala não encontrada.");
+                return ServiceResult<SalaDto>.Fail("Sala não encontrada.", 404);
 
             var nome = (dto.Nome ?? "").Trim();
             var tipo = (dto.Tipo ?? "").Trim();
 
             var nomeVal = ValidateTexto("Nome", nome, NomeMin, NomeMax);
-            if (nomeVal != null) return ServiceResult<SalaDto>.Fail(nomeVal);
+            if (nomeVal != null) return ServiceResult<SalaDto>.Fail(nomeVal, 400);
 
             var tipoVal = ValidateTipo(tipo);
-            if (tipoVal != null) return ServiceResult<SalaDto>.Fail(tipoVal);
+            if (tipoVal != null) return ServiceResult<SalaDto>.Fail(tipoVal, 400);
 
             var capVal = ValidateCapacidade(dto.Capacidade);
-            if (capVal != null) return ServiceResult<SalaDto>.Fail(capVal);
+            if (capVal != null) return ServiceResult<SalaDto>.Fail(capVal, 400);
 
             if (_repo.SalaNomeExists(nome, ignoreId: id))
-                return ServiceResult<SalaDto>.Fail("Já existe uma sala com esse nome.");
+                return ServiceResult<SalaDto>.Fail("Já existe uma sala com esse nome.", 409);
 
             dto.UpdateSalaModel(sala);
 
@@ -98,17 +98,17 @@ namespace Lumiere.API.Services
         public ServiceResult<object> Delete(int id)
         {
             if (id <= 0)
-                return ServiceResult<object>.Fail("Id inválido.");
+                return ServiceResult<object>.Fail("Id inválido.", 400);
 
             var sala = _repo.GetSalaById(id);
             if (sala == null)
-                return ServiceResult<object>.Fail("Sala não encontrada.");
+                return ServiceResult<object>.Fail("Sala não encontrada.", 404);
 
             if (_repo.SalaHasSessoes(id))
-                return ServiceResult<object>.Fail("Não é possível excluir uma sala que possui sessões vinculadas.");
+                return ServiceResult<object>.Fail("Não é possível excluir uma sala que possui sessões vinculadas.", 409);
 
             _repo.DeleteSala(id);
-            return ServiceResult<object>.Success(new { });
+            return ServiceResult<object>.Success(new { }, 204);
         }
 
         private string? ValidateTexto(string campo, string valor, int min, int max)

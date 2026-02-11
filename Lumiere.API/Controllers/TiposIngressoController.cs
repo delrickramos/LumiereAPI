@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Lumiere.API.Controllers
 {
     [Route("api/tipos-ingresso")]
-    [ApiController]
     public class TiposIngressoController : ServiceResultController
     {
         private readonly ITipoIngressoService _service;
