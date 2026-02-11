@@ -130,9 +130,6 @@ namespace Lumiere.API.Services
             var distVal = ValidateTexto("Distribuidora", distribuidora, NomePessoaMin, NomePessoaMax);
             if (distVal != null) return ServiceResult<FilmeDto>.Fail(distVal, 400);
 
-            var durVal = ValidateDuracao(dto.DuracaoMinutos);
-            if (durVal != null) return ServiceResult<FilmeDto>.Fail(durVal, 400);
-
             if (dto.GeneroId <= 0)
                 return ServiceResult<FilmeDto>.Fail("GeneroId inválido.", 400);
 

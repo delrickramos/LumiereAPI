@@ -5,7 +5,6 @@ namespace Lumiere.API.Dtos.Filme
     public class UpdateFilmeDto
     {
         public string Titulo { get; set; } = string.Empty;
-        public int DuracaoMinutos { get; set; }
         public ClassificacaoIndicativaEnum ClassificacaoIndicativa { get; set; }
         public string Sinopse { get; set; } = string.Empty;
         public string Direcao { get; set; } = string.Empty;

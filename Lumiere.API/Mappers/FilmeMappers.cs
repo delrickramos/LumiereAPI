@@ -36,7 +36,6 @@ namespace Lumiere.API.Mappers
         public static void UpdateFilmeModel(this UpdateFilmeDto filmeDto, Filme filme)
         {
             filme.Titulo = filmeDto.Titulo;
-            filme.DuracaoMinutos = filmeDto.DuracaoMinutos;
             filme.ClassificacaoIndicativa = filmeDto.ClassificacaoIndicativa;
             filme.Sinopse = filmeDto.Sinopse;
             filme.Direcao = filmeDto.Direcao;
