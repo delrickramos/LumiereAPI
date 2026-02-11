@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Lumiere.API.Controllers
 {
+    // Controller para gerenciamento de filmes
     [Route("api/filmes")]
     public class FilmesController : ServiceResultController
     {
@@ -28,6 +29,7 @@ namespace Lumiere.API.Controllers
             return HandleResult(result);
         }
 
+        // Endpoint para listar filmes em cartaz (requisito: próximos 7 dias)
         [HttpGet("em-cartaz")]
         public IActionResult GetEmCartaz()
         {

@@ -3,10 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Lumiere.Models
 {
+    // Representa um ingresso vendido para uma sessão em um assento específico
     public class Ingresso
     {
         public int Id { get; set; }
-        
+
+        // PrecoFinal é calculado aplicando o desconto do TipoIngresso ao PrecoBase da sessão
         [Column(TypeName = "decimal(18,2)")]
         public decimal PrecoFinal { get; set; }
 

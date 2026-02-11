@@ -2,6 +2,7 @@
 
 namespace Lumiere.Models
 {
+    // Representa um gênero cinematográfico (Ação, Comédia, Drama, etc)
     public class Genero
     {
         public int Id { get; set; }

@@ -1,5 +1,6 @@
 namespace Lumiere.API.Common
 {
+    // Padroniza o retorno de operações dos serviços com status e dados
     public class ServiceResult<T>
     {
         public bool Ok { get; private set; }

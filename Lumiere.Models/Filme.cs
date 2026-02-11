@@ -3,6 +3,7 @@
 
 namespace Lumiere.Models
 {
+    // Representa um filme exibido no cinema
     public class Filme
     {
         public int Id { get; set; }
@@ -22,8 +23,9 @@ namespace Lumiere.Models
 
         [MaxLength(150)]
         public string Distribuidora { get; set; } = string.Empty;
-        
+
         public int GeneroId { get; set; }
+        // Relacionamento: um filme pode ter várias sessões
         public List<Sessao>? Sessoes { get; set; }
         public Genero? Genero { get; set; }
 

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Lumiere.API.Repository
 {
+    // Repositório responsável pelo acesso a dados de filmes
     public class FilmeRepository : IFilmeRepository
     {
         private readonly LumiereContext _db;
@@ -29,6 +30,7 @@ namespace Lumiere.API.Repository
                 .FirstOrDefault(f => f.Id == id);
         }
 
+        // Requisito: filmes em cartaz (com sessões nos próximos 7 dias)
         public List<Filme> GetFilmesEmCartaz(DateTime inicio, DateTime fim)
         {
             return _db.Filmes

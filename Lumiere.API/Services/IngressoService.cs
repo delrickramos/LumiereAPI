@@ -6,6 +6,7 @@ using Lumiere.Models;
 
 namespace Lumiere.API.Services
 {
+    // Serviço responsável pela lógica de negócio de venda de ingressos
     public class IngressoService : IIngressoService
     {
         private readonly IIngressoRepository _ingressoRepo;
@@ -65,9 +66,11 @@ namespace Lumiere.API.Services
             if (assento == null)
                 return ServiceResult<IngressoDto>.Fail("Assento não encontrado.", 404);
 
+            // Verifica se o assento pertence à sala da sessão
             if (assento.SalaId != sessao.SalaId)
                 return ServiceResult<IngressoDto>.Fail("Assento não pertence à sala dessa sessão.", 400);
 
+            // Garante que o assento não está ocupado nesta sessão
             if (_ingressoRepo.AssentoOcupadoNaSessao(dto.SessaoId, dto.AssentoId))
                 return ServiceResult<IngressoDto>.Fail("Assento já está ocupado nesta sessão.", 409);
 
@@ -79,9 +82,11 @@ namespace Lumiere.API.Services
                 return ServiceResult<IngressoDto>.Fail("DescontoPercentual inválido.", 400);
 
             var agora = DateTimeOffset.Now;
+            // Não permite venda de ingresso com menos de 30 minutos para o início
             if (sessao.DataHoraInicio <= agora.AddMinutes(30))
                 return ServiceResult<IngressoDto>.Fail("Não é possível vender ingresso com menos de 30 minutos para o início da sessão.", 400);
 
+            // Calcula o preço final aplicando o desconto do tipo de ingresso
             var fator = 1m - (tipo.DescontoPercentual / 100m);
             var precoFinal = sessao.PrecoBase * fator;
 

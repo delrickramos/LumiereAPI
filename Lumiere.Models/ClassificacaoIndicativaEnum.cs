@@ -1,5 +1,6 @@
 ﻿namespace Lumiere.Models
 {
+    // Define as faixas etárias permitidas para cada filme
     public enum ClassificacaoIndicativaEnum
     {
         Livre = 0,

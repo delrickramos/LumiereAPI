@@ -6,6 +6,7 @@ using Lumiere.API.Common;
 
 namespace Lumiere.API.Services
 {
+    // Serviço responsável pela lógica de negócio de salas
     public class SalaService : ISalaService
     {
         private readonly ISalaRepository _repo;
@@ -58,6 +59,7 @@ namespace Lumiere.API.Services
 
             _repo.AddSala(sala);
 
+            // Gera automaticamente os assentos da sala com base em linhas e colunas
             var assentos = GerarAssentos(
                 sala.Id,
                 dto.NumeroLinhas,
@@ -103,6 +105,7 @@ namespace Lumiere.API.Services
             if (sala == null)
                 return ServiceResult<object>.Fail("Sala não encontrada.", 404);
 
+            // Não permite excluir sala que possui sessões vinculadas
             if (_repo.SalaHasSessoes(id))
                 return ServiceResult<object>.Fail("Não é possível excluir uma sala que possui sessões vinculadas.", 409);
 
@@ -121,6 +124,7 @@ namespace Lumiere.API.Services
             return null;
         }
 
+        // Define o tipo de assento com base na posição (acessibilidade)
         private static TipoAssentoEnum CalcularTipoAssento(int fileiraIndex, int coluna, int linhas, int colunas)
         {
             bool ehPrimeira = fileiraIndex == 0;
@@ -136,6 +140,7 @@ namespace Lumiere.API.Services
             return TipoAssentoEnum.Normal;
         }
 
+        // Converte índice numérico em letra(s) (0 = A, 25 = Z, 26 = AA)
         private static string LinhaParaLetras(int index)
         {
             var sb = new System.Text.StringBuilder();
@@ -149,6 +154,7 @@ namespace Lumiere.API.Services
             return sb.ToString();
         }
 
+        // Gera todos os assentos da sala com nomes formatados (A1, A2, B1, etc)
         private static List<Assento> GerarAssentos(int salaId, int linhas, int colunas)
         {
             var list = new List<Assento>(linhas * colunas);

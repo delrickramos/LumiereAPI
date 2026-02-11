@@ -4,10 +4,12 @@ using System.Text.Json.Serialization;
 
 namespace Lumiere.Models
 {
+    // Representa uma sessão de exibição de filme em uma sala específica
     public class Sessao
     {
         public int Id { get; set; }
         public DateTimeOffset DataHoraInicio { get; set; }
+        // DataHoraFim é calculado automaticamente com base na duração do filme
         public DateTimeOffset DataHoraFim { get; set; }
 
         [MaxLength(20)]

@@ -162,6 +162,7 @@ namespace Lumiere.API.Services
             if (filme == null)
                 return ServiceResult<object>.Fail("Filme não encontrado.", 404);
 
+            // Não permite excluir filme que possui sessões vinculadas
             if (_repo.FilmeHasSessoes(id))
                 return ServiceResult<object>.Fail("Não é possível excluir um filme que possui sessões vinculadas.", 409);
 

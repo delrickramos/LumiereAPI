@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Lumiere.API.Controllers
 {
+    // Controller para gerenciamento de sessões
     [Route("api/sessoes")]
     public class SessoesController : ServiceResultController
     {

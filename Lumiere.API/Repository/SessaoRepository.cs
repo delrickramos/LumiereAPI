@@ -4,6 +4,7 @@ using Lumiere.Models;
 
 namespace Lumiere.API.Repository
 {
+    // Repositório responsável pelo acesso a dados de sessões
     public class SessaoRepository : ISessaoRepository
     {
         private readonly LumiereContext _db;
@@ -48,6 +49,7 @@ namespace Lumiere.API.Repository
             return _db.Ingressos.Any(i => i.SessaoId == id);
         }
 
+        // Verifica se há conflito de horário na sala (interseção de horários)
         public bool SessaoHasConflict(int salaId, DateTimeOffset dataHoraInicio, DateTimeOffset dataHoraFim, int? sessaoId = null)
         {
             return _db.Sessoes.Any(s => s.SalaId == salaId && (sessaoId == null || s.Id != sessaoId) &&

@@ -6,20 +6,22 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+// Configuração de serviços OpenAPI e Swagger para documentação da API
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
+
+// Configuração para evitar referências circulares em JSON
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 });
 
+// Configuração do contexto de banco de dados com SQL Server
 builder.Services.AddDbContext<LumiereContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("Lumiere"))
 );
 
+// Registro de dependências: repositórios
 builder.Services.AddScoped<IFilmeRepository, FilmeRepository>();
 builder.Services.AddScoped<ISessaoRepository, SessaoRepository>();
 builder.Services.AddScoped<ISalaRepository, SalaRepository>();
@@ -28,13 +30,15 @@ builder.Services.AddScoped<IFormatoSessaoRepository, FormatoSessaoRepository>();
 builder.Services.AddScoped<ITipoIngressoRepository, TipoIngressoRepository>();
 builder.Services.AddScoped<IAssentoRepository, AssentoRepository>();
 builder.Services.AddScoped<IIngressoRepository, IngressoRepository>();
+builder.Services.AddScoped<IRelatorioRepository, RelatorioRepository>();
+
+// Registro de dependências: serviços
 builder.Services.AddScoped<IGeneroService, GeneroService>();
 builder.Services.AddScoped<IFormatoSessaoService, FormatoSessaoService>();
 builder.Services.AddScoped<ITipoIngressoService, TipoIngressoService>();
 builder.Services.AddScoped<IFilmeService, FilmeService>();
 builder.Services.AddScoped<ISalaService, SalaService>();
 builder.Services.AddScoped<ISessaoService, SessaoService>();
-builder.Services.AddScoped<IRelatorioRepository, RelatorioRepository>();
 builder.Services.AddScoped<IAssentoService, AssentoService>();
 builder.Services.AddScoped<IIngressoService, IngressoService>();
 

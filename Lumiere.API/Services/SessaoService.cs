@@ -5,6 +5,7 @@ using Lumiere.API.Common;
 
 namespace Lumiere.API.Services
 {
+    // Serviço responsável pela lógica de negócio de sessões
     public class SessaoService : ISessaoService
     {
         private readonly ISessaoRepository _sessaoRepo;
@@ -64,10 +65,12 @@ namespace Lumiere.API.Services
             if (inicio <= DateTimeOffset.Now)
                 return ServiceResult<SessaoDto>.Fail("A data e hora de início da sessão devem ser no futuro.");
 
+            // Calcula automaticamente o horário de fim com base na duração do filme
             var fim = inicio.AddMinutes(filme.DuracaoMinutos);
             var sessao = dto.ToSessaoModel();
             sessao.DataHoraFim = fim;
 
+            // Valida se não há conflito de horário na sala
             if (_sessaoRepo.SessaoHasConflict(dto.SalaId, dto.DataHoraInicio, sessao.DataHoraFim))
                 return ServiceResult<SessaoDto>.Fail("Já existe uma sessão nesta sala neste horário.", 409);
 
@@ -90,6 +93,7 @@ namespace Lumiere.API.Services
             if (!_salaRepo.SalaExists(dto.SalaId))
                 return ServiceResult<SessaoDto>.Fail("Sala não encontrada.", 404);
 
+            // Não permite atualizar sessão que já tem ingressos vendidos
             if (_sessaoRepo.SessaoHasIngressos(id))
                 return ServiceResult<SessaoDto>.Fail("Não é possível atualizar sessão com ingressos vendidos.", 409);
 
@@ -120,6 +124,7 @@ namespace Lumiere.API.Services
             if (sessao == null)
                 return ServiceResult<object>.Fail("Sessão não encontrada.", 404);
 
+            // Não permite excluir sessão que já tem ingressos vendidos
             if (_sessaoRepo.SessaoHasIngressos(id))
                 return ServiceResult<object>.Fail("Não é possível excluir sessão com ingressos vendidos.", 409);
 

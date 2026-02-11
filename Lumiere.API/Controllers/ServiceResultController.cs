@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Lumiere.API.Controllers
 {
+    // Controller base que padroniza a conversão de ServiceResult em IActionResult
     [ApiController]
     public abstract class ServiceResultController : ControllerBase
     {
+        // Converte ServiceResult em resposta HTTP apropriada
         protected IActionResult HandleResult<T>(ServiceResult<T> result)
         {
             if (!result.Ok)
