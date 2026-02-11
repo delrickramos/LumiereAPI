@@ -10,7 +10,7 @@ namespace Lumiere.Models
         public int Id { get; set; }
         public int Coluna { get; set; }
         public string Fileira { get; set; } = string.Empty;
-    
+        public string Nome { get; set; } = string.Empty;    
         [Required]
         public TipoAssentoEnum TipoAssento { get; set; }
         

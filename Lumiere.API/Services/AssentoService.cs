@@ -76,53 +76,6 @@ namespace Lumiere.API.Services
             return ServiceResult<AssentoDto>.Success(assento.ToAssentoDto(), 201);
         }
 
-        public ServiceResult<AssentoDto> Update(int id, UpdateAssentoDto dto)
-        {
-            if (id <= 0)
-                return ServiceResult<AssentoDto>.Fail("Id inválido.", 400);
-
-            var assento = _assentoRepo.GetAssentoById(id);
-            if (assento == null)
-                return ServiceResult<AssentoDto>.Fail("Assento não encontrado.", 404);
-
-            if (dto.SalaId <= 0)
-                return ServiceResult<AssentoDto>.Fail("SalaId inválido.", 400);
-
-            if (!_salaRepo.SalaExists(dto.SalaId))
-                return ServiceResult<AssentoDto>.Fail("Sala não encontrada.", 404);
-
-            var fileira = (dto.Fileira ?? "").Trim();
-            var fileiraVal = ValidateFileira(fileira);
-            if (fileiraVal != null) return ServiceResult<AssentoDto>.Fail(fileiraVal, 400);
-
-            var colunaVal = ValidateColuna(dto.Coluna);
-            if (colunaVal != null) return ServiceResult<AssentoDto>.Fail(colunaVal, 400);
-
-            if (_assentoRepo.AssentoPosicaoExists(dto.SalaId, fileira, dto.Coluna, ignoreId: id))
-                return ServiceResult<AssentoDto>.Fail("Já existe um assento com essa posição nessa sala.", 409);
-
-            dto.UpdateAssentoModel(assento);
-            assento.Fileira = fileira;
-            _assentoRepo.UpdateAssento(assento);
-            return ServiceResult<AssentoDto>.Success(assento.ToAssentoDto());
-        }
-
-        public ServiceResult<object> Delete(int id)
-        {
-            if (id <= 0)
-                return ServiceResult<object>.Fail("Id inválido.", 400);
-
-            var assento = _assentoRepo.GetAssentoById(id);
-            if (assento == null)
-                return ServiceResult<object>.Fail("Assento não encontrado.", 404);
-
-            if (_assentoRepo.AssentoHasIngressos(id))
-                return ServiceResult<object>.Fail("Não é possível excluir assento com ingressos vendidos.", 409);
-
-            _assentoRepo.DeleteAssento(id);
-            return ServiceResult<object>.Success(new { }, 204);
-        }
-
         private static string? ValidateFileira(string fileira)
         {
             if (string.IsNullOrWhiteSpace(fileira))

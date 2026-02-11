@@ -4,6 +4,7 @@ using Lumiere.API.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Lumiere.API.Migrations
 {
     [DbContext(typeof(LumiereContext))]
-    partial class LumiereContextModelSnapshot : ModelSnapshot
+    [Migration("20260211010449_AddNomeToAssento")]
+    partial class AddNomeToAssento
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,8 +65,9 @@ namespace Lumiere.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ClassificacaoIndicativa")
-                        .HasColumnType("int");
+                    b.Property<string>("ClassificacaoIndicativa")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Direcao")
                         .IsRequired()

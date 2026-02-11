@@ -65,5 +65,12 @@ namespace Lumiere.API.Repository
         {
             return _db.Sessoes.Any(s => s.SalaId == id);
         }
+
+        public void AddAssentosRange(IEnumerable<Assento> assentos)
+        {
+            _db.Assentos.AddRange(assentos);
+            _db.SaveChanges();
+        }
+
     }
 }

@@ -11,6 +11,7 @@ namespace Lumiere.API.Mappers
             return new AssentoDto
             {
                 Id = assento.Id,
+                Nome = assento.Nome,    
                 Coluna = assento.Coluna,
                 Fileira = assento.Fileira,
                 TipoAssento = assento.TipoAssento,
@@ -27,14 +28,6 @@ namespace Lumiere.API.Mappers
                 TipoAssento = assentoDto.TipoAssento,
                 SalaId = assentoDto.SalaId
             };
-        }
-
-        public static void UpdateAssentoModel(this UpdateAssentoDto assentoDto, Assento assento)
-        {
-            assento.Coluna = assentoDto.Coluna;
-            assento.Fileira = assentoDto.Fileira;
-            assento.TipoAssento = assentoDto.TipoAssento;
-            assento.SalaId = assentoDto.SalaId;
         }
     }
 }

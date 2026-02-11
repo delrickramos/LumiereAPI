@@ -35,26 +35,5 @@ namespace Lumiere.API.Controllers
             var result = _service.GetBySala(salaId);
             return HandleResult(result);
         }
-
-        [HttpPost]
-        public IActionResult Add([FromBody] CreateAssentoDto assentoDto)
-        {
-            var result = _service.Create(assentoDto);
-            return HandleResult(result);
-        }
-
-        [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] UpdateAssentoDto assentoDto)
-        {
-            var result = _service.Update(id, assentoDto);
-            return HandleResult(result);
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult Delete([FromRoute] int id)
-        {
-            var result = _service.Delete(id);
-            return HandleResult(result);
-        }
     }
 }
