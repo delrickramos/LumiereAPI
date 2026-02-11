@@ -5,7 +5,7 @@ namespace Lumiere.API.Services
         public bool Ok { get; private set; }
         public string? Error { get; private set; }
         public T? Data { get; private set; }
-        public int StatusCode { get; private set }
+        public int StatusCode { get; private set; }
 
         public static ServiceResult<T> Success(T data, int statusCode = 200)
             => new() { Ok = true, Data = data, StatusCode = statusCode };  
