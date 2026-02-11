@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Lumiere.API.Migrations
 {
     [DbContext(typeof(LumiereContext))]
-    [Migration("20260208161308_LumiereSemUnderline")]
-    partial class LumiereSemUnderline
+    [Migration("20260211190834_ReleaseV1")]
+    partial class ReleaseV1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,14 +38,19 @@ namespace Lumiere.API.Migrations
 
                     b.Property<string>("Fileira")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<int>("SalaId")
                         .HasColumnType("int");
 
-                    b.Property<string>("TipoAssento")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("TipoAssento")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -62,17 +67,18 @@ namespace Lumiere.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ClassificacaoIndicativa")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ClassificacaoIndicativa")
+                        .HasColumnType("int");
 
                     b.Property<string>("Direcao")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
 
                     b.Property<string>("Distribuidora")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<int>("DuracaoMinutos")
                         .HasColumnType("int");
@@ -82,11 +88,13 @@ namespace Lumiere.API.Migrations
 
                     b.Property<string>("Sinopse")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<string>("Titulo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.HasKey("Id");
 
@@ -105,11 +113,29 @@ namespace Lumiere.API.Migrations
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
                     b.HasKey("Id");
 
                     b.ToTable("FormatosSessao");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Nome = "2D"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Nome = "3D"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Nome = "IMAX"
+                        });
                 });
 
             modelBuilder.Entity("Lumiere.Models.Genero", b =>
@@ -122,11 +148,44 @@ namespace Lumiere.API.Migrations
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Generos");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Nome = "Ação"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Nome = "Comédia"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Nome = "Drama"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Nome = "Terror"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Nome = "Ficção"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Nome = "Animação"
+                        });
                 });
 
             modelBuilder.Entity("Lumiere.Models.Ingresso", b =>
@@ -140,18 +199,14 @@ namespace Lumiere.API.Migrations
                     b.Property<int>("AssentoId")
                         .HasColumnType("int");
 
-                    b.Property<DateTimeOffset>("ExpiraEm")
-                        .HasColumnType("datetimeoffset");
-
                     b.Property<decimal>("PrecoFinal")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("SessaoId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<int>("TipoIngressoId")
                         .HasColumnType("int");
@@ -180,11 +235,14 @@ namespace Lumiere.API.Migrations
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
-                    b.Property<string>("Tipo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("NumeroColunas")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NumeroLinhas")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -211,15 +269,16 @@ namespace Lumiere.API.Migrations
                     b.Property<int>("FormatoSessaoId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Preco")
+                    b.Property<string>("Idioma")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<decimal>("PrecoBase")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("SalaId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Versao")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -240,16 +299,49 @@ namespace Lumiere.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("Desconto")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<decimal>("DescontoPercentual")
+                        .HasColumnType("decimal(5,2)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
                     b.HasKey("Id");
 
                     b.ToTable("TiposIngresso");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DescontoPercentual = 0.00m,
+                            Nome = "Inteira"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DescontoPercentual = 50.00m,
+                            Nome = "Meia"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            DescontoPercentual = 50.00m,
+                            Nome = "Estudante"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            DescontoPercentual = 50.00m,
+                            Nome = "Idoso"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            DescontoPercentual = 30.00m,
+                            Nome = "Criança"
+                        });
                 });
 
             modelBuilder.Entity("Lumiere.Models.Assento", b =>
@@ -283,7 +375,7 @@ namespace Lumiere.API.Migrations
                         .IsRequired();
 
                     b.HasOne("Lumiere.Models.Sessao", "Sessao")
-                        .WithMany()
+                        .WithMany("Ingressos")
                         .HasForeignKey("SessaoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -353,6 +445,11 @@ namespace Lumiere.API.Migrations
                     b.Navigation("Assentos");
 
                     b.Navigation("Sessoes");
+                });
+
+            modelBuilder.Entity("Lumiere.Models.Sessao", b =>
+                {
+                    b.Navigation("Ingressos");
                 });
 
             modelBuilder.Entity("Lumiere.Models.TipoIngresso", b =>

@@ -28,7 +28,6 @@ namespace Lumiere.API.Mappers
         public static void UpdateSalaModel(this UpdateSalaDto salaDto, Sala sala)
         {
             sala.Nome = salaDto.Nome;
-            sala.Capacidade = salaDto.Capacidade;
         }
     }
 }
