@@ -34,5 +34,15 @@ namespace Lumiere.API.Database
         public DbSet<Sessao> Sessoes { get; set; }
         public DbSet<TipoIngresso> TiposIngresso { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Assento>()
+                .HasOne(a => a.Sala)
+                .WithMany(s => s.Assentos)
+                .HasForeignKey(a => a.SalaId)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
     }
 }
