@@ -21,12 +21,6 @@ namespace Lumiere.API.Services
             _salaRepo = salaRepo;
         }
 
-        public ServiceResult<IEnumerable<AssentoDto>> GetAll()
-        {
-            var assentos = _assentoRepo.GetAssentos().Select(a => a.ToAssentoDto());
-            return ServiceResult<IEnumerable<AssentoDto>>.Success(assentos);
-        }
-
         public ServiceResult<AssentoDto> GetById(int id)
         {
             if (id <= 0)

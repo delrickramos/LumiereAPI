@@ -12,12 +12,6 @@ namespace Lumiere.API.Repository
         {
             _db = db;
         }
-
-        public List<Assento> GetAssentos()
-        {
-            return _db.Assentos.OrderBy(a => a.SalaId).ThenBy(a => a.Fileira).ThenBy(a => a.Coluna).Include(a => a.Sala).ToList();
-        }
-
         public Assento GetAssentoById(int id)
         {
             return _db.Assentos.Include(a => a.Sala).Include(a => a.Ingressos).FirstOrDefault(a => a.Id == id)!;

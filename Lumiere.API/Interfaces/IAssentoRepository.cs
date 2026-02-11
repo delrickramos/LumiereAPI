@@ -4,7 +4,6 @@ namespace Lumiere.API.Interfaces
 {
     public interface IAssentoRepository
     {
-        List<Assento> GetAssentos();
         Assento GetAssentoById(int id);
         List<Assento> GetAssentosBySala(int salaId);
         void AddAssento(Assento assento);

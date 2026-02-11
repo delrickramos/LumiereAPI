@@ -13,13 +13,6 @@ namespace Lumiere.API.Controllers
             _service = service;
         }
 
-        [HttpGet]
-        public IActionResult Get()
-        {
-            var result = _service.GetAll();
-            return HandleResult(result);
-        }
-
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
