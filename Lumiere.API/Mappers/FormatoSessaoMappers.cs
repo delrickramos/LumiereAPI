@@ -1,5 +1,4 @@
 ﻿using Lumiere.API.Dtos.FormatoSessao;
-using Lumiere.API.Dtos.Genero;
 using Lumiere.Models;
 
 namespace Lumiere.API.Mappers

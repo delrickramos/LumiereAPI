@@ -1,4 +1,4 @@
-﻿using Lumiere.API.Services;
+﻿using Lumiere.API.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lumiere.API.Controllers

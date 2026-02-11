@@ -2,7 +2,6 @@
 using Lumiere.API.Dtos.Relatorio;
 using Lumiere.API.Interfaces;
 using Lumiere.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace Lumiere.API.Repository
 {

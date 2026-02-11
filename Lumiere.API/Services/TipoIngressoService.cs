@@ -1,6 +1,7 @@
 using Lumiere.API.Dtos.TipoIngresso;
 using Lumiere.API.Interfaces;
 using Lumiere.API.Mappers;
+using Lumiere.API.Common;
 
 namespace Lumiere.API.Services
 {

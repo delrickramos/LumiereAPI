@@ -11,7 +11,6 @@ namespace Lumiere.API.Mappers
             {
                 Id = ingresso.Id,
                 PrecoFinal = ingresso.PrecoFinal,
-                ExpiraEm = ingresso.ExpiraEm,
                 Status = ingresso.Status,
                 SessaoId = ingresso.SessaoId,
                 AssentoId = ingresso.AssentoId,

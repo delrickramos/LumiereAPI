@@ -1,5 +1,5 @@
 using Lumiere.API.Dtos.FormatoSessao;
-using Lumiere.API.Services;
+using Lumiere.API.Common;
 
 namespace Lumiere.API.Interfaces
 {

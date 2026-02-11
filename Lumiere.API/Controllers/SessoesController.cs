@@ -1,8 +1,6 @@
 ﻿using Lumiere.API.Dtos.Sessao;
 using Lumiere.API.Interfaces;
-using Lumiere.API.Mappers;
 using Microsoft.AspNetCore.Mvc;
-using Lumiere.Models;
 
 namespace Lumiere.API.Controllers
 {

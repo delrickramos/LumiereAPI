@@ -11,7 +11,6 @@ namespace Lumiere.Models
         public int NumeroLinhas { get; set; }
         public int NumeroColunas { get; set; }
         public int Capacidade { get; set; }
-        public string Tipo { get; set; } = string.Empty;
         public List<Sessao>? Sessoes { get; set; }
         public List<Assento>? Assentos { get; set; }
     }
