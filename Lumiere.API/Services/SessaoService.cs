@@ -58,7 +58,11 @@ namespace Lumiere.API.Services
                 return ServiceResult<SessaoDto>.Fail("Formato de sessão não encontrado.");
 
             var filme = _filmeRepo.GetFilmeById(dto.FilmeId);
+
             var inicio = dto.DataHoraInicio;
+            if (inicio <= DateTime.Now)
+                return ServiceResult<SessaoDto>.Fail("A data e hora de início da sessão devem ser no futuro.");
+
             var fim = inicio.AddMinutes(filme.DuracaoMinutos);
             var sessao = dto.ToSessaoModel();
             sessao.DataHoraFim = fim;
