@@ -61,7 +61,7 @@ namespace Lumiere.API.Services
             var filme = _filmeRepo.GetFilmeById(dto.FilmeId);
 
             var inicio = dto.DataHoraInicio;
-            if (inicio <= DateTime.Now)
+            if (inicio <= DateTimeOffset.Now)
                 return ServiceResult<SessaoDto>.Fail("A data e hora de início da sessão devem ser no futuro.");
 
             var fim = inicio.AddMinutes(filme.DuracaoMinutos);
