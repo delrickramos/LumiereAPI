@@ -86,6 +86,9 @@ namespace Lumiere.API.Services
             var nomeVal = ValidateTexto("Nome", nome, NomeMin, NomeMax);
             if (nomeVal != null) return ServiceResult<SalaDto>.Fail(nomeVal, 400);
 
+            var capVal = ValidateCapacidade(dto.Capacidade);
+            if (capVal != null) return ServiceResult<SalaDto>.Fail(capVal, 400);
+
             if (_repo.SalaNomeExists(nome, ignoreId: id))
                 return ServiceResult<SalaDto>.Fail("Já existe uma sala com esse nome.", 409);
 
