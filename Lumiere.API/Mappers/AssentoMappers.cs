@@ -29,13 +29,5 @@ namespace Lumiere.API.Mappers
                 SalaId = assentoDto.SalaId
             };
         }
-
-        public static void UpdateAssentoModel(this UpdateAssentoDto assentoDto, Assento assento)
-        {
-            assento.Coluna = assentoDto.Coluna;
-            assento.Fileira = assentoDto.Fileira;
-            assento.TipoAssento = assentoDto.TipoAssento;
-            assento.SalaId = assentoDto.SalaId;
-        }
     }
 }
