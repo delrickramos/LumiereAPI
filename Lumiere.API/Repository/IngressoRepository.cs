@@ -33,14 +33,6 @@ namespace Lumiere.API.Repository
             _db.Ingressos.Add(ingresso);
             _db.SaveChanges();
         }
-
-        public void UpdateIngresso(Ingresso ingresso)
-        {
-            // TODO: Para implementação futura - Cancelamento de ingressos
-            _db.Ingressos.Update(ingresso);
-            _db.SaveChanges();
-        }
-
         public bool IngressoExists(int id)
         {
             return _db.Ingressos.Any(i => i.Id == id);
@@ -49,13 +41,6 @@ namespace Lumiere.API.Repository
         public bool AssentoOcupadoNaSessao(int sessaoId, int assentoId)
         {
             return _db.Ingressos.Any(i => i.SessaoId == sessaoId && i.AssentoId == assentoId && i.Status == StatusIngressoEnum.Confirmado);
-        }
-
-
-        // TODO: Para implementação futura - Relatórios de vendas ou auditoria
-        public List<Ingresso> GetIngressosConfirmados(int sessaoId)
-        {
-            return _db.Ingressos.Where(i => i.SessaoId == sessaoId && i.Status == StatusIngressoEnum.Confirmado).ToList();
         }
     }
 }

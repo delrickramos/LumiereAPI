@@ -8,9 +8,7 @@ namespace Lumiere.API.Interfaces
         Ingresso GetIngressoById(int id);
         List<Ingresso> GetIngressosBySessao(int sessaoId);
         void AddIngresso(Ingresso ingresso);
-        void UpdateIngresso(Ingresso ingresso);
         bool IngressoExists(int id);
         bool AssentoOcupadoNaSessao(int sessaoId, int assentoId);
-        List<Ingresso> GetIngressosConfirmados(int sessaoId);
     }
 }
