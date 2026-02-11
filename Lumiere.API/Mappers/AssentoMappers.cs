@@ -11,6 +11,7 @@ namespace Lumiere.API.Mappers
             return new AssentoDto
             {
                 Id = assento.Id,
+                Nome = assento.Nome,    
                 Coluna = assento.Coluna,
                 Fileira = assento.Fileira,
                 TipoAssento = assento.TipoAssento,

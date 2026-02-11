@@ -197,6 +197,7 @@ namespace Lumiere.API.Services
                         SalaId = salaId,
                         Fileira = fileira,
                         Coluna = coluna,
+                        Nome = $"{fileira}{coluna}",
                         TipoAssento = CalcularTipoAssento(i, coluna, linhas, colunas)
                     });
                 }
