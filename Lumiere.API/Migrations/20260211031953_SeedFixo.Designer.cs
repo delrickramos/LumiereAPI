@@ -4,6 +4,7 @@ using Lumiere.API.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Lumiere.API.Migrations
 {
     [DbContext(typeof(LumiereContext))]
-    partial class LumiereContextModelSnapshot : ModelSnapshot
+    [Migration("20260211031953_SeedFixo")]
+    partial class SeedFixo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -110,23 +113,6 @@ namespace Lumiere.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("FormatosSessao");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Nome = "2D"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Nome = "3D"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Nome = "IMAX"
-                        });
                 });
 
             modelBuilder.Entity("Lumiere.Models.Genero", b =>
@@ -144,38 +130,6 @@ namespace Lumiere.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Generos");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Nome = "Ação"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Nome = "Comédia"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Nome = "Drama"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Nome = "Terror"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Nome = "Ficção"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Nome = "Animação"
-                        });
                 });
 
             modelBuilder.Entity("Lumiere.Models.Ingresso", b =>
@@ -304,38 +258,6 @@ namespace Lumiere.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TiposIngresso");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            DescontoPercentual = 0.00m,
-                            Nome = "Inteira"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            DescontoPercentual = 50.00m,
-                            Nome = "Meia"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            DescontoPercentual = 50.00m,
-                            Nome = "Estudante"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            DescontoPercentual = 50.00m,
-                            Nome = "Idoso"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            DescontoPercentual = 30.00m,
-                            Nome = "Criança"
-                        });
                 });
 
             modelBuilder.Entity("Lumiere.Models.Assento", b =>
