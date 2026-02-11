@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Lumiere.Models
 {
@@ -9,8 +6,13 @@ namespace Lumiere.Models
     {
         public int Id { get; set; }
         public int Coluna { get; set; }
+
+        [MaxLength(5)]
         public string Fileira { get; set; } = string.Empty;
+
+        [MaxLength(10)]
         public string Nome { get; set; } = string.Empty;    
+
         [Required]
         public TipoAssentoEnum TipoAssento { get; set; }
         
