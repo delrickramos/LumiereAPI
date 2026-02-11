@@ -11,6 +11,6 @@ namespace Lumiere.API.Interfaces
         void DeleteTipoIngresso(int id);
         bool TipoIngressoExists(int id);
         bool TipoIngressoNomeExists(string nome, int? ignoreId = null);
-        // ADICIONAR: verificar se existe ingresso daquele tipo existente
+        bool TipoIngressoHasIngressos(int id);
     }
 }

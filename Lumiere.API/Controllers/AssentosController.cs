@@ -6,8 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Lumiere.API.Controllers
 {
     [Route("api/assentos")]
-    [ApiController]
-    public class AssentosController : ControllerBase
+    public class AssentosController : ServiceResultController
     {
         private readonly IAssentoService _service;
 
@@ -20,24 +19,21 @@ namespace Lumiere.API.Controllers
         public IActionResult Get()
         {
             var result = _service.GetAll();
-            if (!result.Ok) return BadRequest(result.Error);
-            return Ok(result.Data);
+            return HandleResult(result);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
             var result = _service.GetById(id);
-            if (!result.Ok) return NotFound(result.Error);
-            return Ok(result.Data);
+            return HandleResult(result);
         }
 
         [HttpGet("sala/{salaId}")]
         public IActionResult GetBySala(int salaId)
         {
             var result = _service.GetBySala(salaId);
-            if (!result.Ok) return BadRequest(result.Error);
-            return Ok(result.Data);
+            return HandleResult(result);
         }
     }
 }

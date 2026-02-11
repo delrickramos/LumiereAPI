@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Lumiere.Models
 {
@@ -20,6 +21,8 @@ namespace Lumiere.Models
         public Filme? Filme { get; set; }
         public Sala? Sala { get; set; }
         public FormatoSessao? FormatoSessao { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public List<Ingresso>? Ingressos { get; set; }
     }
 }

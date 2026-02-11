@@ -30,11 +30,11 @@ namespace Lumiere.API.Services
         public ServiceResult<IngressoDto> GetById(int id)
         {
             if (id <= 0)
-                return ServiceResult<IngressoDto>.Fail("Id inválido.");
+                return ServiceResult<IngressoDto>.Fail("Id inválido.", 400);
 
             var ingresso = _ingressoRepo.GetIngressoById(id);
             if (ingresso == null)
-                return ServiceResult<IngressoDto>.Fail("Ingresso não encontrado.");
+                return ServiceResult<IngressoDto>.Fail("Ingresso não encontrado.", 404);
 
             return ServiceResult<IngressoDto>.Success(ingresso.ToIngressoDto());
         }
@@ -42,10 +42,10 @@ namespace Lumiere.API.Services
         public ServiceResult<IEnumerable<IngressoDto>> GetBySessao(int sessaoId)
         {
             if (sessaoId <= 0)
-                return ServiceResult<IEnumerable<IngressoDto>>.Fail("SessaoId inválido.");
+                return ServiceResult<IEnumerable<IngressoDto>>.Fail("SessaoId inválido.", 400);
 
             if (!_sessaoRepo.SessaoExists(sessaoId))
-                return ServiceResult<IEnumerable<IngressoDto>>.Fail("Sessão não encontrada.");
+                return ServiceResult<IEnumerable<IngressoDto>>.Fail("Sessão não encontrada.", 404);
 
             var ingressos = _ingressoRepo.GetIngressosBySessao(sessaoId).Select(i => i.ToIngressoDto());
             return ServiceResult<IEnumerable<IngressoDto>>.Success(ingressos);
@@ -53,49 +53,49 @@ namespace Lumiere.API.Services
 
         public ServiceResult<IngressoDto> Vender(CreateIngressoDto dto)
         {
-            if (dto.SessaoId <= 0) return ServiceResult<IngressoDto>.Fail("SessaoId inválido.");
-            if (dto.AssentoId <= 0) return ServiceResult<IngressoDto>.Fail("AssentoId inválido.");
-            if (dto.TipoIngressoId <= 0) return ServiceResult<IngressoDto>.Fail("TipoIngressoId inválido.");
+            if (dto.SessaoId <= 0) return ServiceResult<IngressoDto>.Fail("SessaoId inválido.", 400);
+            if (dto.AssentoId <= 0) return ServiceResult<IngressoDto>.Fail("AssentoId inválido.", 400);
+            if (dto.TipoIngressoId <= 0) return ServiceResult<IngressoDto>.Fail("TipoIngressoId inválido.", 400);
 
             if (!_sessaoRepo.SessaoExists(dto.SessaoId))
-                return ServiceResult<IngressoDto>.Fail("Sessão não encontrada.");
+                return ServiceResult<IngressoDto>.Fail("Sessão não encontrada.", 404);
 
             if (!_assentoRepo.AssentoExists(dto.AssentoId))
-                return ServiceResult<IngressoDto>.Fail("Assento não encontrado.");
+                return ServiceResult<IngressoDto>.Fail("Assento não encontrado.", 404);
 
             if (!_tipoRepo.TipoIngressoExists(dto.TipoIngressoId))
-                return ServiceResult<IngressoDto>.Fail("Tipo de ingresso não encontrado.");
+                return ServiceResult<IngressoDto>.Fail("Tipo de ingresso não encontrado.", 404);
 
             var sessao = _sessaoRepo.GetSessaoById(dto.SessaoId);
             if (sessao == null)
-                return ServiceResult<IngressoDto>.Fail("Sessão não encontrada.");
+                return ServiceResult<IngressoDto>.Fail("Sessão não encontrada.", 404);
 
             var assento = _assentoRepo.GetAssentoById(dto.AssentoId);
             if (assento == null)
-                return ServiceResult<IngressoDto>.Fail("Assento não encontrado.");
+                return ServiceResult<IngressoDto>.Fail("Assento não encontrado.", 404);
 
             if (assento.SalaId != sessao.SalaId)
-                return ServiceResult<IngressoDto>.Fail("Assento não pertence à sala dessa sessão.");
+                return ServiceResult<IngressoDto>.Fail("Assento não pertence à sala dessa sessão.", 400);
 
             if (_ingressoRepo.AssentoOcupadoNaSessao(dto.SessaoId, dto.AssentoId))
-                return ServiceResult<IngressoDto>.Fail("Assento já está ocupado nesta sessão.");
+                return ServiceResult<IngressoDto>.Fail("Assento já está ocupado nesta sessão.", 409);
 
             var tipo = _tipoRepo.GetTipoIngressoById(dto.TipoIngressoId);
             if (tipo == null)
-                return ServiceResult<IngressoDto>.Fail("Tipo de ingresso não encontrado.");
+                return ServiceResult<IngressoDto>.Fail("Tipo de ingresso não encontrado.", 404);
 
             if (tipo.DescontoPercentual < 0m || tipo.DescontoPercentual > 100m)
-                return ServiceResult<IngressoDto>.Fail("DescontoPercentual inválido.");
+                return ServiceResult<IngressoDto>.Fail("DescontoPercentual inválido.", 400);
 
             var agora = DateTimeOffset.Now;
             if (sessao.DataHoraInicio <= agora.AddMinutes(30))
-                return ServiceResult<IngressoDto>.Fail("Não é possível vender ingresso com menos de 30 minutos para o início da sessão.");
+                return ServiceResult<IngressoDto>.Fail("Não é possível vender ingresso com menos de 30 minutos para o início da sessão.", 400);
 
             var fator = 1m - (tipo.DescontoPercentual / 100m);
             var precoFinal = sessao.PrecoBase * fator;
 
             if (precoFinal < 0m)
-                return ServiceResult<IngressoDto>.Fail("Preço final inválido.");
+                return ServiceResult<IngressoDto>.Fail("Preço final inválido.", 400);
 
             var ingresso = new Ingresso
             {
@@ -108,7 +108,7 @@ namespace Lumiere.API.Services
             };
 
             _ingressoRepo.AddIngresso(ingresso);
-            return ServiceResult<IngressoDto>.Success(ingresso.ToIngressoDto());
+            return ServiceResult<IngressoDto>.Success(ingresso.ToIngressoDto(), 201);
         }
     }
 }

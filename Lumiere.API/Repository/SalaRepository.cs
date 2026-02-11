@@ -15,7 +15,7 @@ namespace Lumiere.API.Repository
 
         public List<Sala> GetSalas()
         {
-            return _db.Salas.OrderBy(s => s.Id).ToList();
+            return _db.Salas.OrderBy(s => s.Nome).ToList();
         }
 
         public Sala GetSalaById(int id)

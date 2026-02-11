@@ -28,11 +28,11 @@ namespace Lumiere.API.Services
         public ServiceResult<SessaoDto> GetById(int id)
         {
             if (id <= 0)
-                return ServiceResult<SessaoDto>.Fail("Id inválido.");
+                return ServiceResult<SessaoDto>.Fail("Id inválido.", 400);
 
             var sessao = _sessaoRepo.GetSessaoById(id);
             if (sessao == null)
-                return ServiceResult<SessaoDto>.Fail("Sessão não encontrada.");
+                return ServiceResult<SessaoDto>.Fail("Sessão não encontrada.", 404);
 
             return ServiceResult<SessaoDto>.Success(sessao.ToSessaoDto());
         }
@@ -40,22 +40,22 @@ namespace Lumiere.API.Services
         public ServiceResult<SessaoDto> Create(CreateSessaoDto dto)
         {
             if (dto.FilmeId <= 0)
-                return ServiceResult<SessaoDto>.Fail("FilmeId inválido.");
+                return ServiceResult<SessaoDto>.Fail("FilmeId inválido.", 400);
 
             if (!_filmeRepo.FilmeExists(dto.FilmeId))
-                return ServiceResult<SessaoDto>.Fail("Filme não encontrado.");
+                return ServiceResult<SessaoDto>.Fail("Filme não encontrado.", 404);
 
             if (dto.SalaId <= 0)
-                return ServiceResult<SessaoDto>.Fail("SalaId inválido.");
+                return ServiceResult<SessaoDto>.Fail("SalaId inválido.", 400);
 
             if (!_salaRepo.SalaExists(dto.SalaId))
-                return ServiceResult<SessaoDto>.Fail("Sala não encontrada.");
+                return ServiceResult<SessaoDto>.Fail("Sala não encontrada.", 404);
 
             if (dto.FormatoSessaoId <= 0)
-                return ServiceResult<SessaoDto>.Fail("FormatoSessaoId inválido.");
+                return ServiceResult<SessaoDto>.Fail("FormatoSessaoId inválido.", 400);
 
             if (!_formatoSessaoRepo.FormatoSessaoExists(dto.FormatoSessaoId))
-                return ServiceResult<SessaoDto>.Fail("Formato de sessão não encontrado.");
+                return ServiceResult<SessaoDto>.Fail("Formato de sessão não encontrado.", 404);
 
             var filme = _filmeRepo.GetFilmeById(dto.FilmeId);
 
@@ -68,42 +68,42 @@ namespace Lumiere.API.Services
             sessao.DataHoraFim = fim;
 
             if (_sessaoRepo.SessaoHasConflict(dto.SalaId, dto.DataHoraInicio, sessao.DataHoraFim))
-                return ServiceResult<SessaoDto>.Fail("Já existe uma sessão nesta sala neste horário.");
+                return ServiceResult<SessaoDto>.Fail("Já existe uma sessão nesta sala neste horário.", 409);
 
             _sessaoRepo.AddSessao(sessao);
-            return ServiceResult<SessaoDto>.Success(sessao.ToSessaoDto());
+            return ServiceResult<SessaoDto>.Success(sessao.ToSessaoDto(), 201);
         }
 
         public ServiceResult<SessaoDto> Update(int id, UpdateSessaoDto dto)
         {
             if (id <= 0)
-                return ServiceResult<SessaoDto>.Fail("Id inválido.");
+                return ServiceResult<SessaoDto>.Fail("Id inválido.", 400);
 
             var sessao = _sessaoRepo.GetSessaoById(id);
             if (sessao == null)
-                return ServiceResult<SessaoDto>.Fail("Sessão não encontrada.");
+                return ServiceResult<SessaoDto>.Fail("Sessão não encontrada.", 404);
 
             if (dto.SalaId <= 0)
-                return ServiceResult<SessaoDto>.Fail("SalaId inválido.");
+                return ServiceResult<SessaoDto>.Fail("SalaId inválido.", 400);
 
             if (!_salaRepo.SalaExists(dto.SalaId))
-                return ServiceResult<SessaoDto>.Fail("Sala não encontrada.");
+                return ServiceResult<SessaoDto>.Fail("Sala não encontrada.", 404);
 
             if (_sessaoRepo.SessaoHasIngressos(id))
-                return ServiceResult<SessaoDto>.Fail("Não é possível atualizar sessão com ingressos vendidos.");
+                return ServiceResult<SessaoDto>.Fail("Não é possível atualizar sessão com ingressos vendidos.", 409);
 
             if (dto.FormatoSessaoId <= 0)
-                return ServiceResult<SessaoDto>.Fail("FormatoSessaoId inválido.");
+                return ServiceResult<SessaoDto>.Fail("FormatoSessaoId inválido.", 400);
 
             if (!_formatoSessaoRepo.FormatoSessaoExists(dto.FormatoSessaoId))
-                return ServiceResult<SessaoDto>.Fail("Formato de sessão não encontrado.");
+                return ServiceResult<SessaoDto>.Fail("Formato de sessão não encontrado.", 404);
 
             dto.UpdateSessaoModel(sessao);
             var filme = _filmeRepo.GetFilmeById(sessao.FilmeId);
             sessao.DataHoraFim = dto.DataHoraInicio.AddMinutes(filme.DuracaoMinutos);
 
             if (_sessaoRepo.SessaoHasConflict(dto.SalaId, dto.DataHoraInicio, sessao.DataHoraFim, id))
-                return ServiceResult<SessaoDto>.Fail("Já existe uma sessão nesta sala neste horário.");
+                return ServiceResult<SessaoDto>.Fail("Já existe uma sessão nesta sala neste horário.", 409);
 
             _sessaoRepo.UpdateSessao(sessao);
 
@@ -113,17 +113,17 @@ namespace Lumiere.API.Services
         public ServiceResult<object> Delete(int id)
         {
             if (id <= 0)
-                return ServiceResult<object>.Fail("Id inválido.");
+                return ServiceResult<object>.Fail("Id inválido.", 400);
 
             var sessao = _sessaoRepo.GetSessaoById(id);
             if (sessao == null)
-                return ServiceResult<object>.Fail("Sessão não encontrada.");
+                return ServiceResult<object>.Fail("Sessão não encontrada.", 404);
 
             if (_sessaoRepo.SessaoHasIngressos(id))
-                return ServiceResult<object>.Fail("Não é possível excluir sessão com ingressos vendidos.");
+                return ServiceResult<object>.Fail("Não é possível excluir sessão com ingressos vendidos.", 409);
 
             _sessaoRepo.DeleteSessao(id);
-            return ServiceResult<object>.Success(new { });
+            return ServiceResult<object>.Success(new { }, 204);
         }
     }
 }

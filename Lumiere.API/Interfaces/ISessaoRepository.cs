@@ -6,7 +6,6 @@ namespace Lumiere.API.Interfaces
     {
         List<Sessao> GetSessoes();
         Sessao GetSessaoById(int id);
-        Sessao? GetSessaoByIdWithIngressos(int id);
         void AddSessao(Sessao sessao);
         void UpdateSessao(Sessao sessao);
         void DeleteSessao(int id);
