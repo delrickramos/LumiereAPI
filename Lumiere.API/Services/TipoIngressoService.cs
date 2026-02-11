@@ -79,7 +79,6 @@ namespace Lumiere.API.Services
             if (_repo.TipoIngressoNomeExists(nome, ignoreId: id))
                 return ServiceResult<TipoIngressoDto>.Fail("Já existe um tipo de ingresso com esse nome.");
 
-            // Se você tiver mapper de update, pode usar. Como são 2 campos, dá pra setar direto:
             tipo.Nome = nome;
             tipo.DescontoPercentual = dto.DescontoPercentual;
 

@@ -1,8 +1,6 @@
 ﻿using Lumiere.API.Dtos.FormatoSessao;
 using Microsoft.AspNetCore.Mvc;
-using Lumiere.API.Services.Interfaces;
 using Lumiere.API.Interfaces;
-
 namespace Lumiere.API.Controllers
 {
     [Route("api/formatos-sessao")]

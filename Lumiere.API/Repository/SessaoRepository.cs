@@ -3,7 +3,6 @@ using Lumiere.API.Interfaces;
 using Lumiere.Models;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace Lumiere.API.Repository
 {
     public class SessaoRepository : ISessaoRepository
@@ -55,6 +54,15 @@ namespace Lumiere.API.Repository
         public bool SessaoHasIngressos(int id)
         {
             return _db.Ingressos.Any(i => i.SessaoId == id);
+        }
+
+        public bool SessaoHasConflict(int salaId, DateTimeOffset dataHoraInicio, DateTimeOffset dataHoraFim, int? sessaoId = null)
+        {
+            return _db.Sessoes.Any(s => s.SalaId == salaId && (sessaoId == null || s.Id != sessaoId) &&
+            ((s.DataHoraInicio <= dataHoraInicio && s.DataHoraFim > dataHoraInicio) || 
+            (s.DataHoraInicio < dataHoraFim && s.DataHoraFim >= dataHoraFim) ||
+            (s.DataHoraInicio >= dataHoraInicio && s.DataHoraFim <= dataHoraFim))
+            );
         }
     }
 }
