@@ -1,7 +1,6 @@
 using Lumiere.API.Database;
 using Lumiere.API.Interfaces;
 using Lumiere.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace Lumiere.API.Repository
 {

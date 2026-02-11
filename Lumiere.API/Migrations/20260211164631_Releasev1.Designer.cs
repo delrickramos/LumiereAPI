@@ -4,6 +4,7 @@ using Lumiere.API.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Lumiere.API.Migrations
 {
     [DbContext(typeof(LumiereContext))]
-    partial class LumiereContextModelSnapshot : ModelSnapshot
+    [Migration("20260211164631_Releasev1")]
+    partial class Releasev1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,13 +38,11 @@ namespace Lumiere.API.Migrations
 
                     b.Property<string>("Fileira")
                         .IsRequired()
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SalaId")
                         .HasColumnType("int");
@@ -69,13 +70,11 @@ namespace Lumiere.API.Migrations
 
                     b.Property<string>("Direcao")
                         .IsRequired()
-                        .HasMaxLength(120)
-                        .HasColumnType("nvarchar(120)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Distribuidora")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DuracaoMinutos")
                         .HasColumnType("int");
@@ -85,13 +84,11 @@ namespace Lumiere.API.Migrations
 
                     b.Property<string>("Sinopse")
                         .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Titulo")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -110,8 +107,7 @@ namespace Lumiere.API.Migrations
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasMaxLength(60)
-                        .HasColumnType("nvarchar(60)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -145,8 +141,7 @@ namespace Lumiere.API.Migrations
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasMaxLength(60)
-                        .HasColumnType("nvarchar(60)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -196,6 +191,9 @@ namespace Lumiere.API.Migrations
                     b.Property<int>("AssentoId")
                         .HasColumnType("int");
 
+                    b.Property<DateTimeOffset>("ExpiraEm")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<decimal>("PrecoFinal")
                         .HasColumnType("decimal(18,2)");
 
@@ -232,8 +230,7 @@ namespace Lumiere.API.Migrations
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasMaxLength(60)
-                        .HasColumnType("nvarchar(60)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NumeroColunas")
                         .HasColumnType("int");
@@ -268,8 +265,7 @@ namespace Lumiere.API.Migrations
 
                     b.Property<string>("Idioma")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("PrecoBase")
                         .HasColumnType("decimal(18,2)");
@@ -301,8 +297,7 @@ namespace Lumiere.API.Migrations
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasMaxLength(60)
-                        .HasColumnType("nvarchar(60)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

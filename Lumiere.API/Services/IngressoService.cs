@@ -1,7 +1,7 @@
 using Lumiere.API.Dtos.Ingresso;
 using Lumiere.API.Interfaces;
 using Lumiere.API.Mappers;
-using Lumiere.API.Services;
+using Lumiere.API.Common;
 using Lumiere.Models;
 
 namespace Lumiere.API.Services
@@ -57,15 +57,6 @@ namespace Lumiere.API.Services
             if (dto.AssentoId <= 0) return ServiceResult<IngressoDto>.Fail("AssentoId inválido.", 400);
             if (dto.TipoIngressoId <= 0) return ServiceResult<IngressoDto>.Fail("TipoIngressoId inválido.", 400);
 
-            if (!_sessaoRepo.SessaoExists(dto.SessaoId))
-                return ServiceResult<IngressoDto>.Fail("Sessão não encontrada.", 404);
-
-            if (!_assentoRepo.AssentoExists(dto.AssentoId))
-                return ServiceResult<IngressoDto>.Fail("Assento não encontrado.", 404);
-
-            if (!_tipoRepo.TipoIngressoExists(dto.TipoIngressoId))
-                return ServiceResult<IngressoDto>.Fail("Tipo de ingresso não encontrado.", 404);
-
             var sessao = _sessaoRepo.GetSessaoById(dto.SessaoId);
             if (sessao == null)
                 return ServiceResult<IngressoDto>.Fail("Sessão não encontrada.", 404);
@@ -103,7 +94,6 @@ namespace Lumiere.API.Services
                 AssentoId = dto.AssentoId,
                 TipoIngressoId = dto.TipoIngressoId,
                 PrecoFinal = precoFinal,
-                ExpiraEm = sessao.DataHoraInicio.AddMinutes(-30),
                 Status = StatusIngressoEnum.Confirmado
             };
 

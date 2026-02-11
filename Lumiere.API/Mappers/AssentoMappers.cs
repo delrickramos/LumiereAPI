@@ -1,6 +1,5 @@
 ﻿using Lumiere.API.Dtos.Assento;
 using Lumiere.Models;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Lumiere.API.Mappers
 {

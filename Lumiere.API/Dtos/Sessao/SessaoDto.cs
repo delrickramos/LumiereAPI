@@ -1,7 +1,4 @@
-﻿using Lumiere.Models;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Lumiere.API.Dtos.Sessao
+﻿namespace Lumiere.API.Dtos.Sessao
 {
     public class SessaoDto
     {

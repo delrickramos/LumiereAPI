@@ -1,4 +1,4 @@
-namespace Lumiere.API.Services
+namespace Lumiere.API.Common
 {
     public class ServiceResult<T>
     {

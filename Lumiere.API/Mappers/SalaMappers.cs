@@ -1,5 +1,4 @@
-﻿using System.Xml;
-using Lumiere.API.Dtos.Sala;
+﻿using Lumiere.API.Dtos.Sala;
 using Lumiere.Models;
 
 namespace Lumiere.API.Mappers
@@ -13,7 +12,6 @@ namespace Lumiere.API.Mappers
                 Id = sala.Id,
                 Nome = sala.Nome,
                 Capacidade = sala.Capacidade,
-                Tipo = sala.Tipo
             };
         }
 
@@ -24,7 +22,6 @@ namespace Lumiere.API.Mappers
                 Nome = salaDto.Nome,
                 NumeroLinhas = salaDto.NumeroLinhas,
                 NumeroColunas = salaDto.NumeroColunas,
-                Tipo = salaDto.Tipo
             };
         }
 
@@ -32,7 +29,6 @@ namespace Lumiere.API.Mappers
         {
             sala.Nome = salaDto.Nome;
             sala.Capacidade = salaDto.Capacidade;
-            sala.Tipo = salaDto.Tipo;
         }
     }
 }

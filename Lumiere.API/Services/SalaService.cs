@@ -2,6 +2,7 @@ using Lumiere.API.Dtos.Sala;
 using Lumiere.API.Interfaces;
 using Lumiere.API.Mappers;
 using Lumiere.Models;
+using Lumiere.API.Common;
 
 namespace Lumiere.API.Services
 {
@@ -41,13 +42,9 @@ namespace Lumiere.API.Services
         public ServiceResult<SalaDto> Create(CreateSalaDto dto)
         {
             var nome = (dto.Nome ?? "").Trim();
-            var tipo = (dto.Tipo ?? "").Trim();
 
             var nomeVal = ValidateTexto("Nome", nome, NomeMin, NomeMax);
             if (nomeVal != null) return ServiceResult<SalaDto>.Fail(nomeVal, 400);
-
-            var tipoVal = ValidateTipo(tipo);
-            if (tipoVal != null) return ServiceResult<SalaDto>.Fail(tipoVal, 400);
 
             var linhasVal = ValidateLinhas(dto.NumeroLinhas);
             if (linhasVal != null) return ServiceResult<SalaDto>.Fail(linhasVal, 400);
@@ -60,7 +57,6 @@ namespace Lumiere.API.Services
 
             var sala = dto.ToSalaModel();
             sala.Nome = nome;
-            sala.Tipo = tipo;
             sala.Capacidade = dto.NumeroLinhas * dto.NumeroColunas;
 
             _repo.AddSala(sala);
@@ -86,13 +82,9 @@ namespace Lumiere.API.Services
                 return ServiceResult<SalaDto>.Fail("Sala não encontrada.", 404);
 
             var nome = (dto.Nome ?? "").Trim();
-            var tipo = (dto.Tipo ?? "").Trim();
 
             var nomeVal = ValidateTexto("Nome", nome, NomeMin, NomeMax);
             if (nomeVal != null) return ServiceResult<SalaDto>.Fail(nomeVal, 400);
-
-            var tipoVal = ValidateTipo(tipo);
-            if (tipoVal != null) return ServiceResult<SalaDto>.Fail(tipoVal, 400);
 
             var capVal = ValidateCapacidade(dto.Capacidade);
             if (capVal != null) return ServiceResult<SalaDto>.Fail(capVal, 400);
@@ -103,7 +95,6 @@ namespace Lumiere.API.Services
             dto.UpdateSalaModel(sala);
 
             sala.Nome = nome;
-            sala.Tipo = tipo;
 
             _repo.UpdateSala(sala);
             return ServiceResult<SalaDto>.Success(sala.ToSalaDto());
@@ -140,17 +131,6 @@ namespace Lumiere.API.Services
         {
             if (capacidade < CapacidadeMin || capacidade > CapacidadeMax)
                 return $"Capacidade deve estar entre {CapacidadeMin} e {CapacidadeMax}.";
-            return null;
-        }
-
-        private string? ValidateTipo(string tipo)
-        {
-            if (string.IsNullOrWhiteSpace(tipo))
-                return "Tipo é obrigatório.";
-
-            if (tipo.Length < 2 || tipo.Length > 20)
-                return "Tipo inválido.";
-
             return null;
         }
 

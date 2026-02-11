@@ -1,6 +1,4 @@
-using Lumiere.API.Dtos.Assento;
 using Lumiere.API.Interfaces;
-using Lumiere.API.Mappers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lumiere.API.Controllers

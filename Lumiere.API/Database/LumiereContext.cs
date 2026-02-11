@@ -1,9 +1,5 @@
 ﻿using Lumiere.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Lumiere.API.Database
 {
