@@ -25,11 +25,13 @@ namespace Lumiere.API.Repository
                     Capacidade = s.Capacidade,
 
                     TotalIngressosVendidos = s.Sessoes!
+                        .Where(sessao => sessao.DataHoraFim < DateTimeOffset.Now)
                         .SelectMany(sessao => sessao.Ingressos!)
                         .Count(ingresso => ingresso.Status == StatusIngressoEnum.Confirmado),
 
                     TaxaOcupacao = s.Capacidade > 0
                         ? (decimal)s.Sessoes!
+                            .Where(sessao => sessao.DataHoraFim < DateTimeOffset.Now)
                             .SelectMany(sessao => sessao.Ingressos!)
                             .Count(ingresso => ingresso.Status == StatusIngressoEnum.Confirmado)
                           / s.Capacidade * 100

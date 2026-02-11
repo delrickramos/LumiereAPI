@@ -9,12 +9,14 @@ namespace Lumiere.API.Services
         private readonly ISessaoRepository _sessaoRepo;
         private readonly IFilmeRepository _filmeRepo;
         private readonly ISalaRepository _salaRepo;
+        private readonly IFormatoSessaoRepository _formatoSessaoRepo;
 
-        public SessaoService(ISessaoRepository sessaoRepo, IFilmeRepository filmeRepo, ISalaRepository salaRepo)
+        public SessaoService(ISessaoRepository sessaoRepo, IFilmeRepository filmeRepo, ISalaRepository salaRepo, IFormatoSessaoRepository formatoSessaoRepo)
         {
             _sessaoRepo = sessaoRepo;
             _filmeRepo = filmeRepo;
             _salaRepo = salaRepo;
+            _formatoSessaoRepo = formatoSessaoRepo;
         }
 
         public ServiceResult<IEnumerable<SessaoDto>> GetAll()
@@ -49,6 +51,12 @@ namespace Lumiere.API.Services
             if (!_salaRepo.SalaExists(dto.SalaId))
                 return ServiceResult<SessaoDto>.Fail("Sala não encontrada.");
 
+            if (dto.FormatoSessaoId <= 0)
+                return ServiceResult<SessaoDto>.Fail("FormatoSessaoId inválido.");
+
+            if (!_formatoSessaoRepo.FormatoSessaoExists(dto.FormatoSessaoId))
+                return ServiceResult<SessaoDto>.Fail("Formato de sessão não encontrado.");
+
             var filme = _filmeRepo.GetFilmeById(dto.FilmeId);
             var inicio = dto.DataHoraInicio;
             var fim = inicio.AddMinutes(filme.DuracaoMinutos);
@@ -79,6 +87,12 @@ namespace Lumiere.API.Services
 
             if (_sessaoRepo.SessaoHasIngressos(id))
                 return ServiceResult<SessaoDto>.Fail("Não é possível atualizar sessão com ingressos vendidos.");
+
+            if (dto.FormatoSessaoId <= 0)
+                return ServiceResult<SessaoDto>.Fail("FormatoSessaoId inválido.");
+
+            if (!_formatoSessaoRepo.FormatoSessaoExists(dto.FormatoSessaoId))
+                return ServiceResult<SessaoDto>.Fail("Formato de sessão não encontrado.");
 
             dto.UpdateSessaoModel(sessao);
             var filme = _filmeRepo.GetFilmeById(sessao.FilmeId);
