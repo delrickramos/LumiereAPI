@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Lumiere.API.Migrations
 {
     /// <inheritdoc />
-    public partial class LumiereSemUnderline : Migration
+    public partial class ReleaseV1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,7 +19,7 @@ namespace Lumiere.API.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Nome = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -30,7 +32,7 @@ namespace Lumiere.API.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Nome = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -43,9 +45,10 @@ namespace Lumiere.API.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Capacidade = table.Column<int>(type: "int", nullable: false),
-                    Tipo = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Nome = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
+                    NumeroLinhas = table.Column<int>(type: "int", nullable: false),
+                    NumeroColunas = table.Column<int>(type: "int", nullable: false),
+                    Capacidade = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -58,8 +61,8 @@ namespace Lumiere.API.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Desconto = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    Nome = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
+                    DescontoPercentual = table.Column<decimal>(type: "decimal(5,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -72,12 +75,12 @@ namespace Lumiere.API.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Titulo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Titulo = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     DuracaoMinutos = table.Column<int>(type: "int", nullable: false),
-                    ClassificacaoIndicativa = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Sinopse = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Direcao = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Distribuidora = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ClassificacaoIndicativa = table.Column<int>(type: "int", nullable: false),
+                    Sinopse = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
+                    Direcao = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false),
+                    Distribuidora = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     GeneroId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -98,8 +101,9 @@ namespace Lumiere.API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Coluna = table.Column<int>(type: "int", nullable: false),
-                    Fileira = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TipoAssento = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Fileira = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false),
+                    Nome = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    TipoAssento = table.Column<int>(type: "int", nullable: false),
                     SalaId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -121,8 +125,8 @@ namespace Lumiere.API.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DataHoraInicio = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     DataHoraFim = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    Versao = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Preco = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Idioma = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    PrecoBase = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     SalaId = table.Column<int>(type: "int", nullable: false),
                     FormatoSessaoId = table.Column<int>(type: "int", nullable: false),
                     FilmeId = table.Column<int>(type: "int", nullable: false)
@@ -147,7 +151,7 @@ namespace Lumiere.API.Migrations
                         column: x => x.SalaId,
                         principalTable: "Salas",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -157,8 +161,7 @@ namespace Lumiere.API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PrecoFinal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ExpiraEm = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
                     SessaoId = table.Column<int>(type: "int", nullable: false),
                     AssentoId = table.Column<int>(type: "int", nullable: false),
                     TipoIngressoId = table.Column<int>(type: "int", nullable: false)
@@ -171,19 +174,54 @@ namespace Lumiere.API.Migrations
                         column: x => x.AssentoId,
                         principalTable: "Assentos",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Ingressos_Sessoes_SessaoId",
                         column: x => x.SessaoId,
                         principalTable: "Sessoes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Ingressos_TiposIngresso_TipoIngressoId",
                         column: x => x.TipoIngressoId,
                         principalTable: "TiposIngresso",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "FormatosSessao",
+                columns: new[] { "Id", "Nome" },
+                values: new object[,]
+                {
+                    { 1, "2D" },
+                    { 2, "3D" },
+                    { 3, "IMAX" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Generos",
+                columns: new[] { "Id", "Nome" },
+                values: new object[,]
+                {
+                    { 1, "Ação" },
+                    { 2, "Comédia" },
+                    { 3, "Drama" },
+                    { 4, "Terror" },
+                    { 5, "Ficção" },
+                    { 6, "Animação" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "TiposIngresso",
+                columns: new[] { "Id", "DescontoPercentual", "Nome" },
+                values: new object[,]
+                {
+                    { 1, 0.00m, "Inteira" },
+                    { 2, 50.00m, "Meia" },
+                    { 3, 50.00m, "Estudante" },
+                    { 4, 50.00m, "Idoso" },
+                    { 5, 30.00m, "Criança" }
                 });
 
             migrationBuilder.CreateIndex(

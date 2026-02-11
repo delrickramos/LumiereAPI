@@ -368,7 +368,7 @@ namespace Lumiere.API.Migrations
                     b.HasOne("Lumiere.Models.Assento", "Assento")
                         .WithMany("Ingressos")
                         .HasForeignKey("AssentoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Lumiere.Models.Sessao", "Sessao")
@@ -407,7 +407,7 @@ namespace Lumiere.API.Migrations
                     b.HasOne("Lumiere.Models.Sala", "Sala")
                         .WithMany("Sessoes")
                         .HasForeignKey("SalaId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Filme");

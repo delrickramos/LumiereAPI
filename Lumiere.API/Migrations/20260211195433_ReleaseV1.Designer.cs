@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Lumiere.API.Migrations
 {
     [DbContext(typeof(LumiereContext))]
-    [Migration("20260211172507_RemoveExpiraEmFromIngresso")]
-    partial class RemoveExpiraEmFromIngresso
+    [Migration("20260211195433_ReleaseV1")]
+    partial class ReleaseV1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,11 +38,13 @@ namespace Lumiere.API.Migrations
 
                     b.Property<string>("Fileira")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<int>("SalaId")
                         .HasColumnType("int");
@@ -70,11 +72,13 @@ namespace Lumiere.API.Migrations
 
                     b.Property<string>("Direcao")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
 
                     b.Property<string>("Distribuidora")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<int>("DuracaoMinutos")
                         .HasColumnType("int");
@@ -84,11 +88,13 @@ namespace Lumiere.API.Migrations
 
                     b.Property<string>("Sinopse")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<string>("Titulo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.HasKey("Id");
 
@@ -107,7 +113,8 @@ namespace Lumiere.API.Migrations
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
                     b.HasKey("Id");
 
@@ -141,7 +148,8 @@ namespace Lumiere.API.Migrations
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
                     b.HasKey("Id");
 
@@ -227,7 +235,8 @@ namespace Lumiere.API.Migrations
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
                     b.Property<int>("NumeroColunas")
                         .HasColumnType("int");
@@ -262,7 +271,8 @@ namespace Lumiere.API.Migrations
 
                     b.Property<string>("Idioma")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<decimal>("PrecoBase")
                         .HasColumnType("decimal(18,2)");
@@ -294,7 +304,8 @@ namespace Lumiere.API.Migrations
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
                     b.HasKey("Id");
 
@@ -360,7 +371,7 @@ namespace Lumiere.API.Migrations
                     b.HasOne("Lumiere.Models.Assento", "Assento")
                         .WithMany("Ingressos")
                         .HasForeignKey("AssentoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Lumiere.Models.Sessao", "Sessao")
@@ -399,7 +410,7 @@ namespace Lumiere.API.Migrations
                     b.HasOne("Lumiere.Models.Sala", "Sala")
                         .WithMany("Sessoes")
                         .HasForeignKey("SalaId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Filme");

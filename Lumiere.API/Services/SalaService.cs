@@ -13,9 +13,6 @@ namespace Lumiere.API.Services
         private const int NomeMin = 2;
         private const int NomeMax = 60;
 
-        private const int CapacidadeMin = 1;
-        private const int CapacidadeMax = 1000;
-
         public SalaService(ISalaRepository repo)
         {
             _repo = repo;
@@ -86,9 +83,6 @@ namespace Lumiere.API.Services
             var nomeVal = ValidateTexto("Nome", nome, NomeMin, NomeMax);
             if (nomeVal != null) return ServiceResult<SalaDto>.Fail(nomeVal, 400);
 
-            var capVal = ValidateCapacidade(dto.Capacidade);
-            if (capVal != null) return ServiceResult<SalaDto>.Fail(capVal, 400);
-
             if (_repo.SalaNomeExists(nome, ignoreId: id))
                 return ServiceResult<SalaDto>.Fail("Já existe uma sala com esse nome.", 409);
 
@@ -124,13 +118,6 @@ namespace Lumiere.API.Services
             if (valor.Length < min || valor.Length > max)
                 return $"{campo} deve ter entre {min} e {max} caracteres.";
 
-            return null;
-        }
-
-        private string? ValidateCapacidade(int capacidade)
-        {
-            if (capacidade < CapacidadeMin || capacidade > CapacidadeMax)
-                return $"Capacidade deve estar entre {CapacidadeMin} e {CapacidadeMax}.";
             return null;
         }
 

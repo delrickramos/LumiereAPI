@@ -40,6 +40,24 @@ namespace Lumiere.API.Database
                 .HasForeignKey(a => a.SalaId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Sessao>()
+                .HasOne(s => s.Sala)
+                .WithMany(sala => sala.Sessoes)
+                .HasForeignKey(s => s.SalaId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Ingresso>()
+                .HasOne(i => i.Sessao)
+                .WithMany(s => s.Ingressos)
+                .HasForeignKey(i => i.SessaoId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Ingresso>()
+                .HasOne(i => i.Assento)
+                .WithMany(a => a.Ingressos)
+                .HasForeignKey(i => i.AssentoId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             // ===== GENEROS (fixo) =====
             modelBuilder.Entity<Genero>().HasData(
                 new Genero { Id = 1, Nome = "Ação" },
