@@ -1,6 +1,7 @@
 using Lumiere.API.Dtos.Sala;
 using Lumiere.API.Interfaces;
 using Lumiere.API.Mappers;
+using Lumiere.Models;
 
 namespace Lumiere.API.Services
 {
@@ -48,8 +49,11 @@ namespace Lumiere.API.Services
             var tipoVal = ValidateTipo(tipo);
             if (tipoVal != null) return ServiceResult<SalaDto>.Fail(tipoVal);
 
-            var capVal = ValidateCapacidade(dto.Capacidade);
-            if (capVal != null) return ServiceResult<SalaDto>.Fail(capVal);
+            var linhasVal = ValidateLinhas(dto.NumeroLinhas);
+            if (linhasVal != null) return ServiceResult<SalaDto>.Fail(linhasVal);
+
+            var colunasVal = ValidateColunas(dto.NumeroColunas);
+            if (colunasVal != null) return ServiceResult<SalaDto>.Fail(colunasVal);
 
             if (_repo.SalaNomeExists(nome))
                 return ServiceResult<SalaDto>.Fail("Já existe uma sala com esse nome.");
@@ -57,8 +61,18 @@ namespace Lumiere.API.Services
             var sala = dto.ToSalaModel();
             sala.Nome = nome;
             sala.Tipo = tipo;
+            sala.Capacidade = dto.NumeroLinhas * dto.NumeroColunas;
 
             _repo.AddSala(sala);
+
+            var assentos = GerarAssentos(
+                sala.Id,
+                dto.NumeroLinhas,
+                dto.NumeroColunas
+            );
+
+            _repo.AddAssentosRange(assentos);
+
             return ServiceResult<SalaDto>.Success(sala.ToSalaDto());
         }
 
@@ -139,5 +153,71 @@ namespace Lumiere.API.Services
 
             return null;
         }
+
+        private static TipoAssentoEnum CalcularTipoAssento(int fileiraIndex, int coluna, int linhas, int colunas)
+        {
+            bool ehPrimeira = fileiraIndex == 0;
+            bool ehUltima = fileiraIndex == linhas - 1;
+            bool ehPonta = (coluna == 1) || (coluna == colunas);
+
+            if ((ehPrimeira || ehUltima) && ehPonta)
+                return TipoAssentoEnum.Obeso;
+
+            if (ehPrimeira)
+                return TipoAssentoEnum.Cadeirante;
+
+            return TipoAssentoEnum.Normal;
+        }
+
+        private static string LinhaParaLetras(int index)
+        {
+            var sb = new System.Text.StringBuilder();
+            index += 1;
+            while (index > 0)
+            {
+                index--;
+                sb.Insert(0, (char)('A' + (index % 26)));
+                index /= 26;
+            }
+            return sb.ToString();
+        }
+
+        private static List<Assento> GerarAssentos(int salaId, int linhas, int colunas)
+        {
+            var list = new List<Assento>(linhas * colunas);
+
+            for (int i = 0; i < linhas; i++)
+            {
+                var fileira = LinhaParaLetras(i);
+
+                for (int coluna = 1; coluna <= colunas; coluna++)
+                {
+                    list.Add(new Assento
+                    {
+                        SalaId = salaId,
+                        Fileira = fileira,
+                        Coluna = coluna,
+                        TipoAssento = CalcularTipoAssento(i, coluna, linhas, colunas)
+                    });
+                }
+            }
+
+            return list;
+        }
+
+        private string? ValidateLinhas(int linhas)
+        {
+            if (linhas <= 0) return "NumeroLinhas deve ser maior que zero.";
+            if (linhas > 52) return "NumeroLinhas muito grande (máximo 52).";
+            return null;
+        }
+
+        private string? ValidateColunas(int colunas)
+        {
+            if (colunas <= 0) return "NumeroColunas deve ser maior que zero.";
+            if (colunas > 60) return "NumeroColunas muito grande (máximo 60).";
+            return null;
+        }
+
     }
 }

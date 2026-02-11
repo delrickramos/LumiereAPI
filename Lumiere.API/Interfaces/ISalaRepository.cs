@@ -13,5 +13,6 @@ namespace Lumiere.API.Interfaces
         bool SalaExists(int id);
         bool SalaNomeExists(string nome, int? ignoreId = null);
         bool SalaHasSessoes(int id);
+        void AddAssentosRange(IEnumerable<Assento> assentos);
     }
 }
