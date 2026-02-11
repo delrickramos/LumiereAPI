@@ -23,13 +23,6 @@ namespace Lumiere.API.Repository
             return _db.Sessoes.FirstOrDefault(s => s.Id == id)!;
         }
 
-        public Sessao? GetSessaoByIdWithIngressos(int id)
-        {
-            return _db.Sessoes
-                .Include(s => s.Ingressos)
-                .FirstOrDefault(s => s.Id == id);
-        }
-
         public List<Sessao> GetSessoes()
         {
             return _db.Sessoes.OrderBy(s => s.Id).ToList();

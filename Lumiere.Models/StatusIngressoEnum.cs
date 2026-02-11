@@ -6,8 +6,8 @@ namespace Lumiere.Models
 {
     public enum StatusIngressoEnum
     {
-        Reservado = 0, // Para futura implementação de fluxo de pagamento
-        Cancelado = 1,
+        Reservado = 0, // TODO: Para implementação futura - Fluxo de pagamento e expiração de reservas
+        Cancelado = 1, // TODO: Para implementação futura - Endpoint PUT /ingressos/{id}/cancelar
         Confirmado = 2
     }
 }

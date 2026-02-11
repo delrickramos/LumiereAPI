@@ -1,6 +1,7 @@
 using Lumiere.API.Dtos.Filme;
 using Lumiere.API.Interfaces;
 using Lumiere.API.Mappers;
+using Lumiere.Models;
 
 namespace Lumiere.API.Services;
 public class FilmeService : IFilmeService
@@ -62,7 +63,6 @@ public class FilmeService : IFilmeService
         var sinopse = (dto.Sinopse ?? "").Trim();
         var direcao = (dto.Direcao ?? "").Trim();
         var distribuidora = (dto.Distribuidora ?? "").Trim();
-        var classificacao = (dto.ClassificacaoIndicativa ?? "").Trim();
 
         var tituloVal = ValidateTexto("Título", titulo, TituloMin, TituloMax);
         if (tituloVal != null) return ServiceResult<FilmeDto>.Fail(tituloVal);
@@ -76,9 +76,6 @@ public class FilmeService : IFilmeService
         var distVal = ValidateTexto("Distribuidora", distribuidora, NomePessoaMin, NomePessoaMax);
         if (distVal != null) return ServiceResult<FilmeDto>.Fail(distVal);
 
-        var classVal = ValidateClassificacao(classificacao);
-        if (classVal != null) return ServiceResult<FilmeDto>.Fail(classVal);
-
         var durVal = ValidateDuracao(dto.DuracaoMinutos);
         if (durVal != null) return ServiceResult<FilmeDto>.Fail(durVal);
 
@@ -91,12 +88,14 @@ public class FilmeService : IFilmeService
         if (_repo.FilmeTituloExists(titulo))
             return ServiceResult<FilmeDto>.Fail("Já existe um filme com esse título.");
 
+        if (!Enum.IsDefined(typeof(ClassificacaoIndicativaEnum), dto.ClassificacaoIndicativa))
+            return ServiceResult<FilmeDto>.Fail("Classificação indicativa inválida.");
+
         var filme = dto.ToFilmeModel();
         filme.Titulo = titulo;
         filme.Sinopse = sinopse;
         filme.Direcao = direcao;
         filme.Distribuidora = distribuidora;
-        filme.ClassificacaoIndicativa = classificacao;
 
         _repo.AddFilme(filme);
 
@@ -116,7 +115,6 @@ public class FilmeService : IFilmeService
         var sinopse = (dto.Sinopse ?? "").Trim();
         var direcao = (dto.Direcao ?? "").Trim();
         var distribuidora = (dto.Distribuidora ?? "").Trim();
-        var classificacao = (dto.ClassificacaoIndicativa ?? "").Trim();
 
         var tituloVal = ValidateTexto("Título", titulo, TituloMin, TituloMax);
         if (tituloVal != null) return ServiceResult<FilmeDto>.Fail(tituloVal);
@@ -130,9 +128,6 @@ public class FilmeService : IFilmeService
         var distVal = ValidateTexto("Distribuidora", distribuidora, NomePessoaMin, NomePessoaMax);
         if (distVal != null) return ServiceResult<FilmeDto>.Fail(distVal);
 
-        var classVal = ValidateClassificacao(classificacao);
-        if (classVal != null) return ServiceResult<FilmeDto>.Fail(classVal);
-
         var durVal = ValidateDuracao(dto.DuracaoMinutos);
         if (durVal != null) return ServiceResult<FilmeDto>.Fail(durVal);
 
@@ -145,13 +140,15 @@ public class FilmeService : IFilmeService
         if (_repo.FilmeTituloExists(titulo, ignoreId: id))
             return ServiceResult<FilmeDto>.Fail("Já existe um filme com esse título.");
 
+        if (!Enum.IsDefined(typeof(ClassificacaoIndicativaEnum), dto.ClassificacaoIndicativa))
+            return ServiceResult<FilmeDto>.Fail("Classificação indicativa inválida.");
+
         dto.UpdateFilmeModel(filme);
 
         filme.Titulo = titulo;
         filme.Sinopse = sinopse;
         filme.Direcao = direcao;
         filme.Distribuidora = distribuidora;
-        filme.ClassificacaoIndicativa = classificacao;
 
         _repo.UpdateFilme(filme);
         return ServiceResult<FilmeDto>.Success(filme.ToFilmeDto());
@@ -188,17 +185,6 @@ public class FilmeService : IFilmeService
     {
         if (duracaoMinutos < DuracaoMin || duracaoMinutos > DuracaoMax)
             return $"DuraçãoMinutos deve estar entre {DuracaoMin} e {DuracaoMax}.";
-        return null;
-    }
-
-    private static string? ValidateClassificacao(string classificacao)
-    {
-        if (string.IsNullOrWhiteSpace(classificacao))
-            return "ClassificaçãoIndicativa é obrigatória.";
-
-        if (classificacao.Length > 10)
-            return "ClassificaçãoIndicativa inválida.";
-
         return null;
     }
 }
