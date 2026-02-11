@@ -1,5 +1,6 @@
 ﻿using Lumiere.API.Dtos.Sessao;
 using Lumiere.Models;
+using Newtonsoft.Json;
 
 namespace Lumiere.API.Dtos.Filme
 {
@@ -13,6 +14,8 @@ namespace Lumiere.API.Dtos.Filme
         public string Direcao { get; set; } = string.Empty;
         public string Distribuidora { get; set; } = string.Empty;
         public int GeneroId { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<SessaoDto>? Sessoes { get; set; }
 
     }
