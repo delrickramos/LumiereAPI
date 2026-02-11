@@ -15,7 +15,7 @@ namespace Lumiere.API.Repository
 
         public List<Ingresso> GetIngressos()
         {
-            return _db.Ingressos.OrderBy(i => i.Id).ToList();
+            return _db.Ingressos.OrderBy(i => i.SessaoId).ThenBy(i => i.Id).ToList();
         }
 
         public Ingresso GetIngressoById(int id)
@@ -36,6 +36,7 @@ namespace Lumiere.API.Repository
 
         public void UpdateIngresso(Ingresso ingresso)
         {
+            // TODO: Para implementação futura - Cancelamento de ingressos
             _db.Ingressos.Update(ingresso);
             _db.SaveChanges();
         }
@@ -50,11 +51,8 @@ namespace Lumiere.API.Repository
             return _db.Ingressos.Any(i => i.SessaoId == sessaoId && i.AssentoId == assentoId && i.Status == StatusIngressoEnum.Confirmado);
         }
 
-        public int GetQuantidadeIngressosVendidos(int sessaoId)
-        {
-            return _db.Ingressos.Count(i => i.SessaoId == sessaoId && i.Status == StatusIngressoEnum.Confirmado);
-        }
 
+        // TODO: Para implementação futura - Relatórios de vendas ou auditoria
         public List<Ingresso> GetIngressosConfirmados(int sessaoId)
         {
             return _db.Ingressos.Where(i => i.SessaoId == sessaoId && i.Status == StatusIngressoEnum.Confirmado).ToList();

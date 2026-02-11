@@ -11,7 +11,6 @@ namespace Lumiere.API.Interfaces
         void UpdateIngresso(Ingresso ingresso);
         bool IngressoExists(int id);
         bool AssentoOcupadoNaSessao(int sessaoId, int assentoId);
-        int GetQuantidadeIngressosVendidos(int sessaoId);
         List<Ingresso> GetIngressosConfirmados(int sessaoId);
     }
 }

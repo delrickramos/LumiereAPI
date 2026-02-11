@@ -15,7 +15,7 @@ namespace Lumiere.API.Repository
 
         public List<Genero> GetGeneros()
         {
-            return _db.Generos.OrderBy(g => g.Id).ToList();
+            return _db.Generos.OrderBy(g => g.Nome).ToList();
         }
 
         public Genero GetGeneroById(int id)

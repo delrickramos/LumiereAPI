@@ -23,31 +23,31 @@ public class FormatoSessaoService : IFormatoSessaoService
 
         var nomeValidation = ValidateNome(nome);
         if (nomeValidation != null)
-            return ServiceResult<FormatoSessaoDto>.Fail(nomeValidation);
+            return ServiceResult<FormatoSessaoDto>.Fail(nomeValidation, 400);
 
         if (_repo.FormatoSessaoNomeExists(nome))
-            return ServiceResult<FormatoSessaoDto>.Fail("Já existe um formato de sessão com esse nome.");
+            return ServiceResult<FormatoSessaoDto>.Fail("Já existe um formato de sessão com esse nome.", 409);
 
         var formato = dto.ToFormatoSessaoModel();
         formato.Nome = nome;
         _repo.AddFormatoSessao(formato);
-        return ServiceResult<FormatoSessaoDto>.Success(formato.ToFormatoSessaoDto());
+        return ServiceResult<FormatoSessaoDto>.Success(formato.ToFormatoSessaoDto(), 201);
     }
 
     public ServiceResult<object> Delete(int id)
     {
         if (id <= 0)
-            return ServiceResult<object>.Fail("Id inválido.");
+            return ServiceResult<object>.Fail("Id inválido.", 400);
 
         var formato = _repo.GetFormatoSessaoById(id);
         if (formato == null)
-            return ServiceResult<object>.Fail("Formato de sessão não encontrado.");
+            return ServiceResult<object>.Fail("Formato de sessão não encontrado.", 404);
 
         if (_repo.FormatoSessaoHasSessoes(id))
-            return ServiceResult<object>.Fail("Não é possível excluir um formato de sessão que possui sessões vinculadas.");
+            return ServiceResult<object>.Fail("Não é possível excluir um formato de sessão que possui sessões vinculadas.", 409);
 
         _repo.DeleteFormatoSessao(id);
-        return ServiceResult<object>.Success(new { });
+        return ServiceResult<object>.Success(new { }, 204);
     }
 
     public ServiceResult<IEnumerable<FormatoSessaoDto>> GetAll()
@@ -58,11 +58,11 @@ public class FormatoSessaoService : IFormatoSessaoService
     public ServiceResult<FormatoSessaoDto> GetById(int id)
     {
         if (id <= 0)
-            return ServiceResult<FormatoSessaoDto>.Fail("Id inválido.");
+            return ServiceResult<FormatoSessaoDto>.Fail("Id inválido.", 400);
 
         var formato = _repo.GetFormatoSessaoById(id);
         if (formato == null)
-            return ServiceResult<FormatoSessaoDto>.Fail("Formato de sessão não encontrado.");
+            return ServiceResult<FormatoSessaoDto>.Fail("Formato de sessão não encontrado.", 404);
 
         return ServiceResult<FormatoSessaoDto>.Success(formato.ToFormatoSessaoDto());    
     }
@@ -70,20 +70,20 @@ public class FormatoSessaoService : IFormatoSessaoService
     public ServiceResult<FormatoSessaoDto> Update(int id, UpdateFormatoSessaoDto dto)
     {
         if (id <= 0)
-            return ServiceResult<FormatoSessaoDto>.Fail("Id inválido.");
+            return ServiceResult<FormatoSessaoDto>.Fail("Id inválido.", 400);
 
         var formato = _repo.GetFormatoSessaoById(id);
         if (formato == null)
-            return ServiceResult<FormatoSessaoDto>.Fail("Formato de sessão não encontrado.");
+            return ServiceResult<FormatoSessaoDto>.Fail("Formato de sessão não encontrado.", 404);
 
         var nome = (dto.Nome ?? "").Trim();
 
         var nomeValidation = ValidateNome(nome);
         if (nomeValidation != null)
-            return ServiceResult<FormatoSessaoDto>.Fail(nomeValidation);
+            return ServiceResult<FormatoSessaoDto>.Fail(nomeValidation, 400);
 
         if (_repo.FormatoSessaoNomeExists(nome, ignoreId: id))
-            return ServiceResult<FormatoSessaoDto>.Fail("Já existe um formato de sessão com esse nome.");
+            return ServiceResult<FormatoSessaoDto>.Fail("Já existe um formato de sessão com esse nome.", 409);
 
         dto.UpdateFormatoSessaoModel(formato);
         formato.Nome = nome;

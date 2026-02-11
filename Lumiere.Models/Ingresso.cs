@@ -12,7 +12,7 @@ namespace Lumiere.Models
         public int Id { get; set; }
         [Column(TypeName = "decimal(18,2)")]
         public decimal PrecoFinal { get; set; }
-        public DateTimeOffset ExpiraEm { get; set; }
+        public DateTimeOffset ExpiraEm { get; set; } // TODO: Para implementação futura - Cancelamento automático de ingressos expirados
 
         [Required]
         public StatusIngressoEnum Status { get; set; }

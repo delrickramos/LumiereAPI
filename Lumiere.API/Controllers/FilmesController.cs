@@ -8,8 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Lumiere.API.Controllers
 {
     [Route("api/filmes")]
-    [ApiController]
-    public class FilmesController : ControllerBase
+    public class FilmesController : ServiceResultController
     {
         private readonly IFilmeService _service;
 
@@ -22,48 +21,41 @@ namespace Lumiere.API.Controllers
         public IActionResult Get()
         {
             var result = _service.GetAll();
-            if (!result.Ok) return BadRequest(result.Error);
-            return Ok(result.Data);
+            return HandleResult(result);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
             var result = _service.GetById(id);
-            if (!result.Ok) return NotFound(result.Error);
-            return Ok(result.Data);
+            return HandleResult(result);
         }
 
         [HttpGet("em-cartaz")]
         public IActionResult GetEmCartaz()
         {
             var result = _service.GetEmCartaz();
-            if (!result.Ok) return BadRequest(result.Error);
-
-            return Ok(result.Data);
+            return HandleResult(result);
         }
 
         [HttpPost]
         public IActionResult Add([FromBody] CreateFilmeDto filmeDto)
         {
             var result = _service.Create(filmeDto);
-            if (!result.Ok) return BadRequest(new { result.Error });
-            return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id }, result.Data);
+            return HandleResult(result);
         }
 
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] UpdateFilmeDto filmeDto)
         {
             var result = _service.Update(id, filmeDto);
-            if (!result.Ok) return BadRequest(result.Error);
-            return Ok(result.Data);
+            return HandleResult(result);
         }
         [HttpDelete("{id}")]
         public IActionResult Delete([FromRoute] int id)
         {
             var result = _service.Delete(id);
-            if (!result.Ok) return BadRequest(result.Error);
-            return NoContent();
+            return HandleResult(result);
         }
     }
 }

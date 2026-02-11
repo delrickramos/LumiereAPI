@@ -4,6 +4,7 @@ using Lumiere.API.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Lumiere.API.Migrations
 {
     [DbContext(typeof(LumiereContext))]
-    partial class LumiereContextModelSnapshot : ModelSnapshot
+    [Migration("20260211002926_AlterarClassificacaoParaEnum")]
+    partial class AlterarClassificacaoParaEnum
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,10 +37,6 @@ namespace Lumiere.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Fileira")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -179,12 +178,6 @@ namespace Lumiere.API.Migrations
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("NumeroColunas")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NumeroLinhas")
-                        .HasColumnType("int");
 
                     b.Property<string>("Tipo")
                         .IsRequired()

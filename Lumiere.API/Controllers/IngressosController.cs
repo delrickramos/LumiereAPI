@@ -7,8 +7,7 @@ using Lumiere.Models;
 namespace Lumiere.API.Controllers
 {
     [Route("api/ingressos")]
-    [ApiController]
-    public class IngressosController : ControllerBase
+    public class IngressosController : ServiceResultController
     {
         private readonly IIngressoService _service;
 
@@ -21,32 +20,28 @@ namespace Lumiere.API.Controllers
         public IActionResult Get()
         {
             var result = _service.GetAll();
-            if (!result.Ok) return BadRequest(result.Error);
-            return Ok(result.Data);
+            return HandleResult(result);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
             var result = _service.GetById(id);
-            if (!result.Ok) return NotFound(result.Error);
-            return Ok(result.Data);
+            return HandleResult(result);
         }
 
         [HttpGet("sessao/{sessaoId}")]
         public IActionResult GetBySessao(int sessaoId)
         {
             var result = _service.GetBySessao(sessaoId);
-            if (!result.Ok) return BadRequest(result.Error);
-            return Ok(result.Data);
+            return HandleResult(result);
         }
 
         [HttpPost]
         public IActionResult VenderIngresso([FromBody] CreateIngressoDto ingressoDto)
         {
             var result = _service.Vender(ingressoDto);
-            if (!result.Ok) return BadRequest(new { result.Error });
-            return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id }, result.Data);
+            return HandleResult(result);
         }
     }
 }
