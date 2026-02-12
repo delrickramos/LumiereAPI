@@ -4,13 +4,13 @@ namespace Lumiere.API.Interfaces
 {
     public interface IFormatoSessaoRepository
     {
-        List<FormatoSessao> GetFormatosSessoes();
-        FormatoSessao GetFormatoSessaoById(int id);
-        void AddFormatoSessao(FormatoSessao formatoSessao);
-        void UpdateFormatoSessao(FormatoSessao formatoSessao);
-        void DeleteFormatoSessao(int id);
-        bool FormatoSessaoExists(int id);
-        bool FormatoSessaoNomeExists(string nome, int? ignoreId = null);
-        bool FormatoSessaoHasSessoes(int id);
+        Task<List<FormatoSessao>> GetFormatosSessoesAsync();
+        Task<FormatoSessao> GetFormatoSessaoByIdAsync(int id);
+        Task AddFormatoSessaoAsync(FormatoSessao formatoSessao);
+        Task UpdateFormatoSessaoAsync(FormatoSessao formatoSessao);
+        Task DeleteFormatoSessaoAsync(int id);
+        Task<bool> FormatoSessaoExistsAsync(int id);
+        Task<bool> FormatoSessaoNomeExistsAsync(string nome, int? ignoreId = null);
+        Task<bool> FormatoSessaoHasSessoesAsync(int id);
     }
 }

@@ -1,6 +1,7 @@
 using Lumiere.API.Database;
 using Lumiere.API.Interfaces;
 using Lumiere.Models;
+using Microsoft.EntityFrameworkCore;
 
 public class TipoIngressoRepository : ITipoIngressoRepository
 {
@@ -12,52 +13,52 @@ public class TipoIngressoRepository : ITipoIngressoRepository
         _db = db;
     }
 
-    public void AddTipoIngresso(TipoIngresso TipoIngresso)
+    public async Task AddTipoIngressoAsync(TipoIngresso TipoIngresso)
     {
         _db.TiposIngresso.Add(TipoIngresso);
-        _db.SaveChanges();
+        await _db.SaveChangesAsync();
     }
 
-    public void DeleteTipoIngresso(int id)
+    public async Task DeleteTipoIngressoAsync(int id)
     {
-        var tipoIngresso = GetTipoIngressoById(id);
+        var tipoIngresso = await GetTipoIngressoByIdAsync(id);
         _db.TiposIngresso.Remove(tipoIngresso);
-        _db.SaveChanges();
+        await _db.SaveChangesAsync();
     }
 
-    public TipoIngresso GetTipoIngressoById(int id)
+    public async Task<TipoIngresso> GetTipoIngressoByIdAsync(int id)
     {
-        return _db.TiposIngresso.Find(id)!;
+        return (await _db.TiposIngresso.FindAsync(id))!;
     }
 
-    public List<TipoIngresso> GetTiposIngresso()
+    public async Task<List<TipoIngresso>> GetTiposIngressoAsync()
     {
-        return _db.TiposIngresso.OrderBy(t => t.Nome).ToList();
+        return await _db.TiposIngresso.OrderBy(t => t.Nome).ToListAsync();
     }
 
-    public bool TipoIngressoExists(int id)
+    public async Task<bool> TipoIngressoExistsAsync(int id)
     {
-        return _db.TiposIngresso.Any(s => s.Id == id);
+        return await _db.TiposIngresso.AnyAsync(s => s.Id == id);
     }
 
-    public void UpdateTipoIngresso(TipoIngresso tipoIngresso)
+    public async Task UpdateTipoIngressoAsync(TipoIngresso tipoIngresso)
     {
         _db.TiposIngresso.Update(tipoIngresso);
-        _db.SaveChanges();
+        await _db.SaveChangesAsync();
     }
 
-    public bool TipoIngressoNomeExists(string nome, int? ignoreId = null)
+    public async Task<bool> TipoIngressoNomeExistsAsync(string nome, int? ignoreId = null)
     {
         var nomeNorm = nome.Trim().ToUpper();
 
-        return _db.TiposIngresso.Any(t =>
+        return await _db.TiposIngresso.AnyAsync(t =>
             t.Nome.Trim().ToUpper() == nomeNorm &&
             (!ignoreId.HasValue || t.Id != ignoreId.Value)
         );
     }
-    public bool TipoIngressoHasIngressos(int id)
+    public async Task<bool> TipoIngressoHasIngressosAsync(int id)
     {
-        return _db.Ingressos.Any(i => i.TipoIngressoId == id);
+        return await _db.Ingressos.AnyAsync(i => i.TipoIngressoId == id);
     }
 
 }

@@ -4,13 +4,13 @@ namespace Lumiere.API.Interfaces
 {
     public interface IGeneroRepository
     {
-        List<Genero> GetGeneros();
-        Genero GetGeneroById(int id);
-        void AddGenero(Genero genero);
-        void UpdateGenero(Genero genero);
-        void DeleteGenero(int id);
-        bool GeneroExists(int id);
-        bool GeneroNomeExists(string nome, int? ignoreId = null);
-        bool GeneroHasFilmes(int id);
+        Task<List<Genero>> GetGenerosAsync();
+        Task<Genero> GetGeneroByIdAsync(int id);
+        Task AddGeneroAsync(Genero genero);
+        Task UpdateGeneroAsync(Genero genero);
+        Task DeleteGeneroAsync(int id);
+        Task<bool> GeneroExistsAsync(int id);
+        Task<bool> GeneroNomeExistsAsync(string nome, int? ignoreId = null);
+        Task<bool> GeneroHasFilmesAsync(int id);
     }
 }

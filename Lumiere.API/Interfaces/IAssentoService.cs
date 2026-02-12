@@ -5,8 +5,8 @@ namespace Lumiere.API.Interfaces
 {
     public interface IAssentoService
     {
-        ServiceResult<AssentoDto> GetById(int id);
-        ServiceResult<IEnumerable<AssentoDto>> GetBySala(int salaId);
-        ServiceResult<AssentoDto> Create(CreateAssentoDto dto);
+        Task<ServiceResult<AssentoDto>> GetByIdAsync(int id);
+        Task<ServiceResult<IEnumerable<AssentoDto>>> GetBySalaAsync(int salaId);
+        Task<ServiceResult<AssentoDto>> CreateAsync(CreateAssentoDto dto);
     }
 }

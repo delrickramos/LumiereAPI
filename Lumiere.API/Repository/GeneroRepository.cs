@@ -1,6 +1,7 @@
 using Lumiere.API.Database;
 using Lumiere.API.Interfaces;
 using Lumiere.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Lumiere.API.Repository
 {
@@ -12,52 +13,52 @@ namespace Lumiere.API.Repository
             _db = db;
         }
 
-        public List<Genero> GetGeneros()
+        public async Task<List<Genero>> GetGenerosAsync()
         {
-            return _db.Generos.OrderBy(g => g.Nome).ToList();
+            return await _db.Generos.OrderBy(g => g.Nome).ToListAsync();
         }
 
-        public Genero GetGeneroById(int id)
+        public async Task<Genero> GetGeneroByIdAsync(int id)
         {
-            return _db.Generos.FirstOrDefault(g => g.Id == id)!;
+            return (await _db.Generos.FirstOrDefaultAsync(g => g.Id == id))!;
         }
 
-        public void AddGenero(Genero genero)
+        public async Task AddGeneroAsync(Genero genero)
         {
             _db.Generos.Add(genero);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
 
-        public void UpdateGenero(Genero genero)
+        public async Task UpdateGeneroAsync(Genero genero)
         {
             _db.Generos.Update(genero);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
 
-        public void DeleteGenero(int id)
+        public async Task DeleteGeneroAsync(int id)
         {
-            _db.Generos.Remove(GetGeneroById(id));
-            _db.SaveChanges();
+            _db.Generos.Remove(await GetGeneroByIdAsync(id));
+            await _db.SaveChangesAsync();
         }
 
-        public bool GeneroExists(int id)
+        public async Task<bool> GeneroExistsAsync(int id)
         {
-            return _db.Generos.Any(g => g.Id == id);
+            return await _db.Generos.AnyAsync(g => g.Id == id);
         }
 
-        public bool GeneroNomeExists(string nome, int? ignoreId = null)
+        public async Task<bool> GeneroNomeExistsAsync(string nome, int? ignoreId = null)
         {
             var nomeNorm = nome.Trim().ToUpper();
 
-            return _db.Generos.Any(g =>
+            return await _db.Generos.AnyAsync(g =>
                 g.Nome.Trim().ToUpper() == nomeNorm &&
                 (!ignoreId.HasValue || g.Id != ignoreId.Value)
             );
         }
 
-        public bool GeneroHasFilmes(int id)
+        public async Task<bool> GeneroHasFilmesAsync(int id)
         {
-            return _db.Filmes.Any(f => f.GeneroId == id);
+            return await _db.Filmes.AnyAsync(f => f.GeneroId == id);
         }
     }
 }

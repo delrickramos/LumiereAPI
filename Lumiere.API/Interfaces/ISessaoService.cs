@@ -5,9 +5,9 @@ namespace Lumiere.API.Interfaces;
 
 public interface ISessaoService
 {
-    ServiceResult<IEnumerable<SessaoDto>> GetAll();
-    ServiceResult<SessaoDto> GetById(int id);
-    ServiceResult<SessaoDto> Create(CreateSessaoDto dto);
-    ServiceResult<SessaoDto> Update(int id, UpdateSessaoDto dto);
-    ServiceResult<object> Delete(int id);
+    Task<ServiceResult<IEnumerable<SessaoDto>>> GetAllAsync();
+    Task<ServiceResult<SessaoDto>> GetByIdAsync(int id);
+    Task<ServiceResult<SessaoDto>> CreateAsync(CreateSessaoDto dto);
+    Task<ServiceResult<SessaoDto>> UpdateAsync(int id, UpdateSessaoDto dto);
+    Task<ServiceResult<object>> DeleteAsync(int id);
 }

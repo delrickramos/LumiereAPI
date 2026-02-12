@@ -29,37 +29,37 @@ namespace Lumiere.API.Services
             _generoRepo = generoRepo;
         }
 
-        public ServiceResult<IEnumerable<FilmeDto>> GetAll()
+        public async Task<ServiceResult<IEnumerable<FilmeDto>>> GetAllAsync()
         {
-            var filmes = _repo.GetFilmes().Select(f => f.ToFilmeDto());
+            var filmes = (await _repo.GetFilmesAsync()).Select(f => f.ToFilmeDto());
             return ServiceResult<IEnumerable<FilmeDto>>.Success(filmes);
         }
 
-        public ServiceResult<FilmeDto> GetById(int id)
+        public async Task<ServiceResult<FilmeDto>> GetByIdAsync(int id)
         {
             if (id <= 0)
                 return ServiceResult<FilmeDto>.Fail("Id inválido.", 400);
 
-            var filme = _repo.GetFilmeByIdWithSessoes(id);
+            var filme = await _repo.GetFilmeByIdWithSessoesAsync(id);
             if (filme == null)
                 return ServiceResult<FilmeDto>.Fail("Filme não encontrado.", 404);
 
             return ServiceResult<FilmeDto>.Success(filme.ToFilmeDto());
         }
 
-        public ServiceResult<IEnumerable<FilmeDto>> GetEmCartaz()
+        public async Task<ServiceResult<IEnumerable<FilmeDto>>> GetEmCartazAsync()
         {
             var inicio = DateTime.Now;
             var fim = inicio.AddDays(7);
 
-            var filmes = _repo
-                .GetFilmesEmCartaz(inicio, fim)
+            var filmes = (await _repo
+                .GetFilmesEmCartazAsync(inicio, fim))
                 .Select(f => f.ToFilmeDto());
 
             return ServiceResult<IEnumerable<FilmeDto>>.Success(filmes);
         }
 
-        public ServiceResult<FilmeDto> Create(CreateFilmeDto dto)
+        public async Task<ServiceResult<FilmeDto>> CreateAsync(CreateFilmeDto dto)
         {
             var titulo = (dto.Titulo ?? "").Trim();
             var sinopse = (dto.Sinopse ?? "").Trim();
@@ -84,10 +84,10 @@ namespace Lumiere.API.Services
             if (dto.GeneroId <= 0)
                 return ServiceResult<FilmeDto>.Fail("GeneroId inválido.", 400);
 
-            if (!_generoRepo.GeneroExists(dto.GeneroId))
+            if (!await _generoRepo.GeneroExistsAsync(dto.GeneroId))
                 return ServiceResult<FilmeDto>.Fail("Gênero não encontrado.", 404);
 
-            if (_repo.FilmeTituloExists(titulo))
+            if (await _repo.FilmeTituloExistsAsync(titulo))
                 return ServiceResult<FilmeDto>.Fail("Já existe um filme com esse título.", 409);
 
             if (!Enum.IsDefined(typeof(ClassificacaoIndicativaEnum), dto.ClassificacaoIndicativa))
@@ -99,17 +99,17 @@ namespace Lumiere.API.Services
             filme.Direcao = direcao;
             filme.Distribuidora = distribuidora;
 
-            _repo.AddFilme(filme);
+            await _repo.AddFilmeAsync(filme);
 
             return ServiceResult<FilmeDto>.Success(filme.ToFilmeDto(), 201);
         }
 
-        public ServiceResult<FilmeDto> Update(int id, UpdateFilmeDto dto)
+        public async Task<ServiceResult<FilmeDto>> UpdateAsync(int id, UpdateFilmeDto dto)
         {
             if (id <= 0)
                 return ServiceResult<FilmeDto>.Fail("Id inválido.", 400);
 
-            var filme = _repo.GetFilmeById(id);
+            var filme = await _repo.GetFilmeByIdAsync(id);
             if (filme == null)
                 return ServiceResult<FilmeDto>.Fail("Filme não encontrado.", 404);
 
@@ -133,10 +133,10 @@ namespace Lumiere.API.Services
             if (dto.GeneroId <= 0)
                 return ServiceResult<FilmeDto>.Fail("GeneroId inválido.", 400);
 
-            if (!_generoRepo.GeneroExists(dto.GeneroId))
+            if (!await _generoRepo.GeneroExistsAsync(dto.GeneroId))
                 return ServiceResult<FilmeDto>.Fail("Gênero não encontrado.", 404);
 
-            if (_repo.FilmeTituloExists(titulo, ignoreId: id))
+            if (await _repo.FilmeTituloExistsAsync(titulo, ignoreId: id))
                 return ServiceResult<FilmeDto>.Fail("Já existe um filme com esse título.", 409);
 
             if (!Enum.IsDefined(typeof(ClassificacaoIndicativaEnum), dto.ClassificacaoIndicativa))
@@ -149,24 +149,24 @@ namespace Lumiere.API.Services
             filme.Direcao = direcao;
             filme.Distribuidora = distribuidora;
 
-            _repo.UpdateFilme(filme);
+            await _repo.UpdateFilmeAsync(filme);
             return ServiceResult<FilmeDto>.Success(filme.ToFilmeDto());
         }
 
-        public ServiceResult<object> Delete(int id)
+        public async Task<ServiceResult<object>> DeleteAsync(int id)
         {
             if (id <= 0)
                 return ServiceResult<object>.Fail("Id inválido.", 400);
 
-            var filme = _repo.GetFilmeById(id);
+            var filme = await _repo.GetFilmeByIdAsync(id);
             if (filme == null)
                 return ServiceResult<object>.Fail("Filme não encontrado.", 404);
 
             // Não permite excluir filme que possui sessões vinculadas
-            if (_repo.FilmeHasSessoes(id))
+            if (await _repo.FilmeHasSessoesAsync(id))
                 return ServiceResult<object>.Fail("Não é possível excluir um filme que possui sessões vinculadas.", 409);
 
-            _repo.DeleteFilme(id);
+            await _repo.DeleteFilmeAsync(id);
             return ServiceResult<object>.Success(new { }, 204);
         }
 

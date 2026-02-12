@@ -19,25 +19,25 @@ namespace Lumiere.API.Services
             _repo = repo;
         }
 
-        public ServiceResult<IEnumerable<SalaDto>> GetAll()
+        public async Task<ServiceResult<IEnumerable<SalaDto>>> GetAllAsync()
         {
-            var salas = _repo.GetSalas().Select(s => s.ToSalaDto());
+            var salas = (await _repo.GetSalasAsync()).Select(s => s.ToSalaDto());
             return ServiceResult<IEnumerable<SalaDto>>.Success(salas);
         }
 
-        public ServiceResult<SalaDto> GetById(int id)
+        public async Task<ServiceResult<SalaDto>> GetByIdAsync(int id)
         {
             if (id <= 0)
                 return ServiceResult<SalaDto>.Fail("Id inválido.", 400);
 
-            var sala = _repo.GetSalaById(id);
+            var sala = await _repo.GetSalaByIdAsync(id);
             if (sala == null)
                 return ServiceResult<SalaDto>.Fail("Sala não encontrada.", 404);
 
             return ServiceResult<SalaDto>.Success(sala.ToSalaDto());
         }
 
-        public ServiceResult<SalaDto> Create(CreateSalaDto dto)
+        public async Task<ServiceResult<SalaDto>> CreateAsync(CreateSalaDto dto)
         {
             var nome = (dto.Nome ?? "").Trim();
 
@@ -50,14 +50,14 @@ namespace Lumiere.API.Services
             var colunasVal = ValidateColunas(dto.NumeroColunas);
             if (colunasVal != null) return ServiceResult<SalaDto>.Fail(colunasVal, 400);
 
-            if (_repo.SalaNomeExists(nome))
+            if (await _repo.SalaNomeExistsAsync(nome))
                 return ServiceResult<SalaDto>.Fail("Já existe uma sala com esse nome.", 409);
 
             var sala = dto.ToSalaModel();
             sala.Nome = nome;
             sala.Capacidade = dto.NumeroLinhas * dto.NumeroColunas;
 
-            _repo.AddSala(sala);
+            await _repo.AddSalaAsync(sala);
 
             // Gera automaticamente os assentos da sala com base em linhas e colunas
             var assentos = GerarAssentos(
@@ -66,17 +66,17 @@ namespace Lumiere.API.Services
                 dto.NumeroColunas
             );
 
-            _repo.AddAssentosRange(assentos);
+            await _repo.AddAssentosRangeAsync(assentos);
 
             return ServiceResult<SalaDto>.Success(sala.ToSalaDto(), 201);
         }
 
-        public ServiceResult<SalaDto> Update(int id, UpdateSalaDto dto)
+        public async Task<ServiceResult<SalaDto>> UpdateAsync(int id, UpdateSalaDto dto)
         {
             if (id <= 0)
                 return ServiceResult<SalaDto>.Fail("Id inválido.", 400);
 
-            var sala = _repo.GetSalaById(id);
+            var sala = await _repo.GetSalaByIdAsync(id);
             if (sala == null)
                 return ServiceResult<SalaDto>.Fail("Sala não encontrada.", 404);
 
@@ -85,31 +85,31 @@ namespace Lumiere.API.Services
             var nomeVal = ValidateTexto("Nome", nome, NomeMin, NomeMax);
             if (nomeVal != null) return ServiceResult<SalaDto>.Fail(nomeVal, 400);
 
-            if (_repo.SalaNomeExists(nome, ignoreId: id))
+            if (await _repo.SalaNomeExistsAsync(nome, ignoreId: id))
                 return ServiceResult<SalaDto>.Fail("Já existe uma sala com esse nome.", 409);
 
             dto.UpdateSalaModel(sala);
 
             sala.Nome = nome;
 
-            _repo.UpdateSala(sala);
+            await _repo.UpdateSalaAsync(sala);
             return ServiceResult<SalaDto>.Success(sala.ToSalaDto());
         }
 
-        public ServiceResult<object> Delete(int id)
+        public async Task<ServiceResult<object>> DeleteAsync(int id)
         {
             if (id <= 0)
                 return ServiceResult<object>.Fail("Id inválido.", 400);
 
-            var sala = _repo.GetSalaById(id);
+            var sala = await _repo.GetSalaByIdAsync(id);
             if (sala == null)
                 return ServiceResult<object>.Fail("Sala não encontrada.", 404);
 
             // Não permite excluir sala que possui sessões vinculadas
-            if (_repo.SalaHasSessoes(id))
+            if (await _repo.SalaHasSessoesAsync(id))
                 return ServiceResult<object>.Fail("Não é possível excluir uma sala que possui sessões vinculadas.", 409);
 
-            _repo.DeleteSala(id);
+            await _repo.DeleteSalaAsync(id);
             return ServiceResult<object>.Success(new { }, 204);
         }
 

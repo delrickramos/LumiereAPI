@@ -5,10 +5,10 @@ namespace Lumiere.API.Interfaces
 {
     public interface IIngressoService
     {
-        ServiceResult<IEnumerable<IngressoDto>> GetAll();
-        ServiceResult<IngressoDto> GetById(int id);
-        ServiceResult<IEnumerable<IngressoDto>> GetBySessao(int sessaoId);
+        Task<ServiceResult<IEnumerable<IngressoDto>>> GetAllAsync();
+        Task<ServiceResult<IngressoDto>> GetByIdAsync(int id);
+        Task<ServiceResult<IEnumerable<IngressoDto>>> GetBySessaoAsync(int sessaoId);
 
-        ServiceResult<IngressoDto> Vender(CreateIngressoDto dto);
+        Task<ServiceResult<IngressoDto>> VenderAsync(CreateIngressoDto dto);
     }
 }

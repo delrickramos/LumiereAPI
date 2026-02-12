@@ -15,30 +15,30 @@ namespace Lumiere.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var result = _service.GetAll();
+            var result = await _service.GetAllAsync();
             return HandleResult(result);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var result = _service.GetById(id);
+            var result = await _service.GetByIdAsync(id);
             return HandleResult(result);
         }
 
         [HttpGet("sessao/{sessaoId}")]
-        public IActionResult GetBySessao(int sessaoId)
+        public async Task<IActionResult> GetBySessao(int sessaoId)
         {
-            var result = _service.GetBySessao(sessaoId);
+            var result = await _service.GetBySessaoAsync(sessaoId);
             return HandleResult(result);
         }
 
         [HttpPost]
-        public IActionResult VenderIngresso([FromBody] CreateIngressoDto ingressoDto)
+        public async Task<IActionResult> VenderIngresso([FromBody] CreateIngressoDto ingressoDto)
         {
-            var result = _service.Vender(ingressoDto);
+            var result = await _service.VenderAsync(ingressoDto);
             return HandleResult(result);
         }
     }

@@ -19,25 +19,25 @@ namespace Lumiere.API.Services
             _repo = tipoIngressoRepository;
         }
 
-        public ServiceResult<IEnumerable<TipoIngressoDto>> GetAll()
+        public async Task<ServiceResult<IEnumerable<TipoIngressoDto>>> GetAllAsync()
         {
-            var tipos = _repo.GetTiposIngresso().Select(t => t.ToTipoIngressoDto());
+            var tipos = (await _repo.GetTiposIngressoAsync()).Select(t => t.ToTipoIngressoDto());
             return ServiceResult<IEnumerable<TipoIngressoDto>>.Success(tipos);
         }
 
-        public ServiceResult<TipoIngressoDto> GetById(int id)
+        public async Task<ServiceResult<TipoIngressoDto>> GetByIdAsync(int id)
         {
             if (id <= 0)
                 return ServiceResult<TipoIngressoDto>.Fail("Id inválido.", 400);
 
-            var tipo = _repo.GetTipoIngressoById(id);
+            var tipo = await _repo.GetTipoIngressoByIdAsync(id);
             if (tipo == null)
                 return ServiceResult<TipoIngressoDto>.Fail("Tipo de ingresso não encontrado.", 404);
 
             return ServiceResult<TipoIngressoDto>.Success(tipo.ToTipoIngressoDto());
         }
 
-        public ServiceResult<TipoIngressoDto> Create(CreateTipoIngressoDto dto)
+        public async Task<ServiceResult<TipoIngressoDto>> CreateAsync(CreateTipoIngressoDto dto)
         {
             var nome = (dto.Nome ?? "").Trim();
 
@@ -49,21 +49,21 @@ namespace Lumiere.API.Services
             if (descontoValidation != null)
                 return ServiceResult<TipoIngressoDto>.Fail(descontoValidation, 400);
 
-            if (_repo.TipoIngressoNomeExists(nome))
+            if (await _repo.TipoIngressoNomeExistsAsync(nome))
                 return ServiceResult<TipoIngressoDto>.Fail("Já existe um tipo de ingresso com esse nome.", 409);
 
             var tipo = dto.ToTipoIngressoModel();
             tipo.Nome = nome;
-            _repo.AddTipoIngresso(tipo);
+            await _repo.AddTipoIngressoAsync(tipo);
             return ServiceResult<TipoIngressoDto>.Success(tipo.ToTipoIngressoDto(), 201);
         }
 
-        public ServiceResult<TipoIngressoDto> Update(int id, UpdateTipoIngressoDto dto)
+        public async Task<ServiceResult<TipoIngressoDto>> UpdateAsync(int id, UpdateTipoIngressoDto dto)
         {
             if (id <= 0)
                 return ServiceResult<TipoIngressoDto>.Fail("Id inválido.", 400);
 
-            var tipo = _repo.GetTipoIngressoById(id);
+            var tipo = await _repo.GetTipoIngressoByIdAsync(id);
             if (tipo == null)
                 return ServiceResult<TipoIngressoDto>.Fail("Tipo de ingresso não encontrado.", 404);
 
@@ -77,29 +77,29 @@ namespace Lumiere.API.Services
             if (descontoValidation != null)
                 return ServiceResult<TipoIngressoDto>.Fail(descontoValidation, 400);
 
-            if (_repo.TipoIngressoNomeExists(nome, ignoreId: id))
+            if (await _repo.TipoIngressoNomeExistsAsync(nome, ignoreId: id))
                 return ServiceResult<TipoIngressoDto>.Fail("Já existe um tipo de ingresso com esse nome.", 409);
 
             tipo.Nome = nome;
             tipo.DescontoPercentual = dto.DescontoPercentual;
 
-            _repo.UpdateTipoIngresso(tipo);
+            await _repo.UpdateTipoIngressoAsync(tipo);
             return ServiceResult<TipoIngressoDto>.Success(tipo.ToTipoIngressoDto());
         }
 
-        public ServiceResult<object> Delete(int id)
+        public async Task<ServiceResult<object>> DeleteAsync(int id)
         {
             if (id <= 0)
                 return ServiceResult<object>.Fail("Id inválido.", 400);
 
-            var tipo = _repo.GetTipoIngressoById(id);
+            var tipo = await _repo.GetTipoIngressoByIdAsync(id);
             if (tipo == null)
                 return ServiceResult<object>.Fail("Tipo de ingresso não encontrado.", 404);
 
-            if (_repo.TipoIngressoHasIngressos(id))
+            if (await _repo.TipoIngressoHasIngressosAsync(id))
                 return ServiceResult<object>.Fail("Não é possível excluir um tipo de ingresso que possui ingressos vinculados.", 409);
 
-            _repo.DeleteTipoIngresso(id);
+            await _repo.DeleteTipoIngressoAsync(id);
             return ServiceResult<object>.Success(new { }, 204);
         }
 

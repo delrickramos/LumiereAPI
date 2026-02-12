@@ -16,44 +16,44 @@ namespace Lumiere.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var result = _service.GetAll();
+            var result = await _service.GetAllAsync();
             return HandleResult(result);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var result = _service.GetById(id);
+            var result = await _service.GetByIdAsync(id);
             return HandleResult(result);
         }
 
         // Endpoint para listar filmes em cartaz (requisito: próximos 7 dias)
         [HttpGet("em-cartaz")]
-        public IActionResult GetEmCartaz()
+        public async Task<IActionResult> GetEmCartaz()
         {
-            var result = _service.GetEmCartaz();
+            var result = await _service.GetEmCartazAsync();
             return HandleResult(result);
         }
 
         [HttpPost]
-        public IActionResult Add([FromBody] CreateFilmeDto filmeDto)
+        public async Task<IActionResult> Add([FromBody] CreateFilmeDto filmeDto)
         {
-            var result = _service.Create(filmeDto);
+            var result = await _service.CreateAsync(filmeDto);
             return HandleResult(result);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] UpdateFilmeDto filmeDto)
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateFilmeDto filmeDto)
         {
-            var result = _service.Update(id, filmeDto);
+            var result = await _service.UpdateAsync(id, filmeDto);
             return HandleResult(result);
         }
         [HttpDelete("{id}")]
-        public IActionResult Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var result = _service.Delete(id);
+            var result = await _service.DeleteAsync(id);
             return HandleResult(result);
         }
     }

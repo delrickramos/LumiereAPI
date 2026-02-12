@@ -1,6 +1,7 @@
 ﻿using Lumiere.API.Database;
 using Lumiere.API.Interfaces;
 using Lumiere.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Lumiere.API.Repository
 {
@@ -12,50 +13,50 @@ namespace Lumiere.API.Repository
             _db = db;
         }
 
-        public List<FormatoSessao> GetFormatosSessoes()
+        public async Task<List<FormatoSessao>> GetFormatosSessoesAsync()
         {
-            return _db.FormatosSessao.OrderBy(f => f.Nome).ToList();
+            return await _db.FormatosSessao.OrderBy(f => f.Nome).ToListAsync();
         }
 
-        public FormatoSessao GetFormatoSessaoById(int id)
+        public async Task<FormatoSessao> GetFormatoSessaoByIdAsync(int id)
         {
-            return _db.FormatosSessao.FirstOrDefault(f => f.Id == id)!;
+            return (await _db.FormatosSessao.FirstOrDefaultAsync(f => f.Id == id))!;
         }
-        public void AddFormatoSessao(FormatoSessao formatoSessao)
+        public async Task AddFormatoSessaoAsync(FormatoSessao formatoSessao)
         {
             _db.FormatosSessao.Add(formatoSessao);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
-        public void UpdateFormatoSessao(FormatoSessao formatoSessao)
+        public async Task UpdateFormatoSessaoAsync(FormatoSessao formatoSessao)
         {
             _db.FormatosSessao.Update(formatoSessao);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
 
-        public void DeleteFormatoSessao(int id)
+        public async Task DeleteFormatoSessaoAsync(int id)
         {
-                _db.FormatosSessao.Remove(GetFormatoSessaoById(id));
-                _db.SaveChanges();
+                _db.FormatosSessao.Remove(await GetFormatoSessaoByIdAsync(id));
+                await _db.SaveChangesAsync();
         }
 
-        public bool FormatoSessaoExists(int id)
+        public async Task<bool> FormatoSessaoExistsAsync(int id)
         {
-            return _db.FormatosSessao.Any(f => f.Id == id);
+            return await _db.FormatosSessao.AnyAsync(f => f.Id == id);
         }
 
-        public bool FormatoSessaoNomeExists(string nome, int? ignoreId = null)
+        public async Task<bool> FormatoSessaoNomeExistsAsync(string nome, int? ignoreId = null)
         {
             var nomeNorm = nome.Trim().ToUpper();
 
-            return _db.FormatosSessao.Any(f =>
+            return await _db.FormatosSessao.AnyAsync(f =>
                 f.Nome.Trim().ToUpper() == nomeNorm &&
                 (!ignoreId.HasValue || f.Id != ignoreId.Value)
             );
         }
 
-        public bool FormatoSessaoHasSessoes(int id)
+        public async Task<bool> FormatoSessaoHasSessoesAsync(int id)
         {
-            return _db.Sessoes.Any(s => s.FormatoSessaoId == id);
+            return await _db.Sessoes.AnyAsync(s => s.FormatoSessaoId == id);
         }
     }
 }

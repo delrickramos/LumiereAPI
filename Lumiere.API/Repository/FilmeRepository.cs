@@ -13,27 +13,27 @@ namespace Lumiere.API.Repository
         {
             _db = db;
         }
-        public List<Filme> GetFilmes()
+        public async Task<List<Filme>> GetFilmesAsync()
         {
-            return _db.Filmes.OrderBy(f => f.Titulo).ToList();
+            return await _db.Filmes.OrderBy(f => f.Titulo).ToListAsync();
         }
 
-        public Filme GetFilmeById(int id)
+        public async Task<Filme> GetFilmeByIdAsync(int id)
         {
-            return _db.Filmes.FirstOrDefault(i => i.Id == id)!;
+            return (await _db.Filmes.FirstOrDefaultAsync(i => i.Id == id))!;
         }
 
-        public Filme? GetFilmeByIdWithSessoes(int id)
+        public async Task<Filme?> GetFilmeByIdWithSessoesAsync(int id)
         {
-            return _db.Filmes
+            return await _db.Filmes
                 .Include(f => f.Sessoes)
-                .FirstOrDefault(f => f.Id == id);
+                .FirstOrDefaultAsync(f => f.Id == id);
         }
 
         // Requisito: filmes em cartaz (com sessões nos próximos 7 dias)
-        public List<Filme> GetFilmesEmCartaz(DateTime inicio, DateTime fim)
+        public async Task<List<Filme>> GetFilmesEmCartazAsync(DateTime inicio, DateTime fim)
         {
-            return _db.Filmes
+            return await _db.Filmes
                 .Where(f =>
                     f.Sessoes != null &&
                     f.Sessoes.Any(s =>
@@ -43,42 +43,42 @@ namespace Lumiere.API.Repository
                 )
                 .Include(f => f.Sessoes)
                 .OrderBy(f => f.Titulo)
-                .ToList();
+                .ToListAsync();
         }
 
-        public void AddFilme(Filme filme)
+        public async Task AddFilmeAsync(Filme filme)
         {
             _db.Filmes.Add(filme);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
 
-        public void UpdateFilme(Filme filme)
+        public async Task UpdateFilmeAsync(Filme filme)
         {
             _db.Filmes.Update(filme);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
 
-        public void DeleteFilme(int id)
+        public async Task DeleteFilmeAsync(int id)
         {
-            _db.Filmes.Remove(GetFilmeById(id));
-            _db.SaveChanges();
+            _db.Filmes.Remove(await GetFilmeByIdAsync(id));
+            await _db.SaveChangesAsync();
         }
 
-        public bool FilmeExists(int id)
+        public async Task<bool> FilmeExistsAsync(int id)
         {
-            return _db.Filmes.Any(f => f.Id == id);
+            return await _db.Filmes.AnyAsync(f => f.Id == id);
         }
 
-        public bool FilmeHasSessoes(int id)
+        public async Task<bool> FilmeHasSessoesAsync(int id)
         {
-            return _db.Sessoes.Any(s => s.FilmeId == id);
+            return await _db.Sessoes.AnyAsync(s => s.FilmeId == id);
         }
 
-        public bool FilmeTituloExists(string titulo, int? ignoreId = null)
+        public async Task<bool> FilmeTituloExistsAsync(string titulo, int? ignoreId = null)
         {
             var titNorm = titulo.Trim().ToUpper();
 
-            return _db.Filmes.Any(f =>
+            return await _db.Filmes.AnyAsync(f =>
                 f.Titulo.Trim().ToUpper() == titNorm &&
                 (!ignoreId.HasValue || f.Id != ignoreId.Value)
             );

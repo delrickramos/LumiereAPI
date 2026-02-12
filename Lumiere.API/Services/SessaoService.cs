@@ -21,45 +21,45 @@ namespace Lumiere.API.Services
             _formatoSessaoRepo = formatoSessaoRepo;
         }
 
-        public ServiceResult<IEnumerable<SessaoDto>> GetAll()
+        public async Task<ServiceResult<IEnumerable<SessaoDto>>> GetAllAsync()
         {
-            var sessoes = _sessaoRepo.GetSessoes().Select(s => s.ToSessaoDto());
+            var sessoes = (await _sessaoRepo.GetSessoesAsync()).Select(s => s.ToSessaoDto());
             return ServiceResult<IEnumerable<SessaoDto>>.Success(sessoes);
         }
 
-        public ServiceResult<SessaoDto> GetById(int id)
+        public async Task<ServiceResult<SessaoDto>> GetByIdAsync(int id)
         {
             if (id <= 0)
                 return ServiceResult<SessaoDto>.Fail("Id inválido.", 400);
 
-            var sessao = _sessaoRepo.GetSessaoById(id);
+            var sessao = await _sessaoRepo.GetSessaoByIdAsync(id);
             if (sessao == null)
                 return ServiceResult<SessaoDto>.Fail("Sessão não encontrada.", 404);
 
             return ServiceResult<SessaoDto>.Success(sessao.ToSessaoDto());
         }
 
-        public ServiceResult<SessaoDto> Create(CreateSessaoDto dto)
+        public async Task<ServiceResult<SessaoDto>> CreateAsync(CreateSessaoDto dto)
         {
             if (dto.FilmeId <= 0)
                 return ServiceResult<SessaoDto>.Fail("FilmeId inválido.", 400);
 
-            if (!_filmeRepo.FilmeExists(dto.FilmeId))
+            if (!await _filmeRepo.FilmeExistsAsync(dto.FilmeId))
                 return ServiceResult<SessaoDto>.Fail("Filme não encontrado.", 404);
 
             if (dto.SalaId <= 0)
                 return ServiceResult<SessaoDto>.Fail("SalaId inválido.", 400);
 
-            if (!_salaRepo.SalaExists(dto.SalaId))
+            if (!await _salaRepo.SalaExistsAsync(dto.SalaId))
                 return ServiceResult<SessaoDto>.Fail("Sala não encontrada.", 404);
 
             if (dto.FormatoSessaoId <= 0)
                 return ServiceResult<SessaoDto>.Fail("FormatoSessaoId inválido.", 400);
 
-            if (!_formatoSessaoRepo.FormatoSessaoExists(dto.FormatoSessaoId))
+            if (!await _formatoSessaoRepo.FormatoSessaoExistsAsync(dto.FormatoSessaoId))
                 return ServiceResult<SessaoDto>.Fail("Formato de sessão não encontrado.", 404);
 
-            var filme = _filmeRepo.GetFilmeById(dto.FilmeId);
+            var filme = await _filmeRepo.GetFilmeByIdAsync(dto.FilmeId);
 
             var inicio = dto.DataHoraInicio;
             if (inicio <= DateTimeOffset.Now)
@@ -71,64 +71,64 @@ namespace Lumiere.API.Services
             sessao.DataHoraFim = fim;
 
             // Valida se não há conflito de horário na sala
-            if (_sessaoRepo.SessaoHasConflict(dto.SalaId, dto.DataHoraInicio, sessao.DataHoraFim))
+            if (await _sessaoRepo.SessaoHasConflictAsync(dto.SalaId, dto.DataHoraInicio, sessao.DataHoraFim))
                 return ServiceResult<SessaoDto>.Fail("Já existe uma sessão nesta sala neste horário.", 409);
 
-            _sessaoRepo.AddSessao(sessao);
+            await _sessaoRepo.AddSessaoAsync(sessao);
             return ServiceResult<SessaoDto>.Success(sessao.ToSessaoDto(), 201);
         }
 
-        public ServiceResult<SessaoDto> Update(int id, UpdateSessaoDto dto)
+        public async Task<ServiceResult<SessaoDto>> UpdateAsync(int id, UpdateSessaoDto dto)
         {
             if (id <= 0)
                 return ServiceResult<SessaoDto>.Fail("Id inválido.", 400);
 
-            var sessao = _sessaoRepo.GetSessaoById(id);
+            var sessao = await _sessaoRepo.GetSessaoByIdAsync(id);
             if (sessao == null)
                 return ServiceResult<SessaoDto>.Fail("Sessão não encontrada.", 404);
 
             if (dto.SalaId <= 0)
                 return ServiceResult<SessaoDto>.Fail("SalaId inválido.", 400);
 
-            if (!_salaRepo.SalaExists(dto.SalaId))
+            if (!await _salaRepo.SalaExistsAsync(dto.SalaId))
                 return ServiceResult<SessaoDto>.Fail("Sala não encontrada.", 404);
 
             // Não permite atualizar sessão que já tem ingressos vendidos
-            if (_sessaoRepo.SessaoHasIngressos(id))
+            if (await _sessaoRepo.SessaoHasIngressosAsync(id))
                 return ServiceResult<SessaoDto>.Fail("Não é possível atualizar sessão com ingressos vendidos.", 409);
 
             if (dto.FormatoSessaoId <= 0)
                 return ServiceResult<SessaoDto>.Fail("FormatoSessaoId inválido.", 400);
 
-            if (!_formatoSessaoRepo.FormatoSessaoExists(dto.FormatoSessaoId))
+            if (!await _formatoSessaoRepo.FormatoSessaoExistsAsync(dto.FormatoSessaoId))
                 return ServiceResult<SessaoDto>.Fail("Formato de sessão não encontrado.", 404);
 
             dto.UpdateSessaoModel(sessao);
-            var filme = _filmeRepo.GetFilmeById(sessao.FilmeId);
+            var filme = await _filmeRepo.GetFilmeByIdAsync(sessao.FilmeId);
             sessao.DataHoraFim = dto.DataHoraInicio.AddMinutes(filme.DuracaoMinutos);
 
-            if (_sessaoRepo.SessaoHasConflict(dto.SalaId, dto.DataHoraInicio, sessao.DataHoraFim, id))
+            if (await _sessaoRepo.SessaoHasConflictAsync(dto.SalaId, dto.DataHoraInicio, sessao.DataHoraFim, id))
                 return ServiceResult<SessaoDto>.Fail("Já existe uma sessão nesta sala neste horário.", 409);
 
-            _sessaoRepo.UpdateSessao(sessao);
+            await _sessaoRepo.UpdateSessaoAsync(sessao);
 
             return ServiceResult<SessaoDto>.Success(sessao.ToSessaoDto());
         }
 
-        public ServiceResult<object> Delete(int id)
+        public async Task<ServiceResult<object>> DeleteAsync(int id)
         {
             if (id <= 0)
                 return ServiceResult<object>.Fail("Id inválido.", 400);
 
-            var sessao = _sessaoRepo.GetSessaoById(id);
+            var sessao = await _sessaoRepo.GetSessaoByIdAsync(id);
             if (sessao == null)
                 return ServiceResult<object>.Fail("Sessão não encontrada.", 404);
 
             // Não permite excluir sessão que já tem ingressos vendidos
-            if (_sessaoRepo.SessaoHasIngressos(id))
+            if (await _sessaoRepo.SessaoHasIngressosAsync(id))
                 return ServiceResult<object>.Fail("Não é possível excluir sessão com ingressos vendidos.", 409);
 
-            _sessaoRepo.DeleteSessao(id);
+            await _sessaoRepo.DeleteSessaoAsync(id);
             return ServiceResult<object>.Success(new { }, 204);
         }
     }

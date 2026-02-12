@@ -4,15 +4,15 @@ namespace Lumiere.API.Interfaces
 {
     public interface ISalaRepository
     {
-        List<Sala> GetSalas();
-        Sala GetSalaById(int id);
-        Sala? GetSalaByIdWithSessoes(int id);
-        void AddSala(Sala sala);
-        void UpdateSala(Sala sala);
-        void DeleteSala(int id);
-        bool SalaExists(int id);
-        bool SalaNomeExists(string nome, int? ignoreId = null);
-        bool SalaHasSessoes(int id);
-        void AddAssentosRange(IEnumerable<Assento> assentos);
+        Task<List<Sala>> GetSalasAsync();
+        Task<Sala> GetSalaByIdAsync(int id);
+        Task<Sala?> GetSalaByIdWithSessoesAsync(int id);
+        Task AddSalaAsync(Sala sala);
+        Task UpdateSalaAsync(Sala sala);
+        Task DeleteSalaAsync(int id);
+        Task<bool> SalaExistsAsync(int id);
+        Task<bool> SalaNomeExistsAsync(string nome, int? ignoreId = null);
+        Task<bool> SalaHasSessoesAsync(int id);
+        Task AddAssentosRangeAsync(IEnumerable<Assento> assentos);
     }
 }

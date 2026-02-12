@@ -5,11 +5,11 @@ namespace Lumiere.API.Interfaces
 {
     public interface IFilmeService
     {
-        ServiceResult<IEnumerable<FilmeDto>> GetAll();
-        ServiceResult<FilmeDto> GetById(int id);
-        ServiceResult<IEnumerable<FilmeDto>> GetEmCartaz();
-        ServiceResult<FilmeDto> Create(CreateFilmeDto dto);
-        ServiceResult<FilmeDto> Update(int id, UpdateFilmeDto dto);
-        ServiceResult<object> Delete(int id);
+        Task<ServiceResult<IEnumerable<FilmeDto>>> GetAllAsync();
+        Task<ServiceResult<FilmeDto>> GetByIdAsync(int id);
+        Task<ServiceResult<IEnumerable<FilmeDto>>> GetEmCartazAsync();
+        Task<ServiceResult<FilmeDto>> CreateAsync(CreateFilmeDto dto);
+        Task<ServiceResult<FilmeDto>> UpdateAsync(int id, UpdateFilmeDto dto);
+        Task<ServiceResult<object>> DeleteAsync(int id);
     }
 }

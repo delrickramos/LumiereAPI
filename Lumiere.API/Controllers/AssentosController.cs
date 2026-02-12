@@ -14,16 +14,16 @@ namespace Lumiere.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var result = _service.GetById(id);
+            var result = await _service.GetByIdAsync(id);
             return HandleResult(result);
         }
 
         [HttpGet("sala/{salaId}")]
-        public IActionResult GetBySala(int salaId)
+        public async Task<IActionResult> GetBySala(int salaId)
         {
-            var result = _service.GetBySala(salaId);
+            var result = await _service.GetBySalaAsync(salaId);
             return HandleResult(result);
         }
     }

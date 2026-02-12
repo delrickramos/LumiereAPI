@@ -12,45 +12,45 @@ namespace Lumiere.API.Repository
         {
             _db = db;
         }
-        public Assento GetAssentoById(int id)
+        public async Task<Assento> GetAssentoByIdAsync(int id)
         {
-            return _db.Assentos.Include(a => a.Sala).Include(a => a.Ingressos).FirstOrDefault(a => a.Id == id)!;
+            return (await _db.Assentos.Include(a => a.Sala).Include(a => a.Ingressos).FirstOrDefaultAsync(a => a.Id == id))!;
         }
 
-        public List<Assento> GetAssentosBySala(int salaId)
+        public async Task<List<Assento>> GetAssentosBySalaAsync(int salaId)
         {
-            return _db.Assentos.Where(a => a.SalaId == salaId).OrderBy(a => a.Fileira).ThenBy(a => a.Coluna).Include(a => a.Sala).ToList();
+            return await _db.Assentos.Where(a => a.SalaId == salaId).OrderBy(a => a.Fileira).ThenBy(a => a.Coluna).Include(a => a.Sala).ToListAsync();
         }
 
-        public void AddAssento(Assento assento)
+        public async Task AddAssentoAsync(Assento assento)
         {
             _db.Assentos.Add(assento);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
 
-        public void UpdateAssento(Assento assento)
+        public async Task UpdateAssentoAsync(Assento assento)
         {
             _db.Assentos.Update(assento);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
 
-        public void DeleteAssento(int id)
+        public async Task DeleteAssentoAsync(int id)
         {
-            var assento = GetAssentoById(id);
+            var assento = await GetAssentoByIdAsync(id);
             _db.Assentos.Remove(assento);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
 
-        public bool AssentoExists(int id)
+        public async Task<bool> AssentoExistsAsync(int id)
         {
-            return _db.Assentos.Any(a => a.Id == id);
+            return await _db.Assentos.AnyAsync(a => a.Id == id);
         }
 
-                public bool AssentoPosicaoExists(int salaId, string fileira, int coluna, int? ignoreId = null)
+        public async Task<bool> AssentoPosicaoExistsAsync(int salaId, string fileira, int coluna, int? ignoreId = null)
         {
             var fileiraNorm = (fileira ?? "").Trim().ToUpper();
 
-            return _db.Assentos.Any(a =>
+            return await _db.Assentos.AnyAsync(a =>
                 a.SalaId == salaId &&
                 a.Coluna == coluna &&
                 a.Fileira.Trim().ToUpper() == fileiraNorm &&
@@ -58,9 +58,9 @@ namespace Lumiere.API.Repository
             );
         }
 
-        public bool AssentoHasIngressos(int assentoId)
+        public async Task<bool> AssentoHasIngressosAsync(int assentoId)
         {
-            return _db.Ingressos.Any(i => i.AssentoId == assentoId);
+            return await _db.Ingressos.AnyAsync(i => i.AssentoId == assentoId);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Lumiere.API.Services
             _repo = repo;
         }
 
-        public ServiceResult<FormatoSessaoDto> Create(CreateFormatoSessaoDto dto)
+        public async Task<ServiceResult<FormatoSessaoDto>> CreateAsync(CreateFormatoSessaoDto dto)
         {
             var nome = (dto.Nome ?? "").Trim();
 
@@ -26,55 +26,55 @@ namespace Lumiere.API.Services
             if (nomeValidation != null)
                 return ServiceResult<FormatoSessaoDto>.Fail(nomeValidation, 400);
 
-            if (_repo.FormatoSessaoNomeExists(nome))
+            if (await _repo.FormatoSessaoNomeExistsAsync(nome))
                 return ServiceResult<FormatoSessaoDto>.Fail("Já existe um formato de sessão com esse nome.", 409);
 
             var formato = dto.ToFormatoSessaoModel();
             formato.Nome = nome;
-            _repo.AddFormatoSessao(formato);
+            await _repo.AddFormatoSessaoAsync(formato);
             return ServiceResult<FormatoSessaoDto>.Success(formato.ToFormatoSessaoDto(), 201);
         }
 
-        public ServiceResult<object> Delete(int id)
+        public async Task<ServiceResult<object>> DeleteAsync(int id)
         {
             if (id <= 0)
                 return ServiceResult<object>.Fail("Id inválido.", 400);
 
-            var formato = _repo.GetFormatoSessaoById(id);
+            var formato = await _repo.GetFormatoSessaoByIdAsync(id);
             if (formato == null)
                 return ServiceResult<object>.Fail("Formato de sessão não encontrado.", 404);
 
-            if (_repo.FormatoSessaoHasSessoes(id))
+            if (await _repo.FormatoSessaoHasSessoesAsync(id))
                 return ServiceResult<object>.Fail("Não é possível excluir um formato de sessão que possui sessões vinculadas.", 409);
 
-            _repo.DeleteFormatoSessao(id);
+            await _repo.DeleteFormatoSessaoAsync(id);
             return ServiceResult<object>.Success(new { }, 204);
         }
 
-        public ServiceResult<IEnumerable<FormatoSessaoDto>> GetAll()
+        public async Task<ServiceResult<IEnumerable<FormatoSessaoDto>>> GetAllAsync()
         {
-            var formatos = _repo.GetFormatosSessoes().Select(f => f.ToFormatoSessaoDto());
+            var formatos = (await _repo.GetFormatosSessoesAsync()).Select(f => f.ToFormatoSessaoDto());
             return ServiceResult<IEnumerable<FormatoSessaoDto>>.Success(formatos);
         }
 
-        public ServiceResult<FormatoSessaoDto> GetById(int id)
+        public async Task<ServiceResult<FormatoSessaoDto>> GetByIdAsync(int id)
         {
             if (id <= 0)
                 return ServiceResult<FormatoSessaoDto>.Fail("Id inválido.", 400);
 
-            var formato = _repo.GetFormatoSessaoById(id);
+            var formato = await _repo.GetFormatoSessaoByIdAsync(id);
             if (formato == null)
                 return ServiceResult<FormatoSessaoDto>.Fail("Formato de sessão não encontrado.", 404);
 
             return ServiceResult<FormatoSessaoDto>.Success(formato.ToFormatoSessaoDto());
         }
 
-        public ServiceResult<FormatoSessaoDto> Update(int id, UpdateFormatoSessaoDto dto)
+        public async Task<ServiceResult<FormatoSessaoDto>> UpdateAsync(int id, UpdateFormatoSessaoDto dto)
         {
             if (id <= 0)
                 return ServiceResult<FormatoSessaoDto>.Fail("Id inválido.", 400);
 
-            var formato = _repo.GetFormatoSessaoById(id);
+            var formato = await _repo.GetFormatoSessaoByIdAsync(id);
             if (formato == null)
                 return ServiceResult<FormatoSessaoDto>.Fail("Formato de sessão não encontrado.", 404);
 
@@ -84,12 +84,12 @@ namespace Lumiere.API.Services
             if (nomeValidation != null)
                 return ServiceResult<FormatoSessaoDto>.Fail(nomeValidation, 400);
 
-            if (_repo.FormatoSessaoNomeExists(nome, ignoreId: id))
+            if (await _repo.FormatoSessaoNomeExistsAsync(nome, ignoreId: id))
                 return ServiceResult<FormatoSessaoDto>.Fail("Já existe um formato de sessão com esse nome.", 409);
 
             dto.UpdateFormatoSessaoModel(formato);
             formato.Nome = nome;
-            _repo.UpdateFormatoSessao(formato);
+            await _repo.UpdateFormatoSessaoAsync(formato);
             return ServiceResult<FormatoSessaoDto>.Success(formato.ToFormatoSessaoDto());
         }
 

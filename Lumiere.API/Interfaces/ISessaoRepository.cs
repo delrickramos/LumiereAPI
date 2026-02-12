@@ -4,13 +4,13 @@ namespace Lumiere.API.Interfaces
 {
     public interface ISessaoRepository
     {
-        List<Sessao> GetSessoes();
-        Sessao GetSessaoById(int id);
-        void AddSessao(Sessao sessao);
-        void UpdateSessao(Sessao sessao);
-        void DeleteSessao(int id);
-        bool SessaoExists(int id);
-        bool SessaoHasIngressos(int id);
-        bool SessaoHasConflict (int salaId, DateTimeOffset dataHoraInicio, DateTimeOffset dataHoraFim, int? sessaoId = null);
+        Task<List<Sessao>> GetSessoesAsync();
+        Task<Sessao> GetSessaoByIdAsync(int id);
+        Task AddSessaoAsync(Sessao sessao);
+        Task UpdateSessaoAsync(Sessao sessao);
+        Task DeleteSessaoAsync(int id);
+        Task<bool> SessaoExistsAsync(int id);
+        Task<bool> SessaoHasIngressosAsync(int id);
+        Task<bool> SessaoHasConflictAsync(int salaId, DateTimeOffset dataHoraInicio, DateTimeOffset dataHoraFim, int? sessaoId = null);
     }
 }

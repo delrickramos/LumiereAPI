@@ -4,13 +4,13 @@ namespace Lumiere.API.Interfaces
 {
     public interface IAssentoRepository
     {
-        Assento GetAssentoById(int id);
-        List<Assento> GetAssentosBySala(int salaId);
-        void AddAssento(Assento assento);
-        void UpdateAssento(Assento assento);
-        void DeleteAssento(int id);
-        bool AssentoExists(int id);
-        bool AssentoPosicaoExists(int salaId, string fileira, int coluna, int? ignoreId = null);
-        bool AssentoHasIngressos(int assentoId);
+        Task<Assento> GetAssentoByIdAsync(int id);
+        Task<List<Assento>> GetAssentosBySalaAsync(int salaId);
+        Task AddAssentoAsync(Assento assento);
+        Task UpdateAssentoAsync(Assento assento);
+        Task DeleteAssentoAsync(int id);
+        Task<bool> AssentoExistsAsync(int id);
+        Task<bool> AssentoPosicaoExistsAsync(int salaId, string fileira, int coluna, int? ignoreId = null);
+        Task<bool> AssentoHasIngressosAsync(int assentoId);
     }
 }

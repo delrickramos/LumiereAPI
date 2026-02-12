@@ -5,10 +5,10 @@ namespace Lumiere.API.Interfaces
 {
     public interface ISalaService
     {
-        ServiceResult<IEnumerable<SalaDto>> GetAll();
-        ServiceResult<SalaDto> GetById(int id);
-        ServiceResult<SalaDto> Create(CreateSalaDto dto);
-        ServiceResult<SalaDto> Update(int id, UpdateSalaDto dto);
-        ServiceResult<object> Delete(int id);
+        Task<ServiceResult<IEnumerable<SalaDto>>> GetAllAsync();
+        Task<ServiceResult<SalaDto>> GetByIdAsync(int id);
+        Task<ServiceResult<SalaDto>> CreateAsync(CreateSalaDto dto);
+        Task<ServiceResult<SalaDto>> UpdateAsync(int id, UpdateSalaDto dto);
+        Task<ServiceResult<object>> DeleteAsync(int id);
     }
 }

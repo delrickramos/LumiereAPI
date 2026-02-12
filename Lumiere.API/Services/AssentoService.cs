@@ -21,36 +21,36 @@ namespace Lumiere.API.Services
             _salaRepo = salaRepo;
         }
 
-        public ServiceResult<AssentoDto> GetById(int id)
+        public async Task<ServiceResult<AssentoDto>> GetByIdAsync(int id)
         {
             if (id <= 0)
                 return ServiceResult<AssentoDto>.Fail("Id inválido.", 400);
 
-            var assento = _assentoRepo.GetAssentoById(id);
+            var assento = await _assentoRepo.GetAssentoByIdAsync(id);
             if (assento == null)
                 return ServiceResult<AssentoDto>.Fail("Assento não encontrado.", 404);
 
             return ServiceResult<AssentoDto>.Success(assento.ToAssentoDto());
         }
 
-        public ServiceResult<IEnumerable<AssentoDto>> GetBySala(int salaId)
+        public async Task<ServiceResult<IEnumerable<AssentoDto>>> GetBySalaAsync(int salaId)
         {
             if (salaId <= 0)
                 return ServiceResult<IEnumerable<AssentoDto>>.Fail("SalaId inválido.", 400);
 
-            if (!_salaRepo.SalaExists(salaId))
+            if (!await _salaRepo.SalaExistsAsync(salaId))
                 return ServiceResult<IEnumerable<AssentoDto>>.Fail("Sala não encontrada.", 404);
 
-            var assentos = _assentoRepo.GetAssentosBySala(salaId).Select(a => a.ToAssentoDto());
+            var assentos = (await _assentoRepo.GetAssentosBySalaAsync(salaId)).Select(a => a.ToAssentoDto());
             return ServiceResult<IEnumerable<AssentoDto>>.Success(assentos);
         }
 
-        public ServiceResult<AssentoDto> Create(CreateAssentoDto dto)
+        public async Task<ServiceResult<AssentoDto>> CreateAsync(CreateAssentoDto dto)
         {
             if (dto.SalaId <= 0)
                 return ServiceResult<AssentoDto>.Fail("SalaId inválido.", 400);
 
-            if (!_salaRepo.SalaExists(dto.SalaId))
+            if (!await _salaRepo.SalaExistsAsync(dto.SalaId))
                 return ServiceResult<AssentoDto>.Fail("Sala não encontrada.", 404);
 
             var fileira = (dto.Fileira ?? "").Trim();
@@ -60,13 +60,13 @@ namespace Lumiere.API.Services
             var colunaVal = ValidateColuna(dto.Coluna);
             if (colunaVal != null) return ServiceResult<AssentoDto>.Fail(colunaVal, 400);
 
-            if (_assentoRepo.AssentoPosicaoExists(dto.SalaId, fileira, dto.Coluna))
+            if (await _assentoRepo.AssentoPosicaoExistsAsync(dto.SalaId, fileira, dto.Coluna))
                 return ServiceResult<AssentoDto>.Fail("Já existe um assento com essa posição nessa sala.", 409);
 
             var assento = dto.ToAssentoModel();
             assento.Fileira = fileira;
 
-            _assentoRepo.AddAssento(assento);
+            await _assentoRepo.AddAssentoAsync(assento);
             return ServiceResult<AssentoDto>.Success(assento.ToAssentoDto(), 201);
         }
 

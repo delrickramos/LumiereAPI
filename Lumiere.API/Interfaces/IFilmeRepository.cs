@@ -4,16 +4,16 @@ namespace Lumiere.API.Interfaces
 {
     public interface IFilmeRepository
     {
-        List<Filme> GetFilmes();
-        Filme GetFilmeById(int id);
-        public Filme? GetFilmeByIdWithSessoes(int id);
-        List<Filme> GetFilmesEmCartaz(DateTime inicio, DateTime fim);
-        void AddFilme(Filme filme);
-        void UpdateFilme(Filme filme);
-        void DeleteFilme(int id);
-        bool FilmeExists(int id);            
-        bool FilmeHasSessoes(int id);
+        Task<List<Filme>> GetFilmesAsync();
+        Task<Filme> GetFilmeByIdAsync(int id);
+        public Task<Filme?> GetFilmeByIdWithSessoesAsync(int id);
+        Task<List<Filme>> GetFilmesEmCartazAsync(DateTime inicio, DateTime fim);
+        Task AddFilmeAsync(Filme filme);
+        Task UpdateFilmeAsync(Filme filme);
+        Task DeleteFilmeAsync(int id);
+        Task<bool> FilmeExistsAsync(int id);            
+        Task<bool> FilmeHasSessoesAsync(int id);
 
-        bool FilmeTituloExists(string titulo, int? ignoreId = null);
+        Task<bool> FilmeTituloExistsAsync(string titulo, int? ignoreId = null);
     }
 }

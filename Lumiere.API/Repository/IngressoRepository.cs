@@ -13,34 +13,34 @@ namespace Lumiere.API.Repository
             _db = db;
         }
 
-        public List<Ingresso> GetIngressos()
+        public async Task<List<Ingresso>> GetIngressosAsync()
         {
-            return _db.Ingressos.OrderBy(i => i.SessaoId).ThenBy(i => i.Id).ToList();
+            return await _db.Ingressos.OrderBy(i => i.SessaoId).ThenBy(i => i.Id).ToListAsync();
         }
 
-        public Ingresso GetIngressoById(int id)
+        public async Task<Ingresso> GetIngressoByIdAsync(int id)
         {
-            return _db.Ingressos.FirstOrDefault(i => i.Id == id)!;
+            return (await _db.Ingressos.FirstOrDefaultAsync(i => i.Id == id))!;
         }
 
-        public List<Ingresso> GetIngressosBySessao(int sessaoId)
+        public async Task<List<Ingresso>> GetIngressosBySessaoAsync(int sessaoId)
         {
-            return _db.Ingressos.Where(i => i.SessaoId == sessaoId).Include(i => i.Assento).Include(i => i.TipoIngresso).ToList();
+            return await _db.Ingressos.Where(i => i.SessaoId == sessaoId).Include(i => i.Assento).Include(i => i.TipoIngresso).ToListAsync();
         }
 
-        public void AddIngresso(Ingresso ingresso)
+        public async Task AddIngressoAsync(Ingresso ingresso)
         {
             _db.Ingressos.Add(ingresso);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
-        public bool IngressoExists(int id)
+        public async Task<bool> IngressoExistsAsync(int id)
         {
-            return _db.Ingressos.Any(i => i.Id == id);
+            return await _db.Ingressos.AnyAsync(i => i.Id == id);
         }
 
-        public bool AssentoOcupadoNaSessao(int sessaoId, int assentoId)
+        public async Task<bool> AssentoOcupadoNaSessaoAsync(int sessaoId, int assentoId)
         {
-            return _db.Ingressos.Any(i => i.SessaoId == sessaoId && i.AssentoId == assentoId && i.Status == StatusIngressoEnum.Confirmado);
+            return await _db.Ingressos.AnyAsync(i => i.SessaoId == sessaoId && i.AssentoId == assentoId && i.Status == StatusIngressoEnum.Confirmado);
         }
     }
 }

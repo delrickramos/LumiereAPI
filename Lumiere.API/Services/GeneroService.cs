@@ -16,7 +16,7 @@ namespace Lumiere.API.Services
         {
             _generoRepo = repo;
         }
-        public ServiceResult<GeneroDto> Create(CreateGeneroDto dto)
+        public async Task<ServiceResult<GeneroDto>> CreateAsync(CreateGeneroDto dto)
         {
             var nome = (dto.Nome ?? "").Trim();
 
@@ -25,54 +25,54 @@ namespace Lumiere.API.Services
             if (nomeValidation != null)
                 return ServiceResult<GeneroDto>.Fail(nomeValidation, 400);
 
-            if (_generoRepo.GeneroNomeExists(nome))
+            if (await _generoRepo.GeneroNomeExistsAsync(nome))
                 return ServiceResult<GeneroDto>.Fail("Já existe um gênero com esse nome.", 409);
 
             var genero = dto.ToGeneroModel();
             genero.Nome = nome;
-            _generoRepo.AddGenero(genero);
+            await _generoRepo.AddGeneroAsync(genero);
             return ServiceResult<GeneroDto>.Success(genero.ToGeneroDto(), 201);
         }
 
-        public ServiceResult<object> Delete(int id)
+        public async Task<ServiceResult<object>> DeleteAsync(int id)
         {
             if (id <= 0)
                 return ServiceResult<object>.Fail("Id inválido.", 400);
 
-            if (!_generoRepo.GeneroExists(id))
+            if (!await _generoRepo.GeneroExistsAsync(id))
                 return ServiceResult<object>.Fail("Gênero não encontrado.", 404);
 
-            if (_generoRepo.GeneroHasFilmes(id))
+            if (await _generoRepo.GeneroHasFilmesAsync(id))
                 return ServiceResult<object>.Fail("Não é possível excluir um gênero que possui filmes vinculados.", 409);
 
-            _generoRepo.DeleteGenero(id);
+            await _generoRepo.DeleteGeneroAsync(id);
             return ServiceResult<object>.Success(new { }, 204);
         }
 
-        public ServiceResult<IEnumerable<GeneroDto>> GetAll()
+        public async Task<ServiceResult<IEnumerable<GeneroDto>>> GetAllAsync()
         {
-            var generos = _generoRepo.GetGeneros().Select(g => g.ToGeneroDto());
+            var generos = (await _generoRepo.GetGenerosAsync()).Select(g => g.ToGeneroDto());
             return ServiceResult<IEnumerable<GeneroDto>>.Success(generos);
         }
 
-        public ServiceResult<GeneroDto> GetById(int id)
+        public async Task<ServiceResult<GeneroDto>> GetByIdAsync(int id)
         {
             if (id <= 0)
                 return ServiceResult<GeneroDto>.Fail("Id inválido.", 400);
 
-            var genero = _generoRepo.GetGeneroById(id);
+            var genero = await _generoRepo.GetGeneroByIdAsync(id);
             if (genero == null)
                 return ServiceResult<GeneroDto>.Fail("Gênero não encontrado.", 404);
 
             return ServiceResult<GeneroDto>.Success(genero.ToGeneroDto());
         }
 
-        public ServiceResult<GeneroDto> Update(int id, UpdateGeneroDto dto)
+        public async Task<ServiceResult<GeneroDto>> UpdateAsync(int id, UpdateGeneroDto dto)
         {
             if (id <= 0)
                 return ServiceResult<GeneroDto>.Fail("Id inválido.", 400);
 
-            var genero = _generoRepo.GetGeneroById(id);
+            var genero = await _generoRepo.GetGeneroByIdAsync(id);
             if (genero == null)
                 return ServiceResult<GeneroDto>.Fail("Gênero não encontrado.", 404);
 
@@ -82,12 +82,12 @@ namespace Lumiere.API.Services
             if (nomeValidation != null)
                 return ServiceResult<GeneroDto>.Fail(nomeValidation, 400);
 
-            if (_generoRepo.GeneroNomeExists(nome, ignoreId: id))
+            if (await _generoRepo.GeneroNomeExistsAsync(nome, ignoreId: id))
                 return ServiceResult<GeneroDto>.Fail("Já existe um gênero com esse nome.", 409);
 
             dto.UpdateGeneroModel(genero);
             genero.Nome = nome;
-            _generoRepo.UpdateGenero(genero);
+            await _generoRepo.UpdateGeneroAsync(genero);
             return ServiceResult<GeneroDto>.Success(genero.ToGeneroDto());
         }
 

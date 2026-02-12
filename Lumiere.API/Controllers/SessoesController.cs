@@ -14,36 +14,36 @@ namespace Lumiere.API.Controllers
             _service = service;
         }
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var result = _service.GetAll();
+            var result = await _service.GetAllAsync();
             return HandleResult(result);
         }
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var result = _service.GetById(id);
+            var result = await _service.GetByIdAsync(id);
             return HandleResult(result);
         }
 
         [HttpPost]
-        public IActionResult Add([FromBody] CreateSessaoDto sessaoDto)
+        public async Task<IActionResult> Add([FromBody] CreateSessaoDto sessaoDto)
         {
-            var result = _service.Create(sessaoDto);
+            var result = await _service.CreateAsync(sessaoDto);
             return HandleResult(result);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] UpdateSessaoDto sessaoDto)
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateSessaoDto sessaoDto)
         {
-            var result = _service.Update(id, sessaoDto);
+            var result = await _service.UpdateAsync(id, sessaoDto);
             return HandleResult(result);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var result = _service.Delete(id);
+            var result = await _service.DeleteAsync(id);
             return HandleResult(result);
         }
     }

@@ -1,6 +1,7 @@
 ﻿using Lumiere.API.Database;
 using Lumiere.API.Interfaces;
 using Lumiere.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Lumiere.API.Repository
 {
@@ -13,46 +14,46 @@ namespace Lumiere.API.Repository
             _db = db;
         }
 
-        public void AddSessao(Sessao sessao)
+        public async Task AddSessaoAsync(Sessao sessao)
         {
             _db.Sessoes.Add(sessao);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
-        public Sessao GetSessaoById(int id)
+        public async Task<Sessao> GetSessaoByIdAsync(int id)
         {
-            return _db.Sessoes.FirstOrDefault(s => s.Id == id)!;
+            return (await _db.Sessoes.FirstOrDefaultAsync(s => s.Id == id))!;
         }
 
-        public List<Sessao> GetSessoes()
+        public async Task<List<Sessao>> GetSessoesAsync()
         {
-            return _db.Sessoes.OrderBy(s => s.DataHoraInicio).ToList();
+            return await _db.Sessoes.OrderBy(s => s.DataHoraInicio).ToListAsync();
         }
 
-        public bool SessaoExists(int id)
+        public async Task<bool> SessaoExistsAsync(int id)
         {
-            return _db.Sessoes.Any(s => s.Id == id);
+            return await _db.Sessoes.AnyAsync(s => s.Id == id);
         }
 
-        public void UpdateSessao(Sessao sessao)
+        public async Task UpdateSessaoAsync(Sessao sessao)
         {
             _db.Sessoes.Update(sessao);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
-        public void DeleteSessao(int id)
+        public async Task DeleteSessaoAsync(int id)
         {
-            _db.Sessoes.Remove(GetSessaoById(id));
-            _db.SaveChanges();
+            _db.Sessoes.Remove(await GetSessaoByIdAsync(id));
+            await _db.SaveChangesAsync();
         }
 
-        public bool SessaoHasIngressos(int id)
+        public async Task<bool> SessaoHasIngressosAsync(int id)
         {
-            return _db.Ingressos.Any(i => i.SessaoId == id);
+            return await _db.Ingressos.AnyAsync(i => i.SessaoId == id);
         }
 
         // Verifica se há conflito de horário na sala (interseção de horários)
-        public bool SessaoHasConflict(int salaId, DateTimeOffset dataHoraInicio, DateTimeOffset dataHoraFim, int? sessaoId = null)
+        public async Task<bool> SessaoHasConflictAsync(int salaId, DateTimeOffset dataHoraInicio, DateTimeOffset dataHoraFim, int? sessaoId = null)
         {
-            return _db.Sessoes.Any(s => s.SalaId == salaId && (sessaoId == null || s.Id != sessaoId) &&
+            return await _db.Sessoes.AnyAsync(s => s.SalaId == salaId && (sessaoId == null || s.Id != sessaoId) &&
             ((s.DataHoraInicio <= dataHoraInicio && s.DataHoraFim > dataHoraInicio) || 
             (s.DataHoraInicio < dataHoraFim && s.DataHoraFim >= dataHoraFim) ||
             (s.DataHoraInicio >= dataHoraInicio && s.DataHoraFim <= dataHoraFim))

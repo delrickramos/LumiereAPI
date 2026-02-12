@@ -13,63 +13,63 @@ namespace Lumiere.API.Repository
             _db = db;
         }
 
-        public List<Sala> GetSalas()
+        public async Task<List<Sala>> GetSalasAsync()
         {
-            return _db.Salas.OrderBy(s => s.Nome).ToList();
+            return await _db.Salas.OrderBy(s => s.Nome).ToListAsync();
         }
 
-        public Sala GetSalaById(int id)
+        public async Task<Sala> GetSalaByIdAsync(int id)
         {
-            return _db.Salas.FirstOrDefault(s => s.Id == id)!;
+            return (await _db.Salas.FirstOrDefaultAsync(s => s.Id == id))!;
         }
 
-        public Sala? GetSalaByIdWithSessoes(int id)
+        public async Task<Sala?> GetSalaByIdWithSessoesAsync(int id)
         {
-            return _db.Salas.Include(s => s.Sessoes).FirstOrDefault(s => s.Id == id);
+            return await _db.Salas.Include(s => s.Sessoes).FirstOrDefaultAsync(s => s.Id == id);
         }
 
-        public void AddSala(Sala sala)
+        public async Task AddSalaAsync(Sala sala)
         {
             _db.Salas.Add(sala);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
 
-        public void UpdateSala(Sala sala)
+        public async Task UpdateSalaAsync(Sala sala)
         {
             _db.Salas.Update(sala);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
 
-        public void DeleteSala(int id)
+        public async Task DeleteSalaAsync(int id)
         {
-            _db.Salas.Remove(GetSalaById(id));
-            _db.SaveChanges();
+            _db.Salas.Remove(await GetSalaByIdAsync(id));
+            await _db.SaveChangesAsync();
         }
 
-        public bool SalaExists(int id)
+        public async Task<bool> SalaExistsAsync(int id)
         {
-            return _db.Salas.Any(s => s.Id == id);
+            return await _db.Salas.AnyAsync(s => s.Id == id);
         }
 
-        public bool SalaNomeExists(string nome, int? ignoreId = null)
+        public async Task<bool> SalaNomeExistsAsync(string nome, int? ignoreId = null)
         {
             var nomeNorm = nome.Trim().ToUpper();
 
-            return _db.Salas.Any(s =>
+            return await _db.Salas.AnyAsync(s =>
                 s.Nome.Trim().ToUpper() == nomeNorm &&
                 (!ignoreId.HasValue || s.Id != ignoreId.Value)
             );
         }
 
-        public bool SalaHasSessoes(int id)
+        public async Task<bool> SalaHasSessoesAsync(int id)
         {
-            return _db.Sessoes.Any(s => s.SalaId == id);
+            return await _db.Sessoes.AnyAsync(s => s.SalaId == id);
         }
 
-        public void AddAssentosRange(IEnumerable<Assento> assentos)
+        public async Task AddAssentosRangeAsync(IEnumerable<Assento> assentos)
         {
             _db.Assentos.AddRange(assentos);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
 
     }

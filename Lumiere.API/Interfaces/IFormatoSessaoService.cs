@@ -5,10 +5,10 @@ namespace Lumiere.API.Interfaces
 {
     public interface IFormatoSessaoService
     {
-        ServiceResult<FormatoSessaoDto> Create(CreateFormatoSessaoDto dto);
-        ServiceResult<FormatoSessaoDto> Update(int id, UpdateFormatoSessaoDto dto);
-        ServiceResult<FormatoSessaoDto> GetById(int id);
-        ServiceResult<IEnumerable<FormatoSessaoDto>> GetAll();
-        ServiceResult<object> Delete(int id);
+        Task<ServiceResult<FormatoSessaoDto>> CreateAsync(CreateFormatoSessaoDto dto);
+        Task<ServiceResult<FormatoSessaoDto>> UpdateAsync(int id, UpdateFormatoSessaoDto dto);
+        Task<ServiceResult<FormatoSessaoDto>> GetByIdAsync(int id);
+        Task<ServiceResult<IEnumerable<FormatoSessaoDto>>> GetAllAsync();
+        Task<ServiceResult<object>> DeleteAsync(int id);
     }
 }

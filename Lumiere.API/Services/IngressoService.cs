@@ -22,47 +22,47 @@ namespace Lumiere.API.Services
             _tipoRepo = tipoRepo;
         }
 
-        public ServiceResult<IEnumerable<IngressoDto>> GetAll()
+        public async Task<ServiceResult<IEnumerable<IngressoDto>>> GetAllAsync()
         {
-            var ingressos = _ingressoRepo.GetIngressos().Select(i => i.ToIngressoDto());
+            var ingressos = (await _ingressoRepo.GetIngressosAsync()).Select(i => i.ToIngressoDto());
             return ServiceResult<IEnumerable<IngressoDto>>.Success(ingressos);
         }
 
-        public ServiceResult<IngressoDto> GetById(int id)
+        public async Task<ServiceResult<IngressoDto>> GetByIdAsync(int id)
         {
             if (id <= 0)
                 return ServiceResult<IngressoDto>.Fail("Id inválido.", 400);
 
-            var ingresso = _ingressoRepo.GetIngressoById(id);
+            var ingresso = await _ingressoRepo.GetIngressoByIdAsync(id);
             if (ingresso == null)
                 return ServiceResult<IngressoDto>.Fail("Ingresso não encontrado.", 404);
 
             return ServiceResult<IngressoDto>.Success(ingresso.ToIngressoDto());
         }
 
-        public ServiceResult<IEnumerable<IngressoDto>> GetBySessao(int sessaoId)
+        public async Task<ServiceResult<IEnumerable<IngressoDto>>> GetBySessaoAsync(int sessaoId)
         {
             if (sessaoId <= 0)
                 return ServiceResult<IEnumerable<IngressoDto>>.Fail("SessaoId inválido.", 400);
 
-            if (!_sessaoRepo.SessaoExists(sessaoId))
+            if (!await _sessaoRepo.SessaoExistsAsync(sessaoId))
                 return ServiceResult<IEnumerable<IngressoDto>>.Fail("Sessão não encontrada.", 404);
 
-            var ingressos = _ingressoRepo.GetIngressosBySessao(sessaoId).Select(i => i.ToIngressoDto());
+            var ingressos = (await _ingressoRepo.GetIngressosBySessaoAsync(sessaoId)).Select(i => i.ToIngressoDto());
             return ServiceResult<IEnumerable<IngressoDto>>.Success(ingressos);
         }
 
-        public ServiceResult<IngressoDto> Vender(CreateIngressoDto dto)
+        public async Task<ServiceResult<IngressoDto>> VenderAsync(CreateIngressoDto dto)
         {
             if (dto.SessaoId <= 0) return ServiceResult<IngressoDto>.Fail("SessaoId inválido.", 400);
             if (dto.AssentoId <= 0) return ServiceResult<IngressoDto>.Fail("AssentoId inválido.", 400);
             if (dto.TipoIngressoId <= 0) return ServiceResult<IngressoDto>.Fail("TipoIngressoId inválido.", 400);
 
-            var sessao = _sessaoRepo.GetSessaoById(dto.SessaoId);
+            var sessao = await _sessaoRepo.GetSessaoByIdAsync(dto.SessaoId);
             if (sessao == null)
                 return ServiceResult<IngressoDto>.Fail("Sessão não encontrada.", 404);
 
-            var assento = _assentoRepo.GetAssentoById(dto.AssentoId);
+            var assento = await _assentoRepo.GetAssentoByIdAsync(dto.AssentoId);
             if (assento == null)
                 return ServiceResult<IngressoDto>.Fail("Assento não encontrado.", 404);
 
@@ -71,10 +71,10 @@ namespace Lumiere.API.Services
                 return ServiceResult<IngressoDto>.Fail("Assento não pertence à sala dessa sessão.", 400);
 
             // Garante que o assento não está ocupado nesta sessão
-            if (_ingressoRepo.AssentoOcupadoNaSessao(dto.SessaoId, dto.AssentoId))
+            if (await _ingressoRepo.AssentoOcupadoNaSessaoAsync(dto.SessaoId, dto.AssentoId))
                 return ServiceResult<IngressoDto>.Fail("Assento já está ocupado nesta sessão.", 409);
 
-            var tipo = _tipoRepo.GetTipoIngressoById(dto.TipoIngressoId);
+            var tipo = await _tipoRepo.GetTipoIngressoByIdAsync(dto.TipoIngressoId);
             if (tipo == null)
                 return ServiceResult<IngressoDto>.Fail("Tipo de ingresso não encontrado.", 404);
 
@@ -102,7 +102,7 @@ namespace Lumiere.API.Services
                 Status = StatusIngressoEnum.Confirmado
             };
 
-            _ingressoRepo.AddIngresso(ingresso);
+            await _ingressoRepo.AddIngressoAsync(ingresso);
             return ServiceResult<IngressoDto>.Success(ingresso.ToIngressoDto(), 201);
         }
     }
